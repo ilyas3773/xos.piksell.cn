@@ -1,0 +1,1877 @@
+<template>
+  <view class="page-wrapper" :class="themeClass()">
+    <view class="mine-topbar" @click="toggleTheme">
+      <text class="mine-topbar-icon">{{ themeMode == 'dark' ? '☀️' : '🌕' }}</text>
+    </view>
+    <scroll-view class="page-shell mine-shell" scroll-y="true" :style="scrollViewStyle">
+      <view class="page-container mine-page">
+        <view class="tech-card user-header" @click="handleUserHeaderClick">
+          <view class="user-avatar-wrap">
+            <image v-if="avatarUrl() != ''" class="user-avatar-image" :src="avatarUrl()" mode="aspectFill"></image>
+            <text v-else class="user-avatar-text">{{ avatarText() }}</text>
+          </view>
+          <view class="user-info-main">
+            <text class="user-name">{{ loggedIn ? (userInfo.nickname || userInfo.username || '发卡小程序') : '点击登录' }}</text>
+            <text class="user-account" v-if="loggedIn">登录名：{{ userInfo.username || '-' }}</text>
+            <text class="user-edit-tip">{{ loggedIn ? '点击编辑资料' : '点击登录' }}</text>
+          </view>
+        </view>
+
+        <view class="grid-wrap">
+          <view class="grid-row">
+            <view class="tech-card grid-card" @click="signInToday">
+              <view class="card-icon-wrap blue-icon">
+                <text class="card-icon">📅</text>
+              </view>
+              <text class="card-title">{{ userInfo.today_signed_in ? '今日已签到' : '每日签到' }}</text>
+            </view>
+            <view class="tech-card grid-card" @click="rechargeEnergy">
+              <view class="card-icon-wrap purple-icon">
+                <text class="card-icon">👤</text>
+              </view>
+              <text class="card-title">充值能量</text>
+            </view>
+          </view>
+
+          <view class="grid-row mixed-row">
+            <view class="tech-card energy-big-card">
+              <view class="energy-gauge">
+                <view class="gauge-bg"></view>
+                <view class="gauge-fill"></view>
+                <view class="gauge-ticks">
+                  <view class="tick" v-for="i in 11" :key="'tick-' + i" :class="'tick-' + i"></view>
+                </view>
+                <text class="energy-value">{{ userInfo.energy }}</text>
+              </view>
+              <text class="energy-label">剩余能量: {{ userInfo.energy }}</text>
+              <view class="recharge-btn" @click="rechargeEnergy">
+                <text class="recharge-btn-text">充值能量</text>
+              </view>
+            </view>
+
+            <view class="grid-card-col">
+              <view class="tech-card grid-card sm-card" @click="openContactCustomer">
+                <view class="card-icon-wrap purple-icon">
+                  <text class="card-icon">💬</text>
+                </view>
+                <text class="card-title">联系客服</text>
+              </view>
+              <view class="tech-card grid-card sm-card" @click="openWishModal">
+                <view class="card-icon-wrap purple-icon">
+                  <text class="card-icon">✨</text>
+                </view>
+                <text class="card-title">我要许愿</text>
+              </view>
+            </view>
+          </view>
+
+          <view class="grid-row">
+            <view class="tech-card grid-card" @click="openHelp">
+              <view class="card-icon-wrap purple-icon">
+                <text class="card-icon">🎯</text>
+              </view>
+              <text class="card-title">帮助</text>
+            </view>
+            <view class="tech-card grid-card" @click="openAbout">
+              <view class="card-icon-wrap blue-icon">
+                <text class="card-icon">🛡️</text>
+              </view>
+              <text class="card-title">关于我们</text>
+            </view>
+          </view>
+
+          <view class="grid-row">
+            <view class="tech-card grid-card" @click="openInvite">
+              <view class="card-icon-wrap blue-icon">
+                <text class="card-icon">📥</text>
+              </view>
+              <text class="card-title">邀请好友</text>
+            </view>
+            <view class="tech-card grid-card" @click="openAllOrders">
+              <view class="card-icon-wrap purple-icon">
+                <text class="card-icon">📋</text>
+              </view>
+              <text class="card-title">我的订单</text>
+            </view>
+          </view>
+
+          <view class="grid-row" v-if="loggedIn">
+            <view class="tech-card grid-card full-card" @click="logout">
+              <view class="card-icon-wrap purple-icon">
+                <text class="card-icon">🚪</text>
+              </view>
+              <text class="card-title">退出登录</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="wish-modal-mask" v-if="contactModalVisible" @click="closeContactCustomer">
+      <view class="wish-modal" @click.stop>
+        <view class="wish-modal-head">
+          <text class="wish-modal-title">📞 联系客服</text>
+          <text class="wish-modal-close" @click="closeContactCustomer">✕</text>
+        </view>
+        <view class="wish-modal-body">
+          <text class="wish-modal-tip">在线客服为您解答疑问、处理上架请求</text>
+
+          <view class="contact-list">
+            <view class="contact-row" v-if="customerContact.wechat != ''">
+              <view class="contact-row-left">
+                <text class="contact-icon">💬</text>
+                <view class="contact-info">
+                  <text class="contact-label">客服微信</text>
+                  <text class="contact-value">{{ customerContact.wechat }}</text>
+                </view>
+              </view>
+              <view class="contact-copy-btn" @click="copyContact(customerContact.wechat, '微信号')">
+                <text class="contact-copy-text">复制</text>
+              </view>
+            </view>
+
+            <view class="contact-row" v-if="customerContact.qq != ''">
+              <view class="contact-row-left">
+                <text class="contact-icon">🐧</text>
+                <view class="contact-info">
+                  <text class="contact-label">客服 QQ</text>
+                  <text class="contact-value">{{ customerContact.qq }}</text>
+                </view>
+              </view>
+              <view class="contact-copy-btn" @click="copyContact(customerContact.qq, 'QQ号')">
+                <text class="contact-copy-text">复制</text>
+              </view>
+            </view>
+
+            <view class="contact-row" v-if="customerContact.phone != ''">
+              <view class="contact-row-left">
+                <text class="contact-icon">📱</text>
+                <view class="contact-info">
+                  <text class="contact-label">客服电话</text>
+                  <text class="contact-value">{{ customerContact.phone }}</text>
+                </view>
+              </view>
+              <view class="contact-copy-btn" @click="copyContact(customerContact.phone, '电话号')">
+                <text class="contact-copy-text">复制</text>
+              </view>
+            </view>
+
+            <view class="contact-row" v-if="customerContact.email != ''">
+              <view class="contact-row-left">
+                <text class="contact-icon">📧</text>
+                <view class="contact-info">
+                  <text class="contact-label">客服邮箱</text>
+                  <text class="contact-value">{{ customerContact.email }}</text>
+                </view>
+              </view>
+              <view class="contact-copy-btn" @click="copyContact(customerContact.email, '邮箱')">
+                <text class="contact-copy-text">复制</text>
+              </view>
+            </view>
+
+            <view v-if="customerContact.wechat == '' && customerContact.qq == '' && customerContact.phone == '' && customerContact.email == ''" class="contact-empty">
+              <text class="contact-empty-text">暂未配置客服联系方式</text>
+            </view>
+          </view>
+
+          <text v-if="customerContact.work_time != ''" class="contact-work-time">
+            🕐 客服工作时间：{{ customerContact.work_time }}
+          </text>
+        </view>
+        <view class="wish-modal-foot">
+          <button class="wish-modal-btn confirm" style="flex:1;" @click="closeContactCustomer">关闭</button>
+        </view>
+      </view>
+    </view>
+
+    <view class="wish-modal-mask" v-if="wishModalVisible" @click="closeWishModal">
+      <view class="wish-modal" @click.stop>
+        <view class="wish-modal-head">
+          <text class="wish-modal-title">✨ 我要许愿</text>
+          <text class="wish-modal-close" @click="closeWishModal">✕</text>
+        </view>
+        <view class="wish-modal-body">
+          <text class="wish-modal-tip">告诉我们您想要的游戏 / 应用，我们会尽快上架</text>
+
+          <view class="wish-form-group">
+            <text class="wish-form-label">名称 <text class="wish-required">*</text></text>
+            <input class="wish-form-input" v-model="wishName" placeholder="请输入想要的游戏 / 应用名称" />
+          </view>
+
+          <view class="wish-form-group">
+            <text class="wish-form-label">描述 <text class="wish-form-optional">（选填）</text></text>
+            <textarea class="wish-form-textarea" v-model="wishDescription" placeholder="可以描述一下您想要的版本、功能等" />
+          </view>
+
+          <view class="wish-form-group">
+            <text class="wish-form-label">联系方式 <text class="wish-form-optional">（选填）</text></text>
+            <input class="wish-form-input" v-model="wishContact" placeholder="留下QQ / 微信等联系方式，我们上架后通知您" />
+          </view>
+        </view>
+        <view class="wish-modal-foot">
+          <button class="wish-modal-btn cancel" @click="closeWishModal">取消</button>
+          <button class="wish-modal-btn confirm" @click="submitWish">提交许愿</button>
+        </view>
+      </view>
+    </view>
+
+    <view class="profile-modal-mask" v-if="profileEditorVisible" @click="closeProfileEditor">
+      <view class="profile-modal" @click.stop>
+        <view class="profile-modal-header">
+          <text class="profile-modal-title">编辑用户资料</text>
+          <text class="profile-modal-close" @click="closeProfileEditor">×</text>
+        </view>
+        <view class="profile-field">
+          <text class="profile-label">登录名称</text>
+          <input class="profile-input" v-model="profileForm.username" placeholder="请输入登录名称" placeholder-class="profile-placeholder" />
+        </view>
+        <view class="profile-field">
+          <text class="profile-label">登录密码</text>
+          <input class="profile-input" v-model="profileForm.password" password="true" placeholder="••••••" placeholder-class="profile-placeholder" />
+        </view>
+        <view class="profile-field">
+          <text class="profile-label">用户头像</text>
+          <view class="profile-avatar-row">
+            <image v-if="profileForm.avatar != ''" class="profile-avatar-preview" :src="profileAvatarPreview()" mode="aspectFill"></image>
+            <view v-else class="profile-avatar-empty">
+              <text class="profile-avatar-empty-text">头像</text>
+            </view>
+            <view class="profile-avatar-actions">
+              <button class="profile-avatar-btn" @click="chooseLocalAvatar">本地上传</button>
+              <button class="profile-avatar-btn" open-type="chooseAvatar" @chooseavatar="chooseWechatAvatar">微信头像</button>
+            </view>
+          </view>
+        </view>
+        <view class="profile-field">
+          <text class="profile-label">手机号</text>
+          <input class="profile-input" v-model="profileForm.phone" type="number" placeholder="请输入手机号" placeholder-class="profile-placeholder" />
+        </view>
+        <view class="profile-actions">
+          <button class="profile-btn profile-cancel" @click="closeProfileEditor">取消</button>
+          <button class="profile-btn profile-save" @click="submitProfile" :disabled="profileSaving">{{ profileSaving ? '保存中...' : '保存' }}</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup lang="uts">
+import {
+  clearAuth,
+  fetchProfile,
+  getStoredUser,
+  hasUserSession,
+  openAuthPage,
+  saveUserProfile,
+  signInUser,
+  updateUserProfile,
+  uploadUserAvatar,
+} from '../../utils/user.uts'
+import {
+  openEnergyPage,
+  openOrderListPage,
+} from '../../utils/navigation.uts'
+import {
+  resolveAssetUrl,
+} from '../../utils/api.uts'
+import {
+  apiOrigin,
+} from '../../utils/shop.uts'
+
+const themeMode = ref('light')
+
+const scrollViewStyle = computed(() => {
+  if (themeMode.value == 'dark') {
+    return `background: #050505;`
+  }
+  return ''
+})
+
+const loggedIn = ref(false)
+const profileEditorVisible = ref(false)
+const profileSaving = ref(false)
+const wishModalVisible = ref(false)
+const contactModalVisible = ref(false)
+const wishName = ref('')
+const wishDescription = ref('')
+const wishContact = ref('')
+const customerContact = reactive({
+  wechat: '',
+  qq: '',
+  phone: '',
+  email: '',
+  qr_image: '',
+  work_time: '',
+})
+const userInfo = reactive({
+  id: 0,
+  username: '',
+  nickname: '',
+  phone: '',
+  email: '',
+  avatar: '',
+  energy: 0,
+  invite_code: '',
+  invite_count: 0,
+  today_signed_in: false,
+})
+const profileForm = reactive({
+  username: '',
+  password: '',
+  nickname: '',
+  avatar: '',
+  phone: '',
+})
+
+function avatarText(): string {
+  const name = String(userInfo.nickname || userInfo.username || '')
+  if (name == '') {
+    return 'U'
+  }
+  return name.slice(0, 1).toUpperCase()
+}
+
+function avatarUrl(): string {
+  return resolveAssetUrl(String(userInfo.avatar || ''))
+}
+
+function profileAvatarPreview(): string {
+  return resolveAssetUrl(String(profileForm.avatar || ''))
+}
+
+function applyUser(data: any) {
+  userInfo.id = Number(data && data.id ? data.id : 0)
+  userInfo.username = String(data && data.username ? data.username : '')
+  userInfo.nickname = String(data && data.nickname ? data.nickname : '')
+  userInfo.phone = String(data && data.phone ? data.phone : '')
+  userInfo.email = String(data && data.email ? data.email : '')
+  userInfo.avatar = String(data && data.avatar ? data.avatar : '')
+  userInfo.energy = Number(data && data.energy ? data.energy : 0)
+  userInfo.invite_code = String(data && data.invite_code ? data.invite_code : '')
+  userInfo.invite_count = Number(data && data.invite_count ? data.invite_count : 0)
+  userInfo.today_signed_in = !!(data && data.today_signed_in)
+  loggedIn.value = userInfo.id > 0
+  if (loggedIn.value) {
+    saveUserProfile(data)
+  }
+}
+
+function resetUser() {
+  loggedIn.value = false
+  userInfo.id = 0
+  userInfo.username = ''
+  userInfo.nickname = ''
+  userInfo.phone = ''
+  userInfo.email = ''
+  userInfo.avatar = ''
+  userInfo.energy = 0
+  userInfo.invite_code = ''
+  userInfo.invite_count = 0
+  userInfo.today_signed_in = false
+}
+
+function loadUserCenter() {
+  if (!hasUserSession()) {
+    resetUser()
+    return
+  }
+  fetchProfile().then((data) => {
+    applyUser(data)
+  }).catch((message) => {
+    const errorText = String(message || '')
+    if (errorText.indexOf('401') >= 0 || errorText.indexOf('sign in') >= 0) {
+      clearAuth()
+      resetUser()
+    }
+  }).finally(() => {
+    uni.stopPullDownRefresh()
+  })
+}
+
+function signInToday() {
+  if (!loggedIn.value) {
+    toLogin()
+    return
+  }
+  if (userInfo.today_signed_in) {
+    uni.showToast({ title: '今天已经签到过了', icon: 'none' })
+    return
+  }
+  uni.showLoading({ title: '签到中...' })
+  signInUser().then((data) => {
+    applyUser(data)
+    uni.showToast({ title: '签到成功', icon: 'none' })
+  }).catch((message) => {
+    uni.showToast({ title: String(message || '签到失败'), icon: 'none' })
+  }).finally(() => {
+    uni.hideLoading()
+  })
+}
+
+function handleUserHeaderClick() {
+  if (!loggedIn.value) {
+    toLogin()
+    return
+  }
+  openProfileEditor()
+}
+
+function openProfileEditor() {
+  profileForm.username = String(userInfo.username || '')
+  profileForm.password = ''
+  profileForm.nickname = String(userInfo.nickname || '')
+  profileForm.avatar = String(userInfo.avatar || '')
+  profileForm.phone = String(userInfo.phone || '')
+  profileEditorVisible.value = true
+}
+
+function closeProfileEditor() {
+  if (profileSaving.value) {
+    return
+  }
+  profileEditorVisible.value = false
+}
+
+function applyUploadedAvatar(data: any) {
+  const profile = data && data.profile ? data.profile : null
+  const avatar = data && data.avatar ? data.avatar : null
+  if (profile) {
+    applyUser(profile)
+  }
+  if (profile && profile.avatar) {
+    profileForm.avatar = String(profile.avatar)
+    return
+  }
+  if (avatar && avatar.url) {
+    profileForm.avatar = String(avatar.url)
+  }
+}
+
+function uploadAvatarFile(filePath: string) {
+  if (filePath == '') {
+    uni.showToast({ title: '请选择头像图片', icon: 'none' })
+    return
+  }
+
+  profileSaving.value = true
+  uni.showLoading({ title: '上传头像...' })
+  uploadUserAvatar(filePath).then((data) => {
+    applyUploadedAvatar(data)
+    uni.showToast({ title: '头像已上传', icon: 'none' })
+  }).catch((message) => {
+    uni.showToast({ title: String(message || '头像上传失败'), icon: 'none' })
+  }).finally(() => {
+    profileSaving.value = false
+    uni.hideLoading()
+  })
+}
+
+function chooseLocalAvatar() {
+  uni.chooseImage({
+    count: 1,
+    sizeType: ['compressed'],
+    sourceType: ['album', 'camera'],
+    success: (res) => {
+      const paths = res.tempFilePaths
+      const filePath = paths && paths.length > 0 ? String(paths[0]) : ''
+      uploadAvatarFile(filePath)
+    },
+    fail: (error) => {
+      const message = error && error.errMsg ? String(error.errMsg) : '选择头像失败'
+      if (message.indexOf('cancel') < 0) {
+        uni.showToast({ title: message, icon: 'none' })
+      }
+    },
+  })
+}
+
+function chooseWechatAvatar(event: any) {
+  const detail = event && event.detail ? event.detail : null
+  const filePath = detail && detail.avatarUrl ? String(detail.avatarUrl) : ''
+  uploadAvatarFile(filePath)
+}
+
+function submitProfile() {
+  const username = String(profileForm.username || '').trim()
+  const password = String(profileForm.password || '')
+  if (username == '') {
+    uni.showToast({ title: '请输入登录名称', icon: 'none' })
+    return
+  }
+  if (password != '' && password.length < 6) {
+    uni.showToast({ title: '密码至少 6 位', icon: 'none' })
+    return
+  }
+
+  const payload: any = {
+    username: username,
+    nickname: String(userInfo.nickname || '').trim(),
+    avatar: String(profileForm.avatar || '').trim(),
+    phone: String(profileForm.phone || '').trim(),
+  }
+  if (password != '') {
+    payload.password = password
+  }
+
+  profileSaving.value = true
+  updateUserProfile(payload).then((data) => {
+    applyUser(data)
+    profileEditorVisible.value = false
+    uni.showToast({ title: '保存成功', icon: 'none' })
+  }).catch((message) => {
+    uni.showToast({ title: String(message || '保存失败'), icon: 'none' })
+  }).finally(() => {
+    profileSaving.value = false
+  })
+}
+
+function rechargeEnergy() {
+  openEnergyPage()
+}
+
+function contactService() {
+  openContactCustomer()
+}
+
+function openComplaint() {
+  openWishModal()
+}
+
+function openContactCustomer() {
+  contactModalVisible.value = true
+  if (customerContact.wechat == '' && customerContact.qq == '' && customerContact.phone == '' && customerContact.email == '') {
+    loadCustomerContact()
+  }
+}
+
+function closeContactCustomer() {
+  contactModalVisible.value = false
+}
+
+function openWishModal() {
+  wishName.value = ''
+  wishDescription.value = ''
+  wishContact.value = ''
+  wishModalVisible.value = true
+  if (customerContact.wechat == '' && customerContact.qq == '' && customerContact.phone == '' && customerContact.email == '') {
+    loadCustomerContact()
+  }
+}
+
+function closeWishModal() {
+  wishModalVisible.value = false
+}
+
+function copyContact(value: string, label: string) {
+  const text = String(value || '').trim()
+  if (text == '') {
+    uni.showToast({ title: '内容为空', icon: 'none' })
+    return
+  }
+  uni.setClipboardData({
+    data: text,
+    success: () => {
+      uni.showToast({ title: label + '已复制', icon: 'none' })
+    },
+  })
+}
+
+function loadCustomerContact() {
+  uni.request({
+    url: apiOrigin() + '/api/shop/customer-contact',
+    method: 'GET',
+    success: (res: any) => {
+      const body = res && res.data ? res.data : null
+      if (body && Number(body.code) === 0 && body.data) {
+        const data = body.data
+        customerContact.wechat = String(data.wechat || '')
+        customerContact.qq = String(data.qq || '')
+        customerContact.phone = String(data.phone || '')
+        customerContact.email = String(data.email || '')
+        customerContact.qr_image = String(data.qr_image || '')
+        customerContact.work_time = String(data.work_time || '')
+      }
+    },
+  })
+}
+
+function submitWish() {
+  const name = String(wishName.value || '').trim()
+  if (name == '') {
+    uni.showToast({ title: '请填写名称', icon: 'none' })
+    return
+  }
+  uni.showLoading({ title: '提交中...' })
+  uni.request({
+    url: apiOrigin() + '/api/shop/wishes',
+    method: 'POST',
+    header: { 'content-type': 'application/x-www-form-urlencoded' },
+    data: {
+      name: name,
+      description: String(wishDescription.value || '').trim(),
+      contact: String(wishContact.value || '').trim(),
+    },
+    success: (res: any) => {
+      uni.hideLoading()
+      const body = res && res.data ? res.data : null
+      if (body && Number(body.code) === 0) {
+        uni.showToast({ title: '许愿成功，感谢您的反馈！', icon: 'none' })
+        closeWishModal()
+      } else {
+        uni.showToast({
+          title: String(body && body.msg ? body.msg : '提交失败'),
+          icon: 'none',
+        })
+      }
+    },
+    fail: () => {
+      uni.hideLoading()
+      uni.showToast({ title: '网络错误，请重试', icon: 'none' })
+    },
+  })
+}
+
+function openHelp() {
+  uni.showToast({ title: '帮助中心即将开放', icon: 'none' })
+}
+
+function openAbout() {
+  uni.showToast({ title: '关于我们', icon: 'none' })
+}
+
+function openInvite() {
+  if (!loggedIn.value) {
+    toLogin()
+    return
+  }
+  if (userInfo.invite_code == '') {
+    uni.showToast({ title: '暂无邀请码', icon: 'none' })
+    return
+  }
+  uni.setClipboardData({
+    data: userInfo.invite_code,
+    success: () => {
+      uni.showToast({ title: '邀请码已复制：' + userInfo.invite_code, icon: 'none' })
+    },
+  })
+}
+
+function openAllOrders() {
+  if (!loggedIn.value) {
+    toLogin()
+    return
+  }
+  openOrderListPage()
+}
+
+function toLogin() {
+  openAuthPage('login')
+}
+
+function logout() {
+  uni.showModal({
+    title: '提示',
+    content: '确定要退出登录吗？',
+    confirmText: '退出',
+    cancelText: '取消',
+    success: (res) => {
+      if (res.confirm) {
+        clearAuth()
+        resetUser()
+        uni.showToast({ title: '已退出登录', icon: 'none' })
+      }
+    },
+  })
+}
+
+onLoad(() => {
+  loadTheme()
+  syncChrome()
+  if (hasUserSession()) {
+    const stored = getStoredUser()
+    if (stored) { applyUser(stored) }
+    loadUserCenter()
+  }
+})
+
+const MINE_THEME_KEY = 'mine_ui_theme_mode'
+
+function normalizedThemeMode(value: string): string {
+  return String(value || '').trim() == 'dark' ? 'dark' : 'light'
+}
+
+function themeClass(): string {
+  return themeMode.value == 'dark' ? 'theme-dark' : 'theme-light'
+}
+
+function applyTheme(mode: string) {
+  themeMode.value = normalizedThemeMode(mode)
+  uni.setStorageSync(MINE_THEME_KEY, themeMode.value)
+  syncChrome()
+}
+
+function loadTheme() {
+  const saved = String(uni.getStorageSync(MINE_THEME_KEY) || '')
+  themeMode.value = normalizedThemeMode(saved)
+}
+
+function syncChrome() {
+  if (themeMode.value == 'dark') {
+    uni.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: '#050505' })
+    uni.setTabBarStyle({
+      color: '#9ca3af',
+      selectedColor: '#1677ff',
+      backgroundColor: '#000000',
+      borderStyle: 'black',
+    })
+    return
+  }
+  uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#ffffff' })
+  uni.setTabBarStyle({
+    color: '#6b7280',
+    selectedColor: '#1677ff',
+    backgroundColor: '#ffffff',
+    borderStyle: 'white',
+  })
+}
+
+function toggleTheme() {
+  applyTheme(themeMode.value == 'dark' ? 'light' : 'dark')
+  uni.showToast({
+    title: themeMode.value == 'dark' ? '已切换至黑色UI' : '已切换至白色UI',
+    icon: 'none',
+  })
+}
+
+onShow(() => {
+  if (hasUserSession()) {
+    const stored = getStoredUser()
+    if (stored) { applyUser(stored) }
+    loadUserCenter()
+  } else {
+    resetUser()
+  }
+})
+
+onPullDownRefresh(() => {
+  if (hasUserSession()) {
+    loadUserCenter()
+  } else {
+    uni.stopPullDownRefresh()
+  }
+})
+</script>
+
+<style>
+.mine-shell {
+  background: linear-gradient(180deg, #f3f5f9 0%, #eef1f6 100%);
+  min-height: 100vh;
+}
+
+.mine-topbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  padding: calc(env(safe-area-inset-top) + 8px) 24rpx 8px;
+}
+
+.mine-topbar-icon {
+  font-size: 30rpx;
+}
+
+.theme-dark .mine-topbar-icon {
+  opacity: 0.9;
+}
+
+.mine-page {
+  padding: 24rpx 24rpx 150rpx;
+}
+
+.tech-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 30rpx;
+  box-shadow: 0 18rpx 46rpx rgba(28, 45, 84, 0.08);
+  border: 2rpx solid rgba(241, 244, 248, 0.9);
+  overflow: hidden;
+}
+
+.user-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24rpx;
+  padding: 30rpx 28rpx;
+  margin-bottom: 24rpx;
+  background: linear-gradient(135deg, #ffffff 0%, #f7fbff 58%, #fff4e8 100%);
+}
+
+.user-header::after {
+  content: '';
+  position: absolute;
+  right: -34rpx;
+  top: -42rpx;
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
+  background: rgba(255, 138, 0, 0.12);
+}
+
+.user-avatar-wrap {
+  width: 106rpx;
+  height: 106rpx;
+  border-radius: 30rpx;
+  background: linear-gradient(135deg, #ffb123 0%, #ff7a45 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12rpx 28rpx rgba(255, 138, 0, 0.25);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.user-avatar-image {
+  width: 106rpx;
+  height: 106rpx;
+  border-radius: 30rpx;
+}
+
+.user-avatar-text {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.user-info-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  min-width: 0;
+  z-index: 1;
+}
+
+.user-name {
+  font-size: 38rpx;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.user-account {
+  font-size: 24rpx;
+  color: #64748b;
+}
+
+.user-edit-tip {
+  font-size: 23rpx;
+  font-weight: 600;
+  color: #ff8a00;
+}
+
+.grid-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.grid-row {
+  display: flex;
+  flex-direction: row;
+  gap: 20rpx;
+}
+
+.mixed-row {
+  align-items: stretch;
+}
+
+.grid-card {
+  flex: 1;
+  min-height: 132rpx;
+  padding: 24rpx 22rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.full-card {
+  width: 100%;
+}
+
+.card-icon-wrap {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 22rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.blue-icon {
+  background: #eef5ff;
+  box-shadow: 0 10rpx 24rpx rgba(22, 119, 255, 0.12);
+}
+
+.purple-icon {
+  background: #fff4e8;
+  box-shadow: 0 10rpx 24rpx rgba(255, 138, 0, 0.12);
+}
+
+.card-icon {
+  font-size: 34rpx;
+}
+
+.card-title {
+  flex: 1;
+  font-size: 29rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.energy-big-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rpx;
+  padding: 30rpx 20rpx 28rpx;
+  background: linear-gradient(145deg, #ffffff 0%, #f6f8fd 56%, #eef4ff 100%);
+}
+
+.energy-gauge {
+  position: relative;
+  width: 212rpx;
+  height: 126rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4rpx;
+}
+
+.gauge-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 212rpx;
+  height: 212rpx;
+  border-radius: 50%;
+  border: 12rpx solid #edf2f7;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  transform: rotate(-135deg);
+  box-sizing: border-box;
+}
+
+.gauge-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 212rpx;
+  height: 212rpx;
+  border-radius: 50%;
+  border: 12rpx solid transparent;
+  border-top-color: #ffb123;
+  border-right-color: #1677ff;
+  transform: rotate(-135deg);
+  box-sizing: border-box;
+  box-shadow: 0 10rpx 28rpx rgba(22, 119, 255, 0.12);
+}
+
+.gauge-ticks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 212rpx;
+  height: 212rpx;
+}
+
+.tick {
+  position: absolute;
+  width: 4rpx;
+  height: 10rpx;
+  background: rgba(148, 163, 184, 0.55);
+  top: 10rpx;
+  left: 104rpx;
+  transform-origin: 2rpx 96rpx;
+}
+
+.tick-1 { transform: rotate(-90deg); }
+.tick-2 { transform: rotate(-72deg); }
+.tick-3 { transform: rotate(-54deg); }
+.tick-4 { transform: rotate(-36deg); }
+.tick-5 { transform: rotate(-18deg); }
+.tick-6 { transform: rotate(0deg); }
+.tick-7 { transform: rotate(18deg); }
+.tick-8 { transform: rotate(36deg); }
+.tick-9 { transform: rotate(54deg); }
+.tick-10 { transform: rotate(72deg); }
+.tick-11 { transform: rotate(90deg); }
+
+.energy-value {
+  position: relative;
+  font-size: 54rpx;
+  font-weight: 900;
+  color: #1677ff;
+  line-height: 1;
+  z-index: 2;
+  margin-top: 30rpx;
+}
+
+.energy-label {
+  font-size: 24rpx;
+  color: #64748b;
+  margin-top: 4rpx;
+}
+
+.recharge-btn {
+  margin-top: 14rpx;
+  padding: 15rpx 48rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #ffb123 0%, #ff8a00 100%);
+  box-shadow: 0 12rpx 26rpx rgba(255, 138, 0, 0.24);
+}
+
+.recharge-btn-text {
+  font-size: 25rpx;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.grid-card-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.sm-card {
+  flex: 1;
+  min-height: 146rpx;
+}
+
+.profile-modal-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 999;
+  background: rgba(15, 23, 42, 0.48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.profile-modal {
+  width: 100%;
+  border-radius: 32rpx;
+  padding: 34rpx 30rpx 30rpx;
+  background: #ffffff;
+  box-shadow: 0 24rpx 80rpx rgba(15, 23, 42, 0.22);
+}
+
+.profile-modal-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28rpx;
+}
+
+.profile-modal-title {
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.profile-modal-close {
+  width: 54rpx;
+  height: 54rpx;
+  line-height: 50rpx;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 44rpx;
+  color: #64748b;
+  background: #f1f5f9;
+}
+
+.profile-field {
+  margin-bottom: 20rpx;
+}
+
+.profile-label {
+  display: block;
+  margin-bottom: 10rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #334155;
+}
+
+.profile-input {
+  height: 82rpx;
+  padding: 0 22rpx;
+  border-radius: 18rpx;
+  font-size: 28rpx;
+  color: #1f2937;
+  background: #f5f7fb;
+  border: 2rpx solid #edf2f7;
+}
+
+.profile-avatar-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18rpx;
+  margin-bottom: 16rpx;
+}
+
+.profile-avatar-preview,
+.profile-avatar-empty {
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 28rpx;
+  flex-shrink: 0;
+}
+
+.profile-avatar-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f7fb;
+  border: 2rpx solid #edf2f7;
+}
+
+.profile-avatar-empty-text {
+  font-size: 24rpx;
+  color: #94a3b8;
+}
+
+.profile-avatar-actions {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 14rpx;
+}
+
+.profile-avatar-btn {
+  flex: 1;
+  height: 64rpx;
+  line-height: 64rpx;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  color: #1677ff;
+  background: #eef5ff;
+}
+
+.profile-avatar-btn::after {
+  border: none;
+}
+
+.profile-placeholder {
+  color: #94a3b8;
+}
+
+.profile-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 18rpx;
+  margin-top: 30rpx;
+}
+
+.profile-btn {
+  flex: 1;
+  height: 84rpx;
+  line-height: 84rpx;
+  border-radius: 999rpx;
+  font-size: 28rpx;
+}
+
+.profile-btn::after {
+  border: none;
+}
+
+.profile-cancel {
+  color: #475569;
+  background: #f1f5f9;
+}
+
+.profile-save {
+  color: #ffffff;
+  background: linear-gradient(135deg, #1677ff 0%, #46a0ff 100%);
+}
+
+/* ============ 许愿 / 联系客服弹窗 ============ */
+.wish-modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.wish-modal {
+  width: 640rpx;
+  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 28rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.wish-modal-head {
+  padding: 28rpx 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2rpx solid #f0f3f8;
+}
+
+.wish-modal-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.wish-modal-close {
+  font-size: 36rpx;
+  color: #94a3b8;
+  padding: 0 8rpx;
+}
+
+.wish-modal-body {
+  padding: 24rpx 32rpx;
+  flex: 1;
+}
+
+.wish-modal-tip {
+  display: block;
+  font-size: 24rpx;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 24rpx;
+}
+
+.wish-form-group {
+  margin-bottom: 22rpx;
+}
+
+.wish-form-label {
+  display: block;
+  margin-bottom: 12rpx;
+  font-size: 26rpx;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.wish-required {
+  color: #d14343;
+  margin-left: 4rpx;
+}
+
+.wish-form-optional {
+  color: #94a3b8;
+  font-weight: 400;
+  font-size: 22rpx;
+}
+
+.wish-form-input {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 22rpx;
+  border-radius: 16rpx;
+  background: #f3f6fb;
+  font-size: 26rpx;
+  color: #1d2b47;
+}
+
+.wish-form-textarea {
+  width: 100%;
+  height: 140rpx;
+  padding: 18rpx 22rpx;
+  border-radius: 16rpx;
+  background: #f3f6fb;
+  font-size: 26rpx;
+  color: #1d2b47;
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+  margin-top: 6rpx;
+}
+
+.contact-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14rpx;
+  padding: 22rpx 24rpx;
+  border-radius: 18rpx;
+  background: #f8fafc;
+  border: 2rpx solid #eef2f7;
+}
+
+.contact-row-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-icon {
+  font-size: 40rpx;
+}
+
+.contact-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-label {
+  display: block;
+  font-size: 22rpx;
+  color: #94a3b8;
+}
+
+.contact-value {
+  display: block;
+  margin-top: 4rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f2937;
+  word-break: break-all;
+}
+
+.contact-copy-btn {
+  flex-shrink: 0;
+  padding: 12rpx 26rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #1f6bff 0%, #5a99ff 100%);
+  box-shadow: 0 4rpx 12rpx rgba(31, 107, 255, 0.3);
+}
+
+.contact-copy-text {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.contact-empty {
+  padding: 40rpx 0;
+  text-align: center;
+}
+
+.contact-empty-text {
+  font-size: 24rpx;
+  color: #94a3b8;
+}
+
+.contact-work-time {
+  display: block;
+  margin-top: 18rpx;
+  padding: 14rpx 22rpx;
+  border-radius: 16rpx;
+  background: #fff8eb;
+  font-size: 24rpx;
+  color: #b85a26;
+  text-align: center;
+}
+
+.wish-modal-foot {
+  display: flex;
+  border-top: 2rpx solid #f0f3f8;
+}
+
+.wish-modal-btn {
+  flex: 1;
+  height: 96rpx;
+  line-height: 96rpx;
+  border: none;
+  background: #ffffff;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 0;
+  margin: 0;
+}
+
+.wish-modal-btn::after {
+  border: none;
+}
+
+.wish-modal-btn.cancel {
+  color: #64748b;
+  border-right: 2rpx solid #f0f3f8;
+}
+
+.wish-modal-btn.confirm {
+  color: #ffffff;
+  background: linear-gradient(135deg, #ff8a3d 0%, #ff5778 100%);
+}
+
+/* H5 端响应式 */
+@media screen and (min-width: 768px) {
+  .user-header {
+    padding: 20rpx 22rpx;
+    gap: 16rpx;
+  }
+
+  .user-avatar-wrap,
+  .user-avatar-image {
+    width: 72rpx;
+    height: 72rpx;
+    border-radius: 20rpx;
+  }
+
+  .user-avatar-text {
+    font-size: 30rpx;
+  }
+
+  .user-name {
+    font-size: 28rpx;
+  }
+
+  .user-account,
+  .user-edit-tip {
+    font-size: 20rpx;
+  }
+
+  .grid-wrap {
+    gap: 14rpx;
+  }
+
+  .grid-row {
+    gap: 14rpx;
+  }
+
+  .grid-card {
+    min-height: 96rpx;
+    padding: 16rpx 14rpx;
+    gap: 12rpx;
+  }
+
+  .card-icon-wrap {
+    width: 52rpx;
+    height: 52rpx;
+    border-radius: 16rpx;
+  }
+
+  .card-icon {
+    font-size: 24rpx;
+  }
+
+  .card-title {
+    font-size: 24rpx;
+  }
+
+  .energy-big-card {
+    padding: 20rpx 14rpx 18rpx;
+  }
+
+  .energy-gauge {
+    width: 160rpx;
+    height: 96rpx;
+  }
+
+  .gauge-bg,
+  .gauge-fill {
+    width: 160rpx;
+    height: 160rpx;
+    border-width: 9rpx;
+  }
+
+  .gauge-ticks {
+    width: 160rpx;
+    height: 160rpx;
+  }
+
+  .tick {
+    left: 78rpx;
+    transform-origin: 2rpx 70rpx;
+  }
+
+  .energy-value {
+    font-size: 40rpx;
+    margin-top: 22rpx;
+  }
+
+  .energy-label {
+    font-size: 20rpx;
+  }
+
+  .recharge-btn {
+    padding: 12rpx 32rpx;
+    margin-top: 10rpx;
+  }
+
+  .recharge-btn-text {
+    font-size: 22rpx;
+  }
+
+  .sm-card {
+    min-height: 96rpx;
+  }
+
+  .grid-card-col {
+    gap: 14rpx;
+  }
+
+  .tech-card {
+    border-radius: 22rpx;
+    box-shadow: 0 10rpx 28rpx rgba(28, 45, 84, 0.06);
+    border-width: 1rpx;
+  }
+}
+
+/* ========== 自定义导航栏（首页同款） ========== */
+.page-wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fb 100%);
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.navbar-status-bar {
+  width: 100%;
+}
+
+.navbar-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx 24rpx;
+  height: 88rpx;
+}
+
+.navbar-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.navbar-brand-logo {
+  width: 72rpx;
+  height: 72rpx;
+  flex-shrink: 0;
+}
+
+.navbar-logo-image {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 18rpx;
+  background: #f0f4ff;
+  box-shadow: 0 6rpx 16rpx rgba(22, 119, 255, 0.16);
+}
+
+.navbar-logo-fallback {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 18rpx;
+  background: linear-gradient(135deg, #1677ff 0%, #69b1ff 100%);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6rpx 16rpx rgba(22, 119, 255, 0.28);
+}
+
+.navbar-logo-leaf {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 28rpx;
+  height: 28rpx;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+.navbar-logo-bite {
+  position: absolute;
+  right: 10rpx;
+  bottom: 10rpx;
+  width: 16rpx;
+  height: 16rpx;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fb 100%);
+  border-radius: 50%;
+}
+
+.navbar-brand-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
+  min-width: 0;
+}
+
+.navbar-site-name {
+  font-size: 30rpx;
+  font-weight: 800;
+  color: #16213a;
+  letter-spacing: 1rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navbar-site-tagline {
+  font-size: 20rpx;
+  color: #7d869b;
+  letter-spacing: 0.5rpx;
+  white-space: nowrap;
+}
+
+.navbar-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+  flex-shrink: 0;
+}
+
+.theme-float-button {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 18rpx;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(22, 119, 255, 0.14), 0 0 0 3rpx rgba(22, 119, 255, 0.1);
+}
+
+.theme-float-icon {
+  font-size: 30rpx;
+}
+
+/* ========== 深色主题 ========== */
+.theme-dark .custom-navbar {
+  background: #050505;
+  box-shadow: 0 4rpx 22rpx rgba(255, 255, 255, 0.06);
+}
+
+.theme-dark .navbar-logo-image {
+  background: #111111;
+  box-shadow: 0 6rpx 16rpx rgba(255, 255, 255, 0.08);
+}
+
+.theme-dark .navbar-logo-bite {
+  background: #050505;
+}
+
+.theme-dark .navbar-site-name {
+  color: #f8fafc;
+}
+
+.theme-dark .navbar-site-tagline {
+  color: #a1a1aa;
+}
+
+.theme-dark .theme-float-button {
+  background: linear-gradient(135deg, #2a2a2a 0%, #4a4a4a 100%);
+  box-shadow: 0 12rpx 28rpx rgba(0, 0, 0, 0.6), 0 0 0 4rpx rgba(255, 255, 255, 0.15);
+}
+
+.theme-dark .mine-page {
+  background: #050505;
+}
+
+.theme-dark .mine-shell {
+  background: #050505;
+}
+
+.theme-dark .tech-card {
+  background: #111111;
+  border-color: rgba(55, 65, 81, 0.8);
+  box-shadow: 0 12rpx 30rpx rgba(0, 0, 0, 0.3);
+}
+
+.theme-dark .user-header {
+  background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%);
+}
+
+.theme-dark .user-header::after {
+  background: rgba(255, 138, 0, 0.08);
+}
+
+.theme-dark .card-icon-wrap.blue-icon {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.theme-dark .card-icon-wrap.purple-icon {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.theme-dark .card-title {
+  color: #f8fafc;
+}
+
+.theme-dark .energy-value,
+.theme-dark .energy-label {
+  color: #f8fafc;
+}
+
+.theme-dark .gauge-bg {
+  background: #1f2937;
+}
+
+.theme-dark .gauge-fill {
+  background: linear-gradient(90deg, #3b82f6 0%, #a855f7 100%);
+}
+
+.theme-dark .energy-label {
+  color: #a1a1aa;
+}
+
+.theme-dark .recharge-btn {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.theme-dark .recharge-btn-text {
+  color: #3b82f6;
+}
+
+.theme-dark .grid-card-col .tech-card {
+  background: #1a1a1a;
+  border-color: rgba(55, 65, 81, 0.8);
+}
+
+.theme-dark .wish-modal,
+.theme-dark .profile-modal {
+  background: #111111;
+  border-color: rgba(55, 65, 81, 0.8);
+}
+
+.theme-dark .wish-modal-title,
+.theme-dark .profile-modal-title {
+  color: #f8fafc;
+}
+
+.theme-dark .wish-modal-close,
+.theme-dark .profile-modal-close {
+  color: #6b7280;
+}
+
+.theme-dark .wish-form-label,
+.theme-dark .profile-label {
+  color: #d1d5db;
+}
+
+.theme-dark .wish-form-input,
+.theme-dark .wish-form-textarea,
+.theme-dark .profile-input {
+  background: #1a1a1a;
+  border-color: rgba(55, 65, 81, 0.8);
+  color: #f8fafc;
+}
+
+.theme-dark .wish-form-input .placeholder,
+.theme-dark .profile-placeholder {
+  color: #6b7280;
+}
+
+.theme-dark .contact-row {
+  background: #1a1a1a;
+  border-color: rgba(55, 65, 81, 0.8);
+}
+
+.theme-dark .contact-label {
+  color: #a1a1aa;
+}
+
+.theme-dark .contact-value {
+  color: #f8fafc;
+}
+
+.theme-dark .contact-copy-btn {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.theme-dark .contact-copy-text {
+  color: #3b82f6;
+}
+
+.theme-dark .wish-modal-tip {
+  color: #a1a1aa;
+}
+
+.theme-dark .wish-form-optional {
+  color: #6b7280;
+}
+
+.theme-dark .wish-required {
+  color: #f87171;
+}
+
+.theme-dark .wish-modal-btn {
+  background: #1a1a1a;
+  border-color: rgba(55, 65, 81, 0.8);
+  color: #a1a1aa;
+}
+
+.theme-dark .wish-modal-btn.confirm {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.theme-dark .profile-avatar-empty {
+  background: #1a1a1a;
+  border-color: rgba(55, 65, 81, 0.8);
+}
+
+.theme-dark .profile-avatar-empty-text {
+  color: #6b7280;
+}
+
+.theme-dark .profile-avatar-btn {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #3b82f6;
+}
+
+.theme-dark .profile-modal-foot .confirm-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: #ffffff;
+}
+
+.theme-dark .wish-modal-mask,
+.theme-dark .profile-modal-mask {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.theme-dark .wish-modal-foot,
+.theme-dark .profile-modal-foot {
+  border-color: rgba(55, 65, 81, 0.8);
+}
+
+.theme-dark .wish-modal-foot .cancel,
+.theme-dark .profile-modal-foot .cancel {
+  color: #6b7280;
+}
+</style>
