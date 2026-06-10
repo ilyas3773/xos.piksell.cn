@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS `product_search_logs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `keyword` varchar(100) NOT NULL DEFAULT '',
+  `user_id` bigint unsigned NOT NULL DEFAULT 0,
+  `username` varchar(100) NOT NULL DEFAULT '',
+  `nickname` varchar(100) NOT NULL DEFAULT '',
+  `visitor_id` varchar(64) NOT NULL DEFAULT '',
+  `result_count` int unsigned NOT NULL DEFAULT 0,
+  `ip` varchar(45) NOT NULL DEFAULT '',
+  `device_type` varchar(20) NOT NULL DEFAULT 'unknown',
+  `user_agent` varchar(255) NOT NULL DEFAULT '',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_keyword` (`keyword`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_visitor_id` (`visitor_id`),
+  KEY `idx_device_type` (`device_type`),
+  KEY `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

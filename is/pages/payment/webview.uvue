@@ -1,0 +1,30 @@
+<template>
+  <view class="payment-page">
+    <web-view v-if="payUrl != ''" :src="payUrl"></web-view>
+    <view v-else class="empty-box">支付链接无效</view>
+  </view>
+</template>
+
+<script setup lang="uts">
+const payUrl = ref('')
+
+onLoad((options) => {
+  const url = options && options['url'] ? String(options['url']) : ''
+  payUrl.value = decodeURIComponent(url)
+})
+</script>
+
+<style>
+.payment-page {
+  width: 100vw;
+  height: 100vh;
+  background: #ffffff;
+}
+
+.empty-box {
+  padding: 80rpx 32rpx;
+  color: #8a94a6;
+  font-size: 28rpx;
+  text-align: center;
+}
+</style>

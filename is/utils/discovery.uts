@@ -1,0 +1,147 @@
+import {
+  fetchCategories,
+  fetchHome,
+  fetchProducts,
+} from './shop.uts'
+
+export function textValue(value: any): string {
+  return String(value || '').trim()
+}
+
+function normalizeKey(value: string): string {
+  return textValue(value)
+    .toLowerCase()
+    .replace(/\s+/g, '')
+    .replace(/\//g, '')
+}
+
+function uniquePush(rows: string[], nextValue: string) {
+  const value = textValue(nextValue)
+  if (value == '') {
+    return
+  }
+
+  if (rows.indexOf(value) >= 0) {
+    return
+  }
+
+  rows.push(value)
+}
+
+function findTreeNodeByAliases(nodes: any[], aliases: string[]): any {
+  if (!nodes || !aliases || aliases.length == 0) {
+    return null
+  }
+
+  for (let i = 0; i < nodes.length; i = i + 1) {
+    const item = nodes[i]
+    const nodeName = normalizeKey(item && item.name ? String(item.name) : '')
+
+    for (let j = 0; j < aliases.length; j = j + 1) {
+      const alias = normalizeKey(aliases[j])
+      if (alias != '' && nodeName == alias) {
+        return item
+      }
+    }
+
+    if (item && item.children && item.children.length > 0) {
+      const found = findTreeNodeByAliases(item.children, aliases)
+      if (found) {
+        return found
+      }
+    }
+  }
+
+  return null
+}
+
+export function productSubtitle(item: any): string {
+  const nameEn = textValue(item && item.name_en ? item.name_en : '')
+  if (nameEn != '') {
+    return nameEn
+  }
+
+  const compatibility = textValue(item && item.compatibility ? item.compatibility : '')
+  if (compatibility != '') {
+    return compatibility
+  }
+
+  const languages = textValue(item && item.supported_languages ? item.supported_languages : '')
+  if (languages != '') {
+    return languages
+  }
+
+  return 'Digital Product'
+}
+
+export function loadTabShowcase(typeAliases: string[], fallbackKeyword: string, limit: number = 6): Promise<any> {
+  return fetchCategories().catch(() => {
+    return {
+      type_tree: [],
+      kind_tree: [],
+    }
+  }).then((categoryData) => {
+    const typeTree = categoryData && categoryData.type_tree ? categoryData.type_tree : []
+    const matchedType = findTreeNodeByAliases(typeTree, typeAliases)
+    const query: any = {
+      page: 1,
+      limit: limit,
+    }
+
+    if (matchedType && matchedType.id) {
+      query.category_id = Number(matchedType.id)
+    } else if (textValue(fallbackKeyword) != '') {
+      query.keyword = textValue(fallbackKeyword)
+    }
+
+    return fetchProducts(query).then((productData) => {
+      return {
+        matchedType: matchedType,
+        products: productData && productData.list ? productData.list : [],
+        query: query,
+      }
+    }).catch(() => {
+      return {
+        matchedType: matchedType,
+        products: [],
+        query: query,
+      }
+    })
+  })
+}
+
+export function loadSearchLanding(limit: number = 8): Promise<any> {
+  return fetchHome().then((data) => {
+    const keywords: string[] = []
+    const featuredProducts = data && data.featured_products ? data.featured_products : []
+    const typeCategories = data && data.type_categories ? data.type_categories : []
+    const kindCategories = data && data.kind_categories ? data.kind_categories : []
+
+    uniquePush(keywords, '游戏')
+    uniquePush(keywords, 'App')
+    uniquePush(keywords, 'Arcade')
+    uniquePush(keywords, 'iPad')
+
+    for (let i = 0; i < typeCategories.length; i = i + 1) {
+      uniquePush(keywords, typeCategories[i] && typeCategories[i].name ? String(typeCategories[i].name) : '')
+    }
+
+    for (let i = 0; i < kindCategories.length; i = i + 1) {
+      uniquePush(keywords, kindCategories[i] && kindCategories[i].name ? String(kindCategories[i].name) : '')
+    }
+
+    for (let i = 0; i < featuredProducts.length; i = i + 1) {
+      uniquePush(keywords, featuredProducts[i] && featuredProducts[i].name ? String(featuredProducts[i].name) : '')
+    }
+
+    return {
+      keywords: keywords.slice(0, 12),
+      featured_products: featuredProducts.slice(0, limit),
+    }
+  }).catch(() => {
+    return {
+      keywords: ['游戏', 'App', 'Arcade', 'iPad'],
+      featured_products: [],
+    }
+  })
+}

@@ -1,0 +1,53 @@
+export function switchToHomeTab() {
+  uni.switchTab({
+    url: '/pages/home/index',
+  })
+}
+
+export function switchToGamesTab() {
+  uni.switchTab({
+    url: '/pages/games/index',
+  })
+}
+
+export function switchToAppsTab() {
+  uni.switchTab({
+    url: '/pages/apps/index',
+  })
+}
+
+export function switchToArcadeTab() {
+  uni.switchTab({
+    url: '/pages/arcade/index',
+  })
+}
+
+export function switchToSearchTab() {
+  uni.switchTab({
+    url: '/pages/search/index',
+  })
+}
+
+export function openCategoryPage() {
+  uni.navigateTo({
+    url: '/pages/category/index',
+  })
+}
+
+export function openMinePage() {
+  uni.navigateTo({
+    url: '/pages/mine/index',
+  })
+}
+
+export function openOrderListPage() {
+  uni.navigateTo({
+    url: '/pages/order/list',
+  })
+}
+
+export function openEnergyPage() {
+  uni.navigateTo({
+    url: '/pages/energy/index',
+  })
+}

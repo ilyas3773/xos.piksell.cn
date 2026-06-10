@@ -1,0 +1,252 @@
+import {
+  buildApiUrl,
+} from './api.uts'
+
+const USER_TOKEN_KEY = 'user_token'
+const USER_PROFILE_KEY = 'user_profile'
+
+function buildQuery(params: any): string {
+  if (!params) {
+    return ''
+  }
+
+  const parts: string[] = []
+  for (const key in params) {
+    const value = params[key]
+    if (value === '' || value === null || value === undefined) {
+      continue
+    }
+    parts.push(encodeURIComponent(String(key)) + '=' + encodeURIComponent(String(value)))
+  }
+
+  return parts.join('&')
+}
+
+function handleResponse(resolve: Function, reject: Function, res: any) {
+  const body = res && res.data ? res.data : res
+  const statusCode = res && res.statusCode ? Number(res.statusCode) : 200
+
+  if (statusCode === 401 || (body && Number(body.code) === 401)) {
+    clearAuth()
+  }
+
+  if (body && Number(body.code) === 0) {
+    resolve(body.data || {})
+    return
+  }
+
+  reject(body && body.msg ? String(body.msg) : '接口请求失败，状态码：' + String(statusCode))
+}
+
+function request(path: string, method: string = 'GET', data: any = null, needAuth: boolean = false): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const token = getUserToken()
+    if (needAuth && token == '') {
+      reject('Please sign in')
+      return
+    }
+
+    let url = buildApiUrl('/api/user' + path)
+    const upperMethod = String(method || 'GET').toUpperCase()
+    if (upperMethod == 'GET') {
+      const query = buildQuery(data)
+      if (query != '') {
+        url += '?' + query
+      }
+    }
+
+    const headers: any = {
+      'content-type': upperMethod == 'GET' ? 'application/json' : 'application/x-www-form-urlencoded',
+    }
+    if (token != '') {
+      headers.Authorization = 'Bearer ' + token
+    }
+
+    uni.request({
+      url: url,
+      method: upperMethod,
+      timeout: 15000,
+      data: upperMethod == 'GET' ? {} : data,
+      header: headers,
+      success: (res) => {
+        handleResponse(resolve, reject, res)
+      },
+      fail: (error) => {
+        const message = error && error.errMsg ? String(error.errMsg) : '网络请求失败'
+        reject(message + '，请检查微信开发者工具是否允许 HTTP 请求，当前接口：' + url)
+      },
+    })
+  })
+}
+
+export function getUserToken(): string {
+  const value = uni.getStorageSync(USER_TOKEN_KEY)
+  return value ? String(value) : ''
+}
+
+export function hasUserSession(): boolean {
+  return getUserToken() != ''
+}
+
+export function getStoredUser(): any {
+  const value = uni.getStorageSync(USER_PROFILE_KEY)
+  return value ? value : null
+}
+
+export function saveUserProfile(user: any): void {
+  if (!user) {
+    return
+  }
+  uni.setStorageSync(USER_PROFILE_KEY, user)
+}
+
+export function saveAuth(auth: any): void {
+  if (auth && auth.token) {
+    uni.setStorageSync(USER_TOKEN_KEY, String(auth.token))
+  }
+  if (auth && auth.user) {
+    saveUserProfile(auth.user)
+  }
+}
+
+export function clearAuth(): void {
+  uni.removeStorageSync(USER_TOKEN_KEY)
+  uni.removeStorageSync(USER_PROFILE_KEY)
+}
+
+export function loginUser(data: any): Promise<any> {
+  return request('/login', 'POST', data).then((result: any) => {
+    saveAuth(result)
+    return result
+  })
+}
+
+export function registerUser(data: any): Promise<any> {
+  return request('/register', 'POST', data).then((result: any) => {
+    saveAuth(result)
+    return result
+  })
+}
+
+export function fetchProfile(): Promise<any> {
+  return request('/profile', 'GET', null, true).then((result: any) => {
+    saveUserProfile(result)
+    return result
+  })
+}
+
+export function updateUserProfile(data: any): Promise<any> {
+  return request('/profile', 'POST', data, true).then((result: any) => {
+    saveUserProfile(result)
+    return result
+  })
+}
+
+export function uploadUserAvatar(filePath: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const token = getUserToken()
+    if (token == '') {
+      reject('Please sign in')
+      return
+    }
+
+    const url = buildApiUrl('/api/user/avatar')
+    uni.uploadFile({
+      url: url,
+      filePath: filePath,
+      name: 'file',
+      header: {
+        Authorization: 'Bearer ' + token,
+      },
+      success: (res: any) => {
+        const raw = res && res.data ? String(res.data) : ''
+        let body: any = null
+        try {
+          body = raw != '' ? JSON.parse(raw) : null
+        } catch (error) {
+          reject('头像上传响应解析失败')
+          return
+        }
+
+        if (body && Number(body.code) === 0) {
+          const data = body.data || {}
+          if (data && data.profile) {
+            saveUserProfile(data.profile)
+          }
+          resolve(data)
+          return
+        }
+
+        reject(body && body.msg ? String(body.msg) : '头像上传失败，状态码：' + String(res && res.statusCode ? res.statusCode : ''))
+      },
+      fail: (error) => {
+        const message = error && error.errMsg ? String(error.errMsg) : '头像上传失败'
+        reject(message + '，当前接口：' + url)
+      },
+    })
+  })
+}
+
+export function signInUser(): Promise<any> {
+  return request('/signin', 'POST', {}, true).then((result: any) => {
+    saveUserProfile(result)
+    return result
+  })
+}
+
+export function fetchUserOrders(page: number = 1, limit: number = 10, status: string = ''): Promise<any> {
+  return request('/orders', 'GET', {
+    page: page,
+    limit: limit,
+    status: status,
+  }, true)
+}
+
+export function fetchEnergyLogs(page: number = 1, limit: number = 20): Promise<any> {
+  return request('/energy-logs', 'GET', {
+    page: page,
+    limit: limit,
+  }, true)
+}
+
+export function fetchEnergySources(): Promise<any> {
+  return request('/energy-sources', 'GET', null, true).then((result: any) => {
+    if (result && result.user) {
+      saveUserProfile(result.user)
+    }
+    return result
+  })
+}
+
+export function fetchRechargePackages(): Promise<any> {
+  return request('/recharge-packages', 'GET', null, true)
+}
+
+export function createRechargeOrder(packageId: number, payChannel: string, returnUrl: string = ''): Promise<any> {
+  return request('/recharge-orders', 'POST', {
+    package_id: packageId,
+    pay_channel: payChannel,
+    return_url: returnUrl,
+  }, true)
+}
+
+export function fetchRechargeOrderStatus(orderNo: string): Promise<any> {
+  return request('/recharge-orders/status', 'GET', {
+    order_no: orderNo,
+  }, true)
+}
+
+export function openAuthPage(mode: string = 'login') {
+  uni.navigateTo({
+    url: '/pages/auth/index?mode=' + encodeURIComponent(String(mode)),
+  })
+}
+
+export function requireUserLogin(): boolean {
+  if (hasUserSession()) {
+    return true
+  }
+
+  openAuthPage('login')
+  return false
+}

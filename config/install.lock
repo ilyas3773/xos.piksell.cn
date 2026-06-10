@@ -1,0 +1,9 @@
+{
+  "installed_at": "2026-05-17 12:48:00",
+  "site_name": "Piksell ????",
+  "db_name": "xospiksell",
+  "admin_username": "admin",
+  "request_host": "http://xos.piksell.cn",
+  "restored_at": "2026-05-17 12:48:00",
+  "note": "Restored after runtime cache clear removed legacy runtime/install.lock"
+}

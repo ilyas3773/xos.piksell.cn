@@ -1,0 +1,169 @@
+<template>
+  <view class="glass-tab-bar">
+    <view class="glass-highlight"></view>
+    <view
+      class="tab-item"
+      v-for="(tab, index) in tabs"
+      :key="tab.pagePath"
+      @click="switchTab(index)"
+    >
+      <view class="tab-icon-wrap" :class="{ 'is-active': currentIndex === index }">
+        <view class="tab-indicator" v-if="currentIndex === index"></view>
+        <image
+          class="tab-icon"
+          :src="currentIndex === index ? tab.selectedIconPath : tab.iconPath"
+          mode="aspectFit"
+        ></image>
+      </view>
+      <text class="tab-label" :class="{ 'is-active': currentIndex === index }">
+        {{ tab.text }}
+      </text>
+    </view>
+  </view>
+</template>
+
+<script setup lang="uts">
+import { ref, onMounted } from 'vue'
+
+interface TabItem {
+  pagePath: string
+  text: string
+  iconPath: string
+  selectedIconPath: string
+}
+
+const tabs: TabItem[] = [
+  { pagePath: '/pages/home/index', text: '首页', iconPath: '/static/tabbar/home.png', selectedIconPath: '/static/tabbar/home-active.png' },
+  { pagePath: '/pages/games/index', text: '游戏', iconPath: '/static/tabbar/games.png', selectedIconPath: '/static/tabbar/games-active.png' },
+  { pagePath: '/pages/apps/index', text: '应用', iconPath: '/static/tabbar/apps.png', selectedIconPath: '/static/tabbar/apps-active.png' },
+  { pagePath: '/pages/rankings/index', text: '榜单', iconPath: '/static/tabbar/rank.png', selectedIconPath: '/static/tabbar/rank-active.png' },
+  { pagePath: '/pages/mine/index', text: '我的', iconPath: '/static/tabbar/mine.png', selectedIconPath: '/static/tabbar/mine-active.png' },
+]
+
+const currentIndex = ref(0)
+const safeAreaBottom = ref(0)
+
+function getCurrentTabIndex(): number {
+  const pages = getCurrentPages()
+  if (pages.length === 0) return 0
+  const current = pages[pages.length - 1]
+  const route = (current as any).route || ''
+  for (let i = 0; i < tabs.length; i++) {
+    if (('/' + route).startsWith(tabs[i].pagePath)) {
+      return i
+    }
+  }
+  return 0
+}
+
+function switchTab(index: number) {
+  if (currentIndex.value === index) return
+  currentIndex.value = index
+  uni.switchTab({ url: tabs[index].pagePath })
+}
+
+onMounted(() => {
+  const info = uni.getSystemInfoSync() as any
+  safeAreaBottom.value = Math.max(0, info.safeAreaInsets?.bottom || 0)
+  currentIndex.value = getCurrentTabIndex()
+})
+</script>
+
+<style>
+.glass-tab-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 998;
+  height: 100rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-top: 12rpx;
+
+  background: rgba(245, 247, 251, 0.72);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+
+  border-top-width: 1.5px;
+  border-top-color: rgba(255, 255, 255, 0.6);
+  border-top-style: solid;
+
+  box-shadow: 0 -4rpx 32rpx rgba(120, 140, 180, 0.08);
+}
+
+.glass-highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.8) 20%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0.8) 80%,
+    transparent 100%
+  );
+}
+
+.tab-indicator {
+  position: absolute;
+  top: -2rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48rpx;
+  height: 5rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 100%);
+  box-shadow: 0 2rpx 8rpx rgba(59, 130, 246, 0.4);
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 8rpx;
+}
+
+.tab-icon-wrap {
+  position: relative;
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18rpx;
+  transition: all 0.2s ease;
+}
+
+.tab-icon-wrap.is-active {
+  background: rgba(59, 130, 246, 0.12);
+  transform: scale(1.08);
+}
+
+.tab-icon {
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.tab-label {
+  margin-top: 2rpx;
+  font-size: 20rpx;
+  font-weight: 500;
+  color: #9aa1ae;
+  transition: all 0.2s ease;
+}
+
+.tab-label.is-active {
+  color: #3b82f6;
+  font-weight: 600;
+}
+</style>

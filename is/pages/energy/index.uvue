@@ -1,0 +1,1018 @@
+<template>
+  <view class="energy-page">
+    <view class="hero-card">
+      <view>
+        <text class="hero-title">当前剩余能量</text>
+        <text class="hero-subtitle">可用于兑换商品和服务</text>
+      </view>
+      <view class="energy-balance">
+        <text class="balance-value">{{ userEnergy }}</text>
+        <text class="balance-label">剩余能量</text>
+      </view>
+    </view>
+
+    <view class="section-card pay-card">
+      <view class="section-head">
+        <text class="section-title">能量套餐</text>
+        <text class="section-link" @click="reload">刷新</text>
+      </view>
+      <text class="pay-desc">请选择需要充值的能量套餐</text>
+      <view v-if="loading" class="empty-box compact-empty">加载中...</view>
+      <view v-else-if="errorMessage != ''" class="empty-box compact-empty">{{ errorMessage }}</view>
+      <view v-else-if="packages.length == 0" class="empty-box compact-empty">暂无充值套餐，请先在后台配置套餐</view>
+      <view v-else class="package-grid">
+        <view
+          class="package-card"
+          v-for="item in packages"
+          :key="item.id"
+          :class="selectedPackageId == Number(item.id || 0) ? 'selected' : ''"
+          @click="selectPackage(item)"
+        >
+          <text class="package-energy">{{ item.total_energy || item.energy_value }}</text>
+          <text class="package-unit">能量</text>
+          <text class="package-bonus" v-if="Number(item.bonus_energy || 0) > 0">含赠送 {{ item.bonus_energy }}</text>
+          <text class="package-price">¥{{ amountText(item.amount) }}</text>
+        </view>
+      </view>
+
+      <!-- 支付方式选择 -->
+      <view class="channel-section">
+        <text class="channel-label">支付方式</text>
+        <view class="channel-tabs">
+          <view
+            class="channel-tab"
+            :class="selectedChannel == 'wechat' ? 'active-wechat' : ''"
+            @click="selectChannel('wechat')"
+          >
+            <text class="channel-tab-icon">💧</text>
+            <text class="channel-tab-text">微信支付</text>
+            <view class="channel-tab-badge" v-if="payChannelEnabled('wechat')"></view>
+          </view>
+          <view
+            class="channel-tab"
+            :class="selectedChannel == 'epay' ? 'active-epay' : ''"
+            @click="selectChannel('epay')"
+          >
+            <text class="channel-tab-icon">⚡</text>
+            <text class="channel-tab-text">易支付</text>
+            <view class="channel-tab-badge" v-if="payChannelEnabled('epay')"></view>
+          </view>
+        </view>
+        <text class="channel-hint" v-if="!payChannelEnabled(selectedChannel)">
+          {{ payChannelMissingText(selectedChannel) }}
+        </text>
+      </view>
+
+      <view class="pay-action-panel">
+        <view class="pay-summary">
+          <text class="pay-summary-title">{{ selectedPackageTitle() }}</text>
+          <text class="pay-summary-desc">{{ selectedPackageDesc() }}</text>
+        </view>
+        <view
+          class="pay-submit"
+          :class="paySubmitDisabled() ? 'disabled' : ''"
+          @click="submitSelectedPackage"
+        >
+          <text class="pay-submit-text">{{ paySubmitText() }}</text>
+        </view>
+      </view>
+    </view>
+
+    <view v-if="miniPayModalVisible" class="mini-pay-mask">
+      <view class="mini-pay-dialog">
+        <view class="mini-pay-close" @click="hideMiniProgramEpayModal" @tap="hideMiniProgramEpayModal">
+          <text class="mini-pay-close-text" @click="hideMiniProgramEpayModal" @tap="hideMiniProgramEpayModal">×</text>
+        </view>
+        <text class="mini-pay-title">请到浏览器支付</text>
+        <text class="mini-pay-content">
+          当前余额：{{ userEnergy }} 能量。{{ miniPayModalDesc() }}
+        </text>
+        <view class="mini-pay-actions">
+          <view class="mini-pay-button" @click="hideMiniProgramEpayModal" @tap="hideMiniProgramEpayModal">
+            <text class="mini-pay-button-text">取消</text>
+          </view>
+          <view class="mini-pay-button" @click="copyCurrentMiniPayUrl">
+            <text class="mini-pay-button-text">{{ copyMiniPayUrlLoading ? '复制中...' : '一键复制' }}</text>
+          </view>
+          <view class="mini-pay-button primary" @click="queryCurrentMiniPayOrder">
+            <text class="mini-pay-button-text primary-text">支付查询</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup lang="uts">
+import {
+  createRechargeOrder,
+  fetchEnergySources,
+  fetchRechargeOrderStatus,
+  getStoredUser,
+  hasUserSession,
+  openAuthPage,
+} from '../../utils/user.uts'
+import { getH5Host } from '../../utils/api.uts'
+
+const loading = ref(false)
+const errorMessage = ref('')
+const userEnergy = ref(0)
+const packages = ref([])
+const selectedPackageId = ref(0)
+const selectedChannel = ref('wechat')
+const checkingRechargePayment = ref(false)
+const miniPayModalVisible = ref(false)
+const currentMiniPayUrl = ref('')
+const currentMiniPayOrderNo = ref('')
+const currentMiniPayIsQrcode = ref(false)
+const copyMiniPayUrlLoading = ref(false)
+const payChannels = reactive({
+  wechat: null,
+  epay: null,
+})
+
+function toList(value: any): any[] {
+  if (!value) {
+    return []
+  }
+  if (Array.isArray(value)) {
+    return value
+  }
+  const list: any[] = []
+  for (const key in value) {
+    list.push(value[key])
+  }
+  return list
+}
+
+function applyStoredUser() {
+  const user = getStoredUser()
+  userEnergy.value = Number(user && user.energy ? user.energy : 0)
+}
+
+function applyUser(user: any) {
+  userEnergy.value = Number(user && user.energy ? user.energy : 0)
+}
+
+function reload() {
+  if (!hasUserSession()) {
+    openAuthPage('login')
+    return
+  }
+  loading.value = true
+  errorMessage.value = ''
+  fetchEnergySources().then((data) => {
+    applyUser(data && data.user ? data.user : null)
+    packages.value = toList(data && data.recharge_packages ? data.recharge_packages : [])
+    if (selectedPackageId.value <= 0 && packages.value.length > 0) {
+      const first = packages.value[0]
+      selectedPackageId.value = Number(first && first.id ? first.id : 0)
+    }
+    payChannels.wechat = data && data.pay_channels ? data.pay_channels.wechat : null
+    payChannels.epay = data && data.pay_channels ? data.pay_channels.epay : null
+  }).catch((message) => {
+    packages.value = []
+    errorMessage.value = String(message || '加载失败，请检查接口域名或重新登录')
+    uni.showToast({ title: errorMessage.value, icon: 'none' })
+  }).finally(() => {
+    loading.value = false
+  })
+}
+
+function payChannelEnabled(channel: string): boolean {
+  const item = getPayChannel(channel)
+  return !!(item && item.enabled)
+}
+
+function payChannelMissingText(channel: string): string {
+  const item = getPayChannel(channel)
+  if (item && item.message) {
+    return String(item.message)
+  }
+  const missing = item && item.missing ? toList(item.missing) : []
+  if (missing.length == 0) {
+    return '支付配置未完成，请先在后台系统配置中完善'
+  }
+  return missing.join('；')
+}
+
+function getPayChannel(channel: string): any {
+  if (channel == 'wechat') {
+    return payChannels.wechat
+  }
+  if (channel == 'epay') {
+    return payChannels.epay
+  }
+  return null
+}
+
+function amountText(value: any): string {
+  return Number(value || 0).toFixed(2)
+}
+
+function getSelectedPackage(): any {
+  for (let i = 0; i < packages.value.length; i++) {
+    const item = packages.value[i]
+    if (Number(item && item.id ? item.id : 0) == selectedPackageId.value) {
+      return item
+    }
+  }
+  return null
+}
+
+function selectedPackageEnergy(): number {
+  const item = getSelectedPackage()
+  return Number(item && (item.total_energy || item.energy_value) ? (item.total_energy || item.energy_value) : 0)
+}
+
+function selectedPackageAmount(): string {
+  const item = getSelectedPackage()
+  return amountText(item && item.amount ? item.amount : 0)
+}
+
+function selectedPackageTitle(): string {
+  const energy = selectedPackageEnergy()
+  if (energy <= 0) {
+    return '请选择一个能量套餐'
+  }
+  return '已选择 ' + String(energy) + ' 能量'
+}
+
+function selectedPackageDesc(): string {
+  const energy = selectedPackageEnergy()
+  if (energy <= 0) {
+    return '选择上方套餐后即可提交支付'
+  }
+  return '¥' + selectedPackageAmount() + ' · 支付成功后自动到账'
+}
+
+function paySubmitText(): string {
+  const energy = selectedPackageEnergy()
+  if (energy <= 0) {
+    return '请选择能量套餐'
+  }
+  return '立即获取 ' + String(energy) + ' 能量'
+}
+
+function paySubmitDisabled(): boolean {
+  return selectedPackageId.value <= 0 || !payChannelEnabled(selectedChannel.value)
+}
+
+function submitSelectedPackage() {
+  if (paySubmitDisabled()) {
+    if (selectedPackageId.value <= 0) {
+      uni.showToast({ title: '请先选择充值套餐', icon: 'none' })
+      return
+    }
+    uni.showModal({
+      title: '支付暂不可用',
+      content: payChannelMissingText(selectedChannel.value),
+      showCancel: false,
+    })
+    return
+  }
+  startPay(selectedChannel.value)
+}
+
+function selectPackage(item: any) {
+  selectedPackageId.value = Number(item && item.id ? item.id : 0)
+}
+
+function selectChannel(channel: string) {
+  selectedChannel.value = channel
+}
+
+function startPay(channel: string) {
+  if (selectedPackageId.value <= 0) {
+    uni.showToast({ title: '请先选择充值套餐', icon: 'none' })
+    return
+  }
+  if (!payChannelEnabled(channel)) {
+    uni.showModal({
+      title: '支付暂不可用',
+      content: payChannelMissingText(channel),
+      showCancel: false,
+    })
+    return
+  }
+  uni.showLoading({ title: '创建订单...' })
+  createRechargeOrder(selectedPackageId.value, channel, getH5RechargeReturnUrl()).then((data) => {
+    uni.hideLoading()
+    if (channel == 'epay' && data && data.payment) {
+      rememberPendingRechargeOrder(data && data.order ? data.order : null)
+      openEpayPayment(data.payment)
+      return
+    }
+    if (channel == 'wechat' && data && data.payment) {
+      rememberPendingRechargeOrder(data && data.order ? data.order : null)
+      openWechatPayment(data.payment)
+      return
+    }
+
+    uni.showToast({ title: '暂不支持该支付方式', icon: 'none' })
+  }).catch((message) => {
+    uni.hideLoading()
+    uni.showToast({ title: String(message || '创建充值订单失败'), icon: 'none' })
+  })
+}
+
+function rememberPendingRechargeOrder(order: any) {
+  const orderNo = order && order.order_no ? String(order.order_no) : ''
+  if (orderNo == '') {
+    return
+  }
+  uni.setStorageSync('pending_recharge_order_no', orderNo)
+}
+
+function clearPendingRechargeOrder() {
+  uni.removeStorageSync('pending_recharge_order_no')
+  uni.removeStorageSync('pending_recharge_pay_url')
+}
+
+function getPendingRechargeOrderNo(): string {
+  const value = uni.getStorageSync('pending_recharge_order_no')
+  return value ? String(value) : ''
+}
+
+function checkPendingRechargePayment(retry: number = 0) {
+  const orderNo = getPendingRechargeOrderNo()
+  if (orderNo == '' || checkingRechargePayment.value) {
+    return
+  }
+
+  checkingRechargePayment.value = true
+  fetchRechargeOrderStatus(orderNo).then((data) => {
+    const paid = !!(data && data.paid)
+    if (paid) {
+      clearPendingRechargeOrder()
+      uni.showModal({
+        title: '支付成功',
+        content: buildPaidMessage(data),
+        showCancel: false,
+      })
+      reload()
+      return
+    }
+
+    if (retry < 6) {
+      setTimeout(() => {
+        checkPendingRechargePayment(retry + 1)
+      }, 2000)
+      return
+    }
+
+    uni.showModal({
+      title: '未检测到支付成功',
+      content: '当前订单还未收到支付成功通知。如果页面提示下单失败或权限未开通，请更换支付方式或联系管理员检查易支付通道配置。',
+      showCancel: false,
+    })
+  }).catch(() => {
+    if (retry < 2) {
+      setTimeout(() => {
+        checkPendingRechargePayment(retry + 1)
+      }, 2000)
+    }
+  }).finally(() => {
+    checkingRechargePayment.value = false
+  })
+}
+
+function openEpayPayment(payment: any) {
+  const payUrl = payment && payment.pay_url ? String(payment.pay_url) : ''
+  const isQrcodeUrl = !!(payment && payment.is_qrcode_url)
+  if (payUrl == '') {
+    uni.showModal({
+      title: '易支付参数异常',
+      content: '后端未返回支付链接，请检查易支付配置。',
+      showCancel: false,
+    })
+    return
+  }
+
+  const orderNo = getPendingRechargeOrderNo()
+  if (openEpayUrlOnH5(payUrl)) {
+    return
+  }
+  showMiniProgramEpayModal(payUrl, orderNo, isQrcodeUrl)
+}
+
+function openWechatPayment(payment: any) {
+  if (payment == null) {
+    uni.showModal({
+      title: '微信支付参数异常',
+      content: '后端未返回支付参数，请检查微信支付配置。',
+      showCancel: false,
+    })
+    return
+  }
+
+  // #ifdef MP-WEIXIN
+  uni.requestPayment({
+    provider: 'wxpay',
+    timeStamp: String(payment.timeStamp || ''),
+    nonceStr: String(payment.nonceStr || ''),
+    package: String(payment.package || ''),
+    signType: String(payment.signType || 'RSA'),
+    paySign: String(payment.paySign || ''),
+    success: (res: any) => {
+      uni.showLoading({ title: '检测支付结果...' })
+      setTimeout(() => {
+        checkPendingRechargePayment(0)
+      }, 1500)
+    },
+    fail: (err: any) => {
+      const errMsg = String(err && err.errMsg ? err.errMsg : '')
+      if (errMsg.indexOf('cancel') >= 0) {
+        uni.showToast({ title: '支付已取消', icon: 'none' })
+      } else {
+        uni.showToast({ title: '支付失败：' + errMsg, icon: 'none' })
+      }
+    },
+  })
+  // #endif
+
+  // #ifndef MP-WEIXIN
+  uni.showToast({ title: '当前环境不支持微信支付，请在微信小程序中使用', icon: 'none' })
+  // #endif
+}
+
+function buildPaidMessage(data: any): string {
+  const order = data && data.order ? data.order : null
+  const energy = Number(order && order.total_energy ? order.total_energy : 0)
+  if (energy > 0) {
+    return '已支付成功，余额已增加 ' + String(energy) + ' 能量。'
+  }
+  return '已支付成功，能量余额已刷新。'
+}
+
+function queryEpayPayment(orderNo: string) {
+  if (orderNo == '') {
+    uni.showToast({ title: '订单号不存在，请重新下单', icon: 'none' })
+    return
+  }
+  uni.showLoading({ title: '查询支付...' })
+  fetchRechargeOrderStatus(orderNo).then((data) => {
+    uni.hideLoading()
+    const paid = !!(data && data.paid)
+    if (paid) {
+      clearPendingRechargeOrder()
+      hideMiniProgramEpayModal()
+      reload()
+      uni.showModal({
+        title: '已支付',
+        content: buildPaidMessage(data),
+        showCancel: false,
+      })
+      return
+    }
+    uni.showModal({
+      title: '你还未付款',
+      content: '当前还没有查询到支付成功订单，请先到手机浏览器完成付款后再查询。',
+      showCancel: false,
+    })
+  }).catch((message) => {
+    uni.hideLoading()
+    uni.showToast({ title: String(message || '查询失败，请稍后重试'), icon: 'none' })
+  })
+}
+
+function getH5RechargeReturnUrl(): string {
+  // #ifdef H5
+  return getH5Host() + '/index.html#/pages/energy/index'
+  // #endif
+  return ''
+}
+
+function openEpayUrlOnH5(payUrl: string): boolean {
+  let opened = false
+  // #ifdef H5
+  window.location.href = payUrl
+  opened = true
+  // #endif
+  return opened
+}
+
+function miniPayModalDesc(): string {
+  if (currentMiniPayIsQrcode.value) {
+    return '请选择一键复制支付链接，到手机浏览器粘贴打开扫码付款；付款后返回这里点支付查询。'
+  }
+  return '当前易支付通道未返回可直达二维码页，请复制收银台链接到手机浏览器打开付款；付款后返回这里点支付查询。'
+}
+
+function showMiniProgramEpayModal(payUrl: string, orderNo: string, isQrcodeUrl: boolean) {
+  currentMiniPayUrl.value = payUrl
+  currentMiniPayOrderNo.value = orderNo
+  currentMiniPayIsQrcode.value = isQrcodeUrl
+  uni.setStorageSync('pending_recharge_pay_url', payUrl)
+  miniPayModalVisible.value = true
+}
+
+function hideMiniProgramEpayModal() {
+  miniPayModalVisible.value = false
+  copyMiniPayUrlLoading.value = false
+}
+
+function copyCurrentMiniPayUrl() {
+  copyEpayUrlForMiniProgram(currentMiniPayUrl.value)
+}
+
+function queryCurrentMiniPayOrder() {
+  queryEpayPayment(currentMiniPayOrderNo.value)
+}
+
+function copyEpayUrlForMiniProgram(payUrl: string) {
+  if (payUrl == '') {
+    uni.showToast({ title: '支付链接不存在，请重新下单', icon: 'none' })
+    return
+  }
+  if (copyMiniPayUrlLoading.value) {
+    return
+  }
+  uni.setStorageSync('pending_recharge_pay_url', payUrl)
+  copyMiniPayUrlLoading.value = true
+  uni.setClipboardData({
+    data: payUrl,
+    success: () => {
+      uni.showToast({ title: '支付链接已复制', icon: 'none' })
+    },
+    fail: () => {
+      uni.showModal({
+        title: '复制失败',
+        content: '支付链接复制失败，请重新点击支付按钮生成支付链接。',
+        showCancel: false,
+      })
+    },
+    complete: () => {
+      copyMiniPayUrlLoading.value = false
+    },
+  })
+}
+
+onLoad(() => {
+  applyStoredUser()
+})
+
+onShow(() => {
+  applyStoredUser()
+  reload()
+  checkPendingRechargePayment()
+})
+</script>
+
+<style>
+.energy-page {
+  min-height: 100vh;
+  padding: 28rpx 28rpx 40rpx;
+  background: linear-gradient(180deg, #f3f7ff 0%, #f8fbff 46%, #ffffff 100%);
+  box-sizing: border-box;
+}
+
+.hero-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 34rpx;
+  border-radius: 32rpx;
+  background: linear-gradient(135deg, #1e67ff 0%, #75c7ff 100%);
+  color: #fff;
+  box-shadow: 0 20rpx 50rpx rgba(30, 103, 255, 0.22);
+}
+
+.hero-title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 800;
+}
+
+.hero-subtitle {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  opacity: 0.86;
+}
+
+.energy-balance {
+  min-width: 150rpx;
+  padding: 18rpx 20rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.18);
+  text-align: center;
+}
+
+.balance-value {
+  display: block;
+  font-size: 46rpx;
+  font-weight: 900;
+}
+
+.balance-label {
+  display: block;
+  margin-top: 4rpx;
+  font-size: 22rpx;
+  opacity: 0.86;
+}
+
+.section-card {
+  margin-top: 24rpx;
+  padding: 26rpx;
+  border-radius: 28rpx;
+  background: #fff;
+  box-shadow: 0 14rpx 40rpx rgba(34, 65, 122, 0.08);
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #17233d;
+}
+
+.section-link,
+.pay-status {
+  font-size: 24rpx;
+  color: #1677ff;
+}
+
+.empty-box {
+  padding: 50rpx 0;
+  text-align: center;
+  color: #8a95a8;
+  font-size: 26rpx;
+}
+
+.source-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 22rpx 0;
+  border-bottom: 2rpx solid #edf2f8;
+}
+
+.source-card:last-child {
+  border-bottom: 0;
+}
+
+.source-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 82rpx;
+  height: 82rpx;
+  border-radius: 24rpx;
+  font-size: 30rpx;
+  font-weight: 900;
+}
+
+.tone-blue { background: #eaf4ff; color: #1677ff; }
+.tone-purple { background: #f0eaff; color: #7f56d9; }
+.tone-green { background: #e9fbf2; color: #12a66a; }
+.tone-orange { background: #fff3e5; color: #ff8a00; }
+.tone-gray { background: #f2f5f8; color: #667085; }
+
+.source-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.source-title {
+  display: block;
+  font-size: 29rpx;
+  font-weight: 800;
+  color: #17233d;
+}
+
+.source-desc,
+.source-limit {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 23rpx;
+  color: #77849a;
+}
+
+.source-side {
+  width: 150rpx;
+  text-align: right;
+}
+
+.source-energy {
+  display: block;
+  margin-bottom: 10rpx;
+  font-size: 30rpx;
+  font-weight: 900;
+  color: #ff7b3f;
+}
+
+.source-btn {
+  height: 54rpx;
+  line-height: 54rpx;
+  padding: 0 22rpx;
+  border-radius: 999rpx;
+  background: #1677ff;
+  color: #fff;
+  font-size: 23rpx;
+}
+
+.pay-desc {
+  display: block;
+  margin-bottom: 20rpx;
+  color: #77849a;
+  font-size: 25rpx;
+  line-height: 1.7;
+}
+
+.compact-empty {
+  padding: 24rpx 0;
+  font-size: 24rpx;
+}
+
+.package-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-bottom: 22rpx;
+}
+
+.package-card {
+  width: calc((100% - 28rpx) / 3);
+  min-height: 150rpx;
+  padding: 18rpx 8rpx;
+  border-radius: 22rpx;
+  border: 2rpx solid #edf2f8;
+  background: #f8fbff;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.package-card.selected {
+  border-color: #1677ff;
+  background: #eef7ff;
+  box-shadow: 0 10rpx 24rpx rgba(22, 119, 255, 0.14);
+}
+
+.package-energy,
+.package-unit,
+.package-bonus,
+.package-price {
+  display: block;
+}
+
+.package-energy {
+  margin-top: 2rpx;
+  font-size: 34rpx;
+  font-weight: 900;
+  color: #1677ff;
+  line-height: 1.25;
+}
+
+.package-unit {
+  margin-top: 2rpx;
+  font-size: 20rpx;
+  color: #1677ff;
+  line-height: 1.2;
+}
+
+.package-bonus {
+  margin-top: 8rpx;
+  font-size: 19rpx;
+  color: #ff7b3f;
+  line-height: 1.2;
+}
+
+.package-price {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  font-weight: 800;
+  color: #17233d;
+  line-height: 1.2;
+}
+
+.pay-action-panel {
+  margin-top: 10rpx;
+  padding: 22rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(180deg, #f7fbff 0%, #edf6ff 100%);
+  border: 2rpx solid #dcebff;
+  box-shadow: inset 0 2rpx 0 rgba(255, 255, 255, 0.9);
+}
+
+.pay-summary {
+  margin-bottom: 18rpx;
+  text-align: center;
+}
+
+.pay-summary-title,
+.pay-summary-desc {
+  display: block;
+}
+
+.pay-summary-title {
+  font-size: 30rpx;
+  font-weight: 900;
+  color: #17233d;
+}
+
+.pay-summary-desc {
+  margin-top: 8rpx;
+  font-size: 23rpx;
+  color: #77849a;
+}
+
+.pay-submit {
+  height: 94rpx;
+  line-height: 94rpx;
+  border-radius: 999rpx;
+  text-align: center;
+  background: linear-gradient(135deg, #1677ff 0%, #55b6ff 100%);
+  box-shadow: 0 18rpx 34rpx rgba(22, 119, 255, 0.26);
+}
+
+.pay-submit.disabled {
+  background: linear-gradient(135deg, #b7c4d8 0%, #d0d9e7 100%);
+  box-shadow: none;
+}
+
+.pay-submit-text {
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 900;
+}
+
+.mini-pay-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx;
+  background: rgba(0, 0, 0, 0.56);
+  box-sizing: border-box;
+}
+
+.mini-pay-dialog {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 18rpx;
+  background: #ffffff;
+}
+
+.mini-pay-close {
+  position: absolute;
+  top: 18rpx;
+  right: 18rpx;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 999rpx;
+  background: #f3f5f8;
+}
+
+.mini-pay-close-text {
+  color: #667085;
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.mini-pay-title {
+  display: block;
+  padding: 42rpx 36rpx 18rpx;
+  text-align: center;
+  color: #111827;
+  font-size: 32rpx;
+  font-weight: 800;
+}
+
+.mini-pay-content {
+  display: block;
+  padding: 0 44rpx 44rpx;
+  color: #8a8f99;
+  font-size: 28rpx;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.mini-pay-actions {
+  display: flex;
+  flex-direction: row;
+  border-top: 2rpx solid #eef0f4;
+}
+
+.mini-pay-button {
+  flex: 1;
+  height: 96rpx;
+  line-height: 96rpx;
+  text-align: center;
+  border-right: 2rpx solid #eef0f4;
+}
+
+.mini-pay-button:last-child {
+  border-right: 0;
+}
+
+.mini-pay-button-text {
+  color: #111827;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.primary-text {
+  color: #31589c;
+}
+
+/* ============ 支付通道选择 ============ */
+.channel-section {
+  margin-top: 24rpx;
+  padding: 22rpx;
+  border-radius: 22rpx;
+  background: linear-gradient(180deg, #f7fbff 0%, #edf6ff 100%);
+  border: 2rpx solid #dcebff;
+}
+
+.channel-label {
+  display: block;
+  margin-bottom: 16rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #334155;
+}
+
+.channel-tabs {
+  display: flex;
+  flex-direction: row;
+  gap: 14rpx;
+}
+
+.channel-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  height: 78rpx;
+  border-radius: 18rpx;
+  border: 2rpx solid #d0d9e7;
+  background: #ffffff;
+  position: relative;
+}
+
+.channel-tab.active-wechat {
+  border-color: #07c160;
+  background: linear-gradient(135deg, #f0fff4 0%, #e6fff2 100%);
+}
+
+.channel-tab.active-epay {
+  border-color: #1677ff;
+  background: linear-gradient(135deg, #eef7ff 0%, #e6f2ff 100%);
+}
+
+.channel-tab-icon {
+  font-size: 30rpx;
+}
+
+.channel-tab-text {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #475569;
+}
+
+.channel-tab.active-wechat .channel-tab-text {
+  color: #07a054;
+}
+
+.channel-tab.active-epay .channel-tab-text {
+  color: #1677ff;
+}
+
+.channel-tab-badge {
+  position: absolute;
+  top: 8rpx;
+  right: 10rpx;
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: #07c160;
+}
+
+.channel-hint {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: #b45309;
+  line-height: 1.5;
+}
+</style>

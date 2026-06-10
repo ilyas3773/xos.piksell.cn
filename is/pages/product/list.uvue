@@ -1,0 +1,919 @@
+<template>
+  <scroll-view class="page-shell" scroll-y="true">
+    <view class="page-container list-page">
+      <view class="hero-card">
+        <view class="hero-top">
+          <view class="hero-copy">
+            <text class="hero-eyebrow">{{ heroEyebrowText() }}</text>
+            <text class="hero-title">{{ displayListTitle() }}</text>
+          </view>
+
+          <view class="hero-search">
+            <input
+              class="hero-search-input"
+              v-model="keyword"
+              placeholder="搜索中文名或者英文名"
+              confirm-type="search"
+              @confirm="searchProducts"
+              @input="onKeywordInput"
+            />
+            <view class="hero-search-button" @click="searchProducts">
+              <text class="hero-search-button-text">搜索</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="section-card control-card">
+        <view class="control-row">
+          <text class="control-label">分类：</text>
+          <view class="control-main">
+            <view class="control-chip-wrap">
+              <scroll-view v-if="!typeExpanded" class="control-chip-scroll" scroll-x="true">
+                <view class="control-chip-row">
+                  <view class="control-chip" :class="{ active: selectedTypeId == 0 }" @click="selectType(0, '')">
+                    <text class="control-chip-text" :class="{ active: selectedTypeId == 0 }">全部</text>
+                  </view>
+                  <view
+                    class="control-chip"
+                    v-for="item in visibleTypeOptions()"
+                    :key="'type-' + item.id"
+                    :class="{ active: selectedTypeId == item.id }"
+                    @click="selectType(item.id, item.name)"
+                  >
+                    <text class="control-chip-text" :class="{ active: selectedTypeId == item.id }">{{ item.name }}</text>
+                  </view>
+                </view>
+              </scroll-view>
+              <view v-else class="control-chip-row expanded">
+                <view class="control-chip" :class="{ active: selectedTypeId == 0 }" @click="selectType(0, '')">
+                  <text class="control-chip-text" :class="{ active: selectedTypeId == 0 }">全部</text>
+                </view>
+                <view
+                  class="control-chip"
+                  v-for="item in visibleTypeOptions()"
+                  :key="'type-expanded-' + item.id"
+                  :class="{ active: selectedTypeId == item.id }"
+                  @click="selectType(item.id, item.name)"
+                >
+                  <text class="control-chip-text" :class="{ active: selectedTypeId == item.id }">{{ item.name }}</text>
+                </view>
+              </view>
+              <view class="control-expand" v-if="canExpandTypeOptions()" @click="toggleTypeExpand">
+                <text class="control-expand-text">{{ typeExpanded ? '收起' : '展开' }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="control-divider"></view>
+
+        <view class="control-row sort-control-row">
+          <text class="control-label">排序：</text>
+          <view class="control-main">
+            <view class="sort-row">
+              <view
+                class="sort-tab"
+                v-for="item in sortTabs"
+                :key="'sort-' + item.key"
+                :class="{ active: sortKey == item.key }"
+                @click="selectSort(item.key)"
+              >
+                <text class="sort-tab-text" :class="{ active: sortKey == item.key }">{{ item.label }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="product-grid" v-if="products.length > 0">
+        <view class="game-card" v-for="item in products" :key="item.id" @click="goDetail(item.id)">
+          <image class="game-cover" :src="cover(item.display_image)" mode="aspectFill"></image>
+          <view class="game-card-body">
+            <text class="game-title">{{ item.name }}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="empty-box empty-state" v-else>
+        没有找到对应商品
+      </view>
+
+      <button class="secondary-button more-button" v-if="hasMore" @click="loadMore">加载更多</button>
+    </view>
+  </scroll-view>
+</template>
+
+<script setup lang="uts">
+import {
+  fetchCategories,
+  fetchProducts,
+  imageUrl,
+  openProductDetail,
+} from '../../utils/shop.uts'
+
+const products = ref([])
+const typeTree = ref([])
+const flatTypeCategories = ref([])
+const keyword = ref('')
+const selectedTypeId = ref(0)
+const baseTypeId = ref(0)
+const baseTypeName = ref('')
+const selectedTypeName = ref('')
+const quickKey = ref('')
+const entryTitle = ref('')
+const total = ref(0)
+const page = ref(1)
+const hasMore = ref(false)
+const typeExpanded = ref(false)
+const sortKey = ref('latest')
+const matchFields = ref('')
+
+const sortTabs = [
+  { key: 'hot', label: '热门' },
+  { key: 'click', label: '点击量' },
+  { key: 'exchange', label: '兑换量' },
+  { key: 'latest', label: '发布时间' },
+]
+
+function textValue(value: any): string {
+  return String(value || '').trim()
+}
+
+function queryTextValue(value: any): string {
+  const raw = textValue(value)
+  if (raw == '') {
+    return ''
+  }
+
+  try {
+    return decodeURIComponent(raw)
+  } catch (error) {
+    return raw
+  }
+}
+
+function normalizeCategoryName(value: string): string {
+  return textValue(value).toLowerCase().replace(/\s+/g, '').replace(/\//g, '')
+}
+
+function cover(path: string): string {
+  return imageUrl(path)
+}
+
+function goDetail(id: any) {
+  openProductDetail(id)
+}
+
+function flattenTree(nodes: any[], prefix: string = ''): any[] {
+  let rows: any[] = []
+  if (!nodes) {
+    return rows
+  }
+
+  for (let i = 0; i < nodes.length; i = i + 1) {
+    const item = nodes[i]
+    const name = textValue(item && item.name ? item.name : '')
+    const fullName = prefix == '' ? name : prefix + ' / ' + name
+    rows.push({
+      id: Number(item && item.id ? item.id : 0),
+      name: name,
+      full_name: fullName,
+      parent_id: Number(item && item.parent_id ? item.parent_id : 0),
+    })
+
+    if (item && item.children && item.children.length > 0) {
+      rows = rows.concat(flattenTree(item.children, fullName))
+    }
+  }
+
+  return rows
+}
+
+function mapNodeList(nodes: any[]): any[] {
+  const rows: any[] = []
+  if (!nodes) {
+    return rows
+  }
+
+  for (let i = 0; i < nodes.length; i = i + 1) {
+    const item = nodes[i]
+    rows.push({
+      id: Number(item && item.id ? item.id : 0),
+      name: textValue(item && item.name ? item.name : ''),
+      parent_id: Number(item && item.parent_id ? item.parent_id : 0),
+    })
+  }
+
+  return rows
+}
+
+function findFlatCategoryById(rows: any[], id: number): any {
+  for (let i = 0; i < rows.length; i = i + 1) {
+    const item = rows[i]
+    if (Number(item && item.id ? item.id : 0) == id) {
+      return item
+    }
+  }
+
+  return null
+}
+
+function findTopTypeAncestorId(id: number): number {
+  let current = findFlatCategoryById(flatTypeCategories.value, id)
+  let ancestorId = id
+
+  while (current && Number(current.parent_id || 0) > 0) {
+    ancestorId = Number(current.parent_id || 0)
+    current = findFlatCategoryById(flatTypeCategories.value, ancestorId)
+  }
+
+  return ancestorId
+}
+
+function findTreeNodeById(nodes: any[], id: number): any {
+  if (!nodes || id <= 0) {
+    return null
+  }
+
+  for (let i = 0; i < nodes.length; i = i + 1) {
+    const item = nodes[i]
+    if (Number(item && item.id ? item.id : 0) == id) {
+      return item
+    }
+    if (item && item.children && item.children.length > 0) {
+      const found = findTreeNodeById(item.children, id)
+      if (found) {
+        return found
+      }
+    }
+  }
+
+  return null
+}
+
+function findTreeNodeByAliases(nodes: any[], aliases: string[]): any {
+  if (!nodes || !aliases || aliases.length == 0) {
+    return null
+  }
+
+  for (let i = 0; i < nodes.length; i = i + 1) {
+    const item = nodes[i]
+    const nodeName = normalizeCategoryName(item && item.name ? String(item.name) : '')
+    for (let j = 0; j < aliases.length; j = j + 1) {
+      const alias = normalizeCategoryName(aliases[j])
+      if (alias != '' && (nodeName == alias || nodeName.indexOf(alias) >= 0 || alias.indexOf(nodeName) >= 0)) {
+        return item
+      }
+    }
+    if (item && item.children && item.children.length > 0) {
+      const found = findTreeNodeByAliases(item.children, aliases)
+      if (found) {
+        return found
+      }
+    }
+  }
+
+  return null
+}
+
+function quickTypeAliases(key: string): string[] {
+  if (key == 'games') {
+    return ['Game游戏', 'Game', '游戏', '游戏列表']
+  }
+
+  if (key == 'software') {
+    return ['APP应用', 'APP', '应用', '软件', '软件列表']
+  }
+
+  return []
+}
+
+function typeOptions(): any[] {
+  if (baseTypeId.value > 0) {
+    const baseNode = findTreeNodeById(typeTree.value, baseTypeId.value)
+    return baseNode && baseNode.children && baseNode.children.length > 0 ? mapNodeList(baseNode.children) : []
+  }
+
+  const quickNode = findTreeNodeByAliases(typeTree.value, quickTypeAliases(activeQuickKey()))
+  if (quickNode && quickNode.children && quickNode.children.length > 0) {
+    return mapNodeList(quickNode.children)
+  }
+
+  return []
+}
+
+function visibleTypeOptions(): any[] {
+  const rows = typeOptions()
+  if (typeExpanded.value || rows.length <= 8) {
+    return rows
+  }
+  return rows.slice(0, 8)
+}
+
+function canExpandTypeOptions(): boolean {
+  return typeOptions().length > 8
+}
+
+function toggleTypeExpand() {
+  typeExpanded.value = !typeExpanded.value
+}
+
+function activeTypeId(): number {
+  if (selectedTypeId.value > 0) {
+    return selectedTypeId.value
+  }
+  return baseTypeId.value
+}
+
+function resolveBaseTypeContext(queryTypeId: number) {
+  const quickAliases = quickTypeAliases(textValue(quickKey.value))
+  const quickNode = findTreeNodeByAliases(typeTree.value, quickAliases)
+
+  if (quickNode) {
+    baseTypeId.value = Number(quickNode.id || 0)
+    baseTypeName.value = textValue(quickNode.name)
+  }
+
+  if (queryTypeId <= 0) {
+    if (activeQuickKey() == 'games' && quickNode) {
+      baseTypeId.value = Number(quickNode.id || 0)
+      baseTypeName.value = textValue(quickNode.name)
+    }
+    return
+  }
+
+  const queryNode = findTreeNodeById(typeTree.value, queryTypeId)
+  if (!queryNode) {
+    return
+  }
+
+  const currentId = Number(queryNode.id || 0)
+  const currentName = textValue(queryNode.name)
+  const parentId = Number(queryNode.parent_id || 0)
+  const hasChildren = !!(queryNode.children && queryNode.children.length > 0)
+
+  if (parentId == 0 && hasChildren) {
+    baseTypeId.value = currentId
+    baseTypeName.value = currentName
+    return
+  }
+
+  if (parentId > 0) {
+    const rootTypeId = findTopTypeAncestorId(currentId)
+    const rootType = findFlatCategoryById(flatTypeCategories.value, rootTypeId)
+    if (rootType && rootTypeId != currentId) {
+      baseTypeId.value = rootTypeId
+      baseTypeName.value = textValue(rootType.name)
+      selectedTypeId.value = currentId
+      selectedTypeName.value = currentName
+      return
+    }
+  }
+}
+
+function syncSelectedNames() {
+  const activeType = findFlatCategoryById(flatTypeCategories.value, activeTypeId())
+  if (selectedTypeId.value > 0) {
+    selectedTypeName.value = activeType ? textValue(activeType.name) : selectedTypeName.value
+  } else if (baseTypeId.value > 0) {
+    baseTypeName.value = activeType ? textValue(activeType.name) : baseTypeName.value
+  }
+}
+
+function sortProducts(rows: any[]): any[] {
+  const list = rows.slice()
+  list.sort((left, right) => {
+    const leftId = Number(left && left.id ? left.id : 0)
+    const rightId = Number(right && right.id ? right.id : 0)
+    const leftCreatedAt = Date.parse(String(left && left.created_at ? left.created_at : '')) || 0
+    const rightCreatedAt = Date.parse(String(right && right.created_at ? right.created_at : '')) || 0
+
+    if (sortKey.value == 'hot') {
+      const leftClicks = Number(left && left.click_count ? left.click_count : 0)
+      const rightClicks = Number(right && right.click_count ? right.click_count : 0)
+      const leftExchanges = Number(left && left.exchange_count ? left.exchange_count : 0)
+      const rightExchanges = Number(right && right.exchange_count ? right.exchange_count : 0)
+      const leftValue = leftClicks + leftExchanges
+      const rightValue = rightClicks + rightExchanges
+      if (leftValue == rightValue) {
+        return rightId - leftId
+      }
+      return rightValue - leftValue
+    }
+
+    if (sortKey.value == 'click') {
+      const leftValue = Number(left && left.click_count ? left.click_count : 0)
+      const rightValue = Number(right && right.click_count ? right.click_count : 0)
+      if (leftValue == rightValue) {
+        return rightId - leftId
+      }
+      return rightValue - leftValue
+    }
+
+    if (sortKey.value == 'exchange') {
+      const leftValue = Number(left && left.exchange_count ? left.exchange_count : 0)
+      const rightValue = Number(right && right.exchange_count ? right.exchange_count : 0)
+      if (leftValue == rightValue) {
+        return rightId - leftId
+      }
+      return rightValue - leftValue
+    }
+
+    if (leftCreatedAt == rightCreatedAt) {
+      return rightId - leftId
+    }
+    return rightCreatedAt - leftCreatedAt
+  })
+
+  return list
+}
+
+function selectSort(key: string) {
+  sortKey.value = textValue(key)
+  loadProducts(true)
+}
+
+function displayListTitle(): string {
+  if (activeQuickKey() != 'games' && activeQuickKey() != 'software') {
+    return entryTitle.value != '' ? entryTitle.value : '商品列表'
+  }
+
+  if (sortKey.value == 'hot') {
+    return activeQuickKey() == 'software' ? '热门应用' : '热门游戏'
+  }
+
+  if (sortKey.value == 'click') {
+    return '点击量最多'
+  }
+
+  if (sortKey.value == 'exchange') {
+    return '兑换量最多'
+  }
+
+  return activeQuickKey() == 'software' ? '最新应用' : '最新游戏'
+}
+
+function heroEyebrowText(): string {
+  return activeQuickKey() == 'software' ? 'APP CENTER' : 'GAME CENTER'
+}
+
+function navigationCenterTitle(): string {
+  if (activeQuickKey() == 'software') {
+    return '应用中心'
+  }
+
+  if (activeQuickKey() == 'games') {
+    return '游戏中心'
+  }
+
+  return displayListTitle()
+}
+
+function activeQuickKey(): string {
+  const value = textValue(quickKey.value)
+  return value == '' ? 'games' : value
+}
+
+function productSubtitle(item: any): string {
+  const nameEn = textValue(item && item.name_en ? item.name_en : '')
+  if (nameEn != '') {
+    return nameEn
+  }
+
+  const compatibility = textValue(item && item.compatibility ? item.compatibility : '')
+  if (compatibility != '') {
+    return compatibility
+  }
+
+  const languages = textValue(item && item.supported_languages ? item.supported_languages : '')
+  if (languages != '') {
+    return languages
+  }
+
+  return 'Digital Product'
+}
+
+function loadCategoryFilters(queryTypeId: number): Promise<any> {
+  return fetchCategories().then((data) => {
+    typeTree.value = data && data.type_tree ? data.type_tree : []
+    flatTypeCategories.value = flattenTree(typeTree.value)
+    resolveBaseTypeContext(queryTypeId)
+    syncSelectedNames()
+  }).catch(() => {})
+}
+
+function loadProducts(reset: boolean = false) {
+  if (reset) {
+    page.value = 1
+  }
+
+  uni.showLoading({
+    title: '加载中',
+  })
+
+  fetchProducts({
+    page: page.value,
+    limit: 12,
+    keyword: textValue(keyword.value),
+    category_id: activeTypeId(),
+    sort: sortKey.value,
+    match_fields: matchFields.value,
+  }).then((data) => {
+    const rows = data && data.list ? data.list : []
+    const nextRows = reset ? rows : products.value.concat(rows)
+    products.value = sortProducts(nextRows)
+    total.value = data && data.pagination && data.pagination.total ? Number(data.pagination.total) : rows.length
+    hasMore.value = !!(data && data.pagination && data.pagination.has_more)
+  }).catch((message) => {
+    if (reset) {
+      products.value = []
+      total.value = 0
+      hasMore.value = false
+    }
+
+    uni.showToast({
+      title: String(message || '商品加载失败'),
+      icon: 'none',
+    })
+  }).finally(() => {
+    uni.hideLoading()
+    uni.stopPullDownRefresh()
+  })
+}
+
+function searchProducts() {
+  keyword.value = textValue(keyword.value)
+  loadProducts(true)
+}
+
+let searchDebounceTimer: any = null
+
+function onKeywordInput() {
+  if (searchDebounceTimer != null) {
+    clearTimeout(searchDebounceTimer)
+  }
+  searchDebounceTimer = setTimeout(() => {
+    keyword.value = textValue(keyword.value)
+    loadProducts(true)
+  }, 300)
+}
+
+function selectType(id: number, name: string) {
+  selectedTypeId.value = id
+  selectedTypeName.value = id > 0 ? textValue(name) : ''
+  typeExpanded.value = false
+  loadProducts(true)
+}
+
+function loadMore() {
+  if (!hasMore.value) {
+    return
+  }
+
+  page.value = page.value + 1
+  loadProducts(false)
+}
+
+onLoad((query) => {
+  const queryTypeId = query && query.category_id ? Number(query.category_id) : 0
+  keyword.value = query && query.keyword ? queryTextValue(query.keyword) : ''
+  quickKey.value = query && query.quick_key ? textValue(query.quick_key) : ''
+  sortKey.value = query && query.sort && ['hot', 'click', 'exchange', 'latest'].indexOf(textValue(query.sort)) >= 0 ? textValue(query.sort) : 'latest'
+  matchFields.value = query && query.match_fields ? queryTextValue(query.match_fields) : ''
+  entryTitle.value = query && query.title ? queryTextValue(query.title) : displayListTitle()
+  uni.setNavigationBarTitle({
+    title: navigationCenterTitle(),
+  })
+
+  loadCategoryFilters(queryTypeId).finally(() => {
+    loadProducts(true)
+  })
+})
+
+onPullDownRefresh(() => {
+  loadProducts(true)
+})
+</script>
+
+<style>
+.list-page {
+  padding-bottom: 36rpx;
+}
+
+.hero-card {
+  padding: 28rpx;
+  border-radius: 32rpx;
+  background: linear-gradient(145deg, #ffffff 0%, #f6f8fd 56%, #eef4ff 100%);
+  box-shadow: 0 18rpx 48rpx rgba(34, 60, 112, 0.08);
+}
+
+.hero-top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18rpx;
+}
+
+.hero-copy {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 260rpx;
+}
+
+.hero-eyebrow {
+  display: block;
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  color: #ff6b2c;
+}
+
+.hero-title {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #15213b;
+  line-height: 1.3;
+}
+
+.hero-search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-left: auto;
+  gap: 10rpx;
+  width: auto;
+  max-width: none;
+  padding: 10rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 12rpx 22rpx rgba(41, 69, 109, 0.08);
+}
+
+.hero-search-input {
+  flex: 1;
+  min-width: 0;
+  height: 62rpx;
+  padding: 0 22rpx;
+  border-radius: 999rpx;
+  background: #f4f7fb;
+  font-size: 24rpx;
+  color: #22314f;
+}
+
+.hero-search-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 62rpx;
+  padding: 0 20rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #ff8b3d 0%, #ff6b2c 100%);
+}
+
+.hero-search-button-text {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.control-card {
+  margin-top: 22rpx;
+  padding: 14rpx 22rpx 20rpx;
+}
+
+.control-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10rpx;
+  padding: 16rpx 0;
+}
+
+.control-label {
+  width: 82rpx;
+  flex-shrink: 0;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #445069;
+}
+
+.control-main {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.control-chip-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.control-chip-scroll {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.control-chip-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 14rpx;
+  width: auto;
+  min-width: 100%;
+}
+
+.control-chip-row.expanded {
+  flex: 1;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.control-chip {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 14rpx 22rpx;
+  border-radius: 999rpx;
+  background: #f3f6fb;
+}
+
+.control-chip.active {
+  background: #ff6b2c;
+  box-shadow: 0 12rpx 24rpx rgba(255, 107, 44, 0.18);
+}
+
+.control-chip-text {
+  font-size: 24rpx;
+  color: #4b5872;
+}
+
+.control-chip-text.active {
+  color: #ffffff;
+}
+
+.control-expand {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  margin-left: 12rpx;
+  padding: 12rpx 4rpx;
+}
+
+.control-expand-text {
+  font-size: 24rpx;
+  color: #ff6b2c;
+}
+
+.control-divider {
+  height: 2rpx;
+  background: #edf1f7;
+}
+
+.sort-control-row {
+  align-items: center;
+}
+
+.sort-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14rpx;
+  width: 100%;
+}
+
+.sort-tab {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  padding: 14rpx 10rpx;
+}
+
+.sort-tab.active {
+  position: relative;
+}
+
+.sort-tab.active::after {
+  content: '';
+  position: absolute;
+  left: 10rpx;
+  right: 10rpx;
+  bottom: 4rpx;
+  height: 4rpx;
+  border-radius: 999rpx;
+  background: #ff6b2c;
+}
+
+.sort-tab-text {
+  font-size: 26rpx;
+  color: #65738d;
+}
+
+.sort-tab-text.active {
+  color: #ff6b2c;
+  font-weight: 600;
+}
+
+.product-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 18rpx;
+  margin-top: 24rpx;
+}
+
+.game-card {
+  width: 128rpx;
+  flex-shrink: 0;
+  border-radius: 22rpx;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-cover {
+  flex-shrink: 0;
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 20rpx;
+  background: #e2e8f0;
+  box-shadow: inset 0 0 0 2rpx rgba(226, 232, 240, 0.9);
+}
+
+.game-card-body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.game-title {
+  display: block;
+  width: 100%;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #6b7280;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.game-en {
+  display: block;
+  width: 100%;
+  font-size: 22rpx;
+  color: #8a95a8;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.empty-state {
+  margin-top: 24rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12rpx 30rpx rgba(36, 53, 86, 0.05);
+}
+
+.more-button {
+  margin-top: 24rpx;
+}
+
+@media screen and (min-width: 960px) {
+  .hero-card {
+    padding: 32rpx;
+  }
+
+  .hero-top {
+    align-items: center;
+    gap: 24rpx;
+  }
+
+  .hero-copy {
+    max-width: 320rpx;
+  }
+
+  .hero-search {
+    width: auto;
+    max-width: none;
+  }
+}
+</style>

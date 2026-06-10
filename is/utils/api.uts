@@ -1,0 +1,137 @@
+import { API_HOST, H5_HOST } from '../config/api-config.uts'
+
+const DEFAULT_API_ORIGIN = API_HOST
+const API_ORIGIN_STORAGE_KEY = 'api_origin'
+
+function trimValue(value: any): string {
+  return String(value || '').trim()
+}
+
+function normalizeOrigin(value: string): string {
+  let normalized = trimValue(value)
+  if (normalized == '') {
+    return ''
+  }
+
+  while (normalized.endsWith('/')) {
+    normalized = normalized.substring(0, normalized.length - 1)
+  }
+
+  return normalized
+}
+
+function getStoredApiOrigin(): string {
+  const value = uni.getStorageSync(API_ORIGIN_STORAGE_KEY)
+  return normalizeOrigin(value)
+}
+
+function getH5Origin(): string {
+  // #ifdef H5
+  const location = window.location
+  if (!location) {
+    return ''
+  }
+
+  const origin = normalizeOrigin(location.origin)
+  const hostname = trimValue(location.hostname).toLowerCase()
+  if (origin == '' || hostname == '') {
+    return ''
+  }
+
+  if (hostname == 'xos.piksell.cn' || hostname.endsWith('.piksell.cn')) {
+    return origin
+  }
+  // #endif
+
+  return ''
+}
+
+export function getApiOrigin(): string {
+  const h5Origin = getH5Origin()
+  if (h5Origin != '') {
+    return h5Origin
+  }
+
+  return DEFAULT_API_ORIGIN
+}
+
+export function buildApiUrl(path: string): string {
+  const currentPath = trimValue(path)
+  if (currentPath == '') {
+    return getApiOrigin()
+  }
+  if (currentPath.indexOf('http://') == 0 || currentPath.indexOf('https://') == 0) {
+    return currentPath
+  }
+  if (currentPath.indexOf('/') == 0) {
+    return getApiOrigin() + currentPath
+  }
+
+  return getApiOrigin() + '/' + currentPath
+}
+
+export function getH5Host(): string {
+  // #ifdef H5
+  const location = window.location
+  if (location) {
+    const hostname = trimValue(location.hostname).toLowerCase()
+    const origin = normalizeOrigin(location.origin)
+    let href = trimValue(location.href)
+    const hashIndex = href.indexOf('#')
+    if (hashIndex >= 0) {
+      href = href.substring(0, hashIndex)
+    }
+    const queryIndex = href.indexOf('?')
+    if (queryIndex >= 0) {
+      href = href.substring(0, queryIndex)
+    }
+    if (href.endsWith('/index.html')) {
+      href = href.substring(0, href.length - 11)
+    }
+    const base = normalizeOrigin(href)
+    if (hostname == 'localhost' || hostname == '127.0.0.1') {
+      return origin
+    }
+    if (base != '' && base != origin) {
+      return base
+    }
+    if (normalizeOrigin(H5_HOST) != '') {
+      return normalizeOrigin(H5_HOST)
+    }
+    return origin
+  }
+  // #endif
+
+  return normalizeOrigin(H5_HOST)
+}
+
+export function resolveAssetUrl(path: string): string {
+  const value = trimValue(path)
+  if (value == '') {
+    return ''
+  }
+  if (value.indexOf('http://') == 0 || value.indexOf('https://') == 0) {
+    return value
+  }
+  if (value.indexOf('//') == 0) {
+    return 'https:' + value
+  }
+
+  return buildApiUrl(value)
+}
+
+export function setApiOrigin(origin: string): string {
+  const normalized = normalizeOrigin(origin)
+  if (normalized == '') {
+    uni.removeStorageSync(API_ORIGIN_STORAGE_KEY)
+    return getApiOrigin()
+  }
+
+  uni.setStorageSync(API_ORIGIN_STORAGE_KEY, normalized)
+  return normalized
+}
+
+export function clearApiOrigin(): string {
+  uni.removeStorageSync(API_ORIGIN_STORAGE_KEY)
+  return getApiOrigin()
+}

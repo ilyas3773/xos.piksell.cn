@@ -1,0 +1,4974 @@
+{
+  "projectName": "冠春工厂系统",
+  "sourceUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=read_only&screen=rbpV3a69jcZA5qlu2",
+  "generatedAt": "2026-04-12T05:30:47.107Z",
+  "clientPageCount": 46,
+  "designSize": {
+    "width": 750,
+    "height": 1624
+  },
+  "pages": [
+    {
+      "pageNumber": 1,
+      "pageName": "登录",
+      "canvasCid": "rcV39Sqh1kfAXS3k",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39Sqh1kfAXS3k",
+      "screenshotFile": "page-01.png",
+      "keyTexts": [
+        "登录",
+        "欢迎来到冠春商城",
+        "微信号一键授权登录",
+        "手机号登录",
+        "注册",
+        "同意已阅读《用户协议》和《个人信息保护政策》"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "微信号一键授权登录",
+          "cid": "V3SiRle2n2N3PJ",
+          "linkCid": "itaV3SiSUsxBrPNYF",
+          "bounds": {
+            "x": -77.4827880859375,
+            "y": 601.1206665039062,
+            "w": 899.3792724609375,
+            "h": 153.62066650390625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 2,
+            "targetPageName": "微信号登录",
+            "targetCanvasCid": "rcV39SqhV39bH8JDQ8DUHa",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39bH8JDQ8DUHa"
+          }
+        },
+        {
+          "order": 2,
+          "label": "手机号登录",
+          "cid": "V3Sibn3zGK4Hyh",
+          "linkCid": "itaV3SicvOKBaf8AZ",
+          "bounds": {
+            "x": -88.6551513671875,
+            "y": 799.4310302734375,
+            "w": 910.5516357421875,
+            "h": 149.4310302734375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 3,
+            "targetPageName": "登录",
+            "targetCanvasCid": "rcV39SqhV39blm0Pscu5KX",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39blm0Pscu5KX"
+          }
+        },
+        {
+          "order": 3,
+          "label": "注册",
+          "cid": "V3Sin2G2BAnxBF",
+          "linkCid": "itaV3Sio3wW2tYFtG",
+          "bounds": {
+            "x": 284.22412109375,
+            "y": 992.1551513671875,
+            "w": 202.5,
+            "h": 76.8104248046875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 4,
+            "targetPageName": "注册",
+            "targetCanvasCid": "rcV39SqhV39dV6SIgvUFg0",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39dV6SIgvUFg0"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 2,
+      "pageName": "微信号登录",
+      "canvasCid": "rcV39SqhV39bH8JDQ8DUHa",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39bH8JDQ8DUHa",
+      "screenshotFile": "page-02.png",
+      "keyTexts": [
+        "登录",
+        "欢迎来到冠春商城",
+        "微信号一键授权登录",
+        "账号密码登录",
+        "注册",
+        "冠春商城"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SitnqubKPDjq",
+          "linkCid": "itaV3SiuiXDrOtfmS",
+          "bounds": {
+            "x": 0.72412109375,
+            "y": 1661.103515625,
+            "w": 354.72412109375,
+            "h": 156.413818359375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 11,
+            "targetPageName": "首页",
+            "targetCanvasCid": "rcV39SqhV3FSCruau1HXSD",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SiUpWLD1X1UW",
+          "linkCid": "itaV3SiVyOtt66RpK",
+          "bounds": {
+            "x": 384.77587890625,
+            "y": 1666.689697265625,
+            "w": 354.72412109375,
+            "h": 156.413818359375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 1,
+            "targetPageName": "登录",
+            "targetCanvasCid": "rcV39Sqh1kfAXS3k",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39Sqh1kfAXS3k"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 3,
+      "pageName": "登录",
+      "canvasCid": "rcV39SqhV39blm0Pscu5KX",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39blm0Pscu5KX",
+      "screenshotFile": "page-03.png",
+      "keyTexts": [
+        "登录",
+        "欢迎来到冠春商城",
+        "请输入手机号",
+        "验证码",
+        "获取验证码",
+        "密码登录",
+        "注册",
+        "同意已阅读《用户协议》和《个人信息保护政策》"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SipQweV3SjGe5Sd94zoR",
+          "linkCid": "itaV3SiqIfEc3QkbF",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -214.46551513671875,
+            "w": 89.3792724609375,
+            "h": 106.137939453125
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 3,
+            "targetPageName": "登录",
+            "targetCanvasCid": "rcV39SqhV39blm0Pscu5KX",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39blm0Pscu5KX"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SipQweV3SjGe5Sd94zoR",
+          "linkCid": "itaV3SiqIfEc3QkbF",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -214.46551513671875,
+            "w": 89.3792724609375,
+            "h": 106.137939453125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 11,
+            "targetPageName": "首页",
+            "targetCanvasCid": "rcV39SqhV3FSCruau1HXSD",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD"
+          }
+        },
+        {
+          "order": 3,
+          "label": "密码登录",
+          "cid": "V3SiihJaj8zFZP",
+          "linkCid": "itaV3SijCB8Ee1Dc3",
+          "bounds": {
+            "x": -106.81036376953125,
+            "y": 950.2586669921875,
+            "w": 217.86212158203125,
+            "h": 93.5689697265625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 6,
+            "targetPageName": "登录-密码登录",
+            "targetCanvasCid": "rcV39SqhV39eIoOe6YpU9q",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39eIoOe6YpU9q"
+          }
+        },
+        {
+          "order": 4,
+          "label": "登录",
+          "cid": "V3SieaKdWXd879",
+          "linkCid": "itaV3SifFUBwcocTH",
+          "bounds": {
+            "x": -95.637939453125,
+            "y": 1095.5,
+            "w": 917.534423828125,
+            "h": 184.3448486328125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 4,
+            "targetPageName": "注册",
+            "targetCanvasCid": "rcV39SqhV39dV6SIgvUFg0",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39dV6SIgvUFg0"
+          }
+        },
+        {
+          "order": 5,
+          "label": "注册",
+          "cid": "V3Sin2G2V3SixU2lGIIsoG",
+          "linkCid": "itaV3Sio3wW2tYFtG",
+          "bounds": {
+            "x": 274.4482421875,
+            "y": 1309.17236328125,
+            "w": 202.5,
+            "h": 76.8104248046875
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 3,
+            "targetPageName": "登录",
+            "targetCanvasCid": "rcV39SqhV39blm0Pscu5KX",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39blm0Pscu5KX"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 4,
+      "pageName": "注册",
+      "canvasCid": "rcV39SqhV39dV6SIgvUFg0",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39dV6SIgvUFg0",
+      "screenshotFile": "page-04.png",
+      "keyTexts": [
+        "注册",
+        "请输入手机号",
+        "验证码",
+        "获取验证码",
+        "请输入密码",
+        "请再次输入密码",
+        "已有账号？",
+        "同意已阅读《用户协议》和《个人信息保护政策》"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SipQweV3SjEmYNcAYDZo",
+          "linkCid": "itaV3SiqIfEc3QkbF",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -214.46551513671875,
+            "w": 89.3792724609375,
+            "h": 106.137939453125
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 4,
+            "targetPageName": "注册",
+            "targetCanvasCid": "rcV39SqhV39dV6SIgvUFg0",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39dV6SIgvUFg0"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SipQweV3SjEmYNcAYDZo",
+          "linkCid": "itaV3SiqIfEc3QkbF",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -214.46551513671875,
+            "w": 89.3792724609375,
+            "h": 106.137939453125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 6,
+            "targetPageName": "登录-密码登录",
+            "targetCanvasCid": "rcV39SqhV39eIoOe6YpU9q",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39eIoOe6YpU9q"
+          }
+        },
+        {
+          "order": 3,
+          "label": "注册",
+          "cid": "V3Sj0TGJIzYcJK",
+          "linkCid": "itaV3Sj2VZkvgoeGI",
+          "bounds": {
+            "x": -83.0689697265625,
+            "y": 880.4310302734375,
+            "w": 904.9654541015625,
+            "h": 194.1207275390625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 3,
+            "targetPageName": "登录",
+            "targetCanvasCid": "rcV39SqhV39blm0Pscu5KX",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39blm0Pscu5KX"
+          }
+        },
+        {
+          "order": 4,
+          "label": "已有账号？",
+          "cid": "V3Sj58E2WofHmT",
+          "linkCid": "itaV3Sj5l43gRtTD3",
+          "bounds": {
+            "x": -71.89654541015625,
+            "y": 1102.4827880859375,
+            "w": 893.7930297851562,
+            "h": 115.913818359375
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 4,
+            "targetPageName": "注册",
+            "targetCanvasCid": "rcV39SqhV39dV6SIgvUFg0",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39dV6SIgvUFg0"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 5,
+      "pageName": "忘记密码",
+      "canvasCid": "rcV39SqhV39e648QroJSO0",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39e648QroJSO0",
+      "screenshotFile": "page-05.png",
+      "keyTexts": [
+        "忘记密码",
+        "请输入手机号",
+        "验证码",
+        "获取验证码",
+        "请输入密码",
+        "请再次输入密码",
+        "重置密码",
+        "同意已阅读《用户协议》和《个人信息保护政策》"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SipQweV3SirVY7PQEKcA",
+          "linkCid": "itaV3SiqIfEc3QkbF",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -214.46551513671875,
+            "w": 89.3792724609375,
+            "h": 106.137939453125
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 5,
+            "targetPageName": "忘记密码",
+            "targetCanvasCid": "rcV39SqhV39e648QroJSO0",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39e648QroJSO0"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SipQweV3SirVY7PQEKcA",
+          "linkCid": "itaV3SiqIfEc3QkbF",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -214.46551513671875,
+            "w": 89.3792724609375,
+            "h": 106.137939453125
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 5,
+            "targetPageName": "忘记密码",
+            "targetCanvasCid": "rcV39SqhV39e648QroJSO0",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39e648QroJSO0"
+          }
+        },
+        {
+          "order": 3,
+          "label": "重置密码",
+          "cid": "V3SrZR8DqKi2mM",
+          "linkCid": "itaV3Sratj4RQ4tPl",
+          "bounds": {
+            "x": -62.1207275390625,
+            "y": 894.3966064453125,
+            "w": 884.0172119140625,
+            "h": 155.0172119140625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 6,
+            "targetPageName": "登录-密码登录",
+            "targetCanvasCid": "rcV39SqhV39eIoOe6YpU9q",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39eIoOe6YpU9q"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 6,
+      "pageName": "登录-密码登录",
+      "canvasCid": "rcV39SqhV39eIoOe6YpU9q",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39eIoOe6YpU9q",
+      "screenshotFile": "page-06.png",
+      "keyTexts": [
+        "登录",
+        "欢迎来到冠春商城",
+        "请输入手机号",
+        "请输入密码",
+        "忘记密码？",
+        "验证码登录",
+        "注册",
+        "同意已阅读《用户协议》和《个人信息保护政策》"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SipQweV3SjFimYekkURS",
+          "linkCid": "itaV3SiqIfEc3QkbF",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -214.46551513671875,
+            "w": 89.3792724609375,
+            "h": 106.137939453125
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 6,
+            "targetPageName": "登录-密码登录",
+            "targetCanvasCid": "rcV39SqhV39eIoOe6YpU9q",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39eIoOe6YpU9q"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SipQweV3SjFimYekkURS",
+          "linkCid": "itaV3SiqIfEc3QkbF",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -214.46551513671875,
+            "w": 89.3792724609375,
+            "h": 106.137939453125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 11,
+            "targetPageName": "首页",
+            "targetCanvasCid": "rcV39SqhV3FSCruau1HXSD",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD"
+          }
+        },
+        {
+          "order": 3,
+          "label": "忘记密码？",
+          "cid": "V3Sj8bn8ozqyK5",
+          "linkCid": "itaV3Sj9EDUgHfaHA",
+          "bounds": {
+            "x": 507.67236328125,
+            "y": 823.17236328125,
+            "w": 314.22412109375,
+            "h": 106.137939453125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 4,
+            "targetPageName": "注册",
+            "targetCanvasCid": "rcV39SqhV39dV6SIgvUFg0",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39dV6SIgvUFg0"
+          }
+        },
+        {
+          "order": 4,
+          "label": "登录",
+          "cid": "V3SieaKdV3Sil1Dk1GZ5WN",
+          "linkCid": "itaV3SifFUBwcocTH",
+          "bounds": {
+            "x": -95.637939453125,
+            "y": 1095.5,
+            "w": 917.534423828125,
+            "h": 184.3448486328125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 5,
+            "targetPageName": "忘记密码",
+            "targetCanvasCid": "rcV39SqhV39e648QroJSO0",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39e648QroJSO0"
+          }
+        },
+        {
+          "order": 5,
+          "label": "注册",
+          "cid": "V3Sin2G2V3Siyz2RT02SZP",
+          "linkCid": "itaV3Sio3wW2tYFtG",
+          "bounds": {
+            "x": 274.4482421875,
+            "y": 1309.17236328125,
+            "w": 202.5,
+            "h": 76.8104248046875
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 6,
+            "targetPageName": "登录-密码登录",
+            "targetCanvasCid": "rcV39SqhV39eIoOe6YpU9q",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV39eIoOe6YpU9q"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 7,
+      "pageName": "首页-商品详情",
+      "canvasCid": "rcV39SqhV3AH4SOTTdlwAB",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AH4SOTTdlwAB",
+      "screenshotFile": "page-07.png",
+      "keyTexts": [
+        "商品详情",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "¥ 20.88",
+        "销售量：10万+",
+        "批发价",
+        "¥8.88",
+        "联系业务员获取批发价格",
+        "去联系",
+        "产品规格",
+        "发货信息",
+        "广东广州丨48小时内发货丨运费：免运费",
+        "厂家信息",
+        "两只老虎药品有限公司",
+        "保质期",
+        "36个月",
+        "OEM采购",
+        "存储条件",
+        "存储至阴凉处，避免太阳直射",
+        "我要批发",
+        "立即购买",
+        "客服",
+        "加入采购车",
+        "查看全部",
+        "用户评价·1000+",
+        "好评人数900+",
+        "有图/视频·200",
+        "用户昵称",
+        "产品规格：10盒",
+        "质量非常好，完全超出期望值，发货速度非常快，包装非常仔细、严实，很满意的一次购物",
+        "相关推荐",
+        "北东虫夏草粉",
+        "批发价：¥8.88",
+        "¥ 12.88"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpV3Sp6chY7iHRpn",
+          "linkCid": "itaV3SjSxwDILx6d4",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 7,
+            "targetPageName": "首页-商品详情",
+            "targetCanvasCid": "rcV39SqhV3AH4SOTTdlwAB",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AH4SOTTdlwAB"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpV3Sp6chY7iHRpn",
+          "linkCid": "itaV3SjSxwDILx6d4",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 7,
+            "targetPageName": "首页-商品详情",
+            "targetCanvasCid": "rcV39SqhV3AH4SOTTdlwAB",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AH4SOTTdlwAB"
+          }
+        },
+        {
+          "order": 3,
+          "label": "立即购买 / 存储至阴凉处，避免太阳直射",
+          "cid": "V3Sp8C9lLVp1gp",
+          "linkCid": "itaV3Sp8oBhb0FOiU",
+          "bounds": {
+            "x": 521.637939453125,
+            "y": 1774.22412109375,
+            "w": 349.137939453125,
+            "h": 164.793212890625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 12,
+            "targetPageName": "首页-商品详情 -下单",
+            "targetCanvasCid": "rcV39SqhV3NQuQPZvPYq3k",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NQuQPZvPYq3k"
+          }
+        },
+        {
+          "order": 4,
+          "label": "立即购买",
+          "cid": "V3Sp8C9lLVp1gp",
+          "linkCid": "itaV3Sp8oBhb0FOiU",
+          "bounds": {
+            "x": 521.637939453125,
+            "y": 4558.9482421875,
+            "w": 349.137939453125,
+            "h": 164.79296875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 12,
+            "targetPageName": "首页-商品详情 -下单",
+            "targetCanvasCid": "rcV39SqhV3NQuQPZvPYq3k",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NQuQPZvPYq3k"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 8,
+      "pageName": "商城",
+      "canvasCid": "rcV39SqhV3Aa9J5Pa0kMYe",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Aa9J5Pa0kMYe",
+      "screenshotFile": "page-08.png",
+      "keyTexts": [
+        "商城",
+        "搜索关键词",
+        "全部商品",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "¥ 12.88",
+        "批发价：¥8.88",
+        "药贴",
+        "销售量：10万+",
+        "药油",
+        "药膏",
+        "药粉",
+        "乳膏品",
+        "首页",
+        "我的",
+        "会员"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "五福面人参茶养生茶组合熬夜疲劳恢复茶 / 销售量：10万+ / ¥ 12.88",
+          "cid": "V3SrdYySc8T1M0",
+          "linkCid": "itaV3Srei2vvrQM49",
+          "bounds": {
+            "x": 115.2413330078125,
+            "y": 293.87933349609375,
+            "w": 755.5345458984375,
+            "h": 279.310302734375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 7,
+            "targetPageName": "首页-商品详情",
+            "targetCanvasCid": "rcV39SqhV3AH4SOTTdlwAB",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AH4SOTTdlwAB"
+          }
+        },
+        {
+          "order": 2,
+          "label": "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+          "cid": "V41OAXaYkEPeHh",
+          "linkCid": "itaV41OB3PGdUEJLK",
+          "bounds": {
+            "x": 738.103515625,
+            "y": 1303.586181640625,
+            "w": 136.862060546875,
+            "h": 145.241455078125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 9,
+            "targetPageName": "采购车",
+            "targetCanvasCid": "rcV39SqhV3AdXhGdz1jAZU",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AdXhGdz1jAZU"
+          }
+        },
+        {
+          "order": 3,
+          "label": "首页",
+          "cid": "V3SpulgvV41Ochunci3zZA",
+          "linkCid": "itaV41OshfHOTBrCQ",
+          "bounds": {
+            "x": -71.89654541015625,
+            "y": 1803.5517578125,
+            "w": 68.4310302734375,
+            "h": 124.29296875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 11,
+            "targetPageName": "首页",
+            "targetCanvasCid": "rcV39SqhV3FSCruau1HXSD",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD"
+          }
+        },
+        {
+          "order": 4,
+          "label": "五福面人参茶养生茶组合熬夜疲劳恢复茶 / 我的",
+          "cid": "V3SqKBTkV41Ochu9f8QwpN",
+          "linkCid": "itaV3SqL6GmcB4e8h",
+          "bounds": {
+            "x": 714.362060546875,
+            "y": 1651.32763671875,
+            "w": 132.67236328125,
+            "h": 115.913818359375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 10,
+            "targetPageName": "我的",
+            "targetCanvasCid": "rcV39SqhV3AnkFsnNwH5dy",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AnkFsnNwH5dy"
+          }
+        },
+        {
+          "order": 5,
+          "label": "五福面人参茶养生茶组合熬夜疲劳恢复茶 / 会员 / ¥ 12.88",
+          "cid": "V41UTe21V41UXIO9jAw93E",
+          "linkCid": "itaV41UZ0cd6VBCry",
+          "bounds": {
+            "x": 462.982666015625,
+            "y": 1663.896484375,
+            "w": 79.603515625,
+            "h": 118.70703125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 40,
+            "targetPageName": "会员",
+            "targetCanvasCid": "rcV39SqhV41R91HEFKyiai",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV41R91HEFKyiai"
+          }
+        },
+        {
+          "order": 6,
+          "label": "我的",
+          "cid": "V3SqKBTkV41Ochu9f8QwpN",
+          "linkCid": "itaV3SqL6GmcB4e8h",
+          "bounds": {
+            "x": 714.362060546875,
+            "y": 1804.9482421875,
+            "w": 132.67236328125,
+            "h": 115.913818359375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 40,
+            "targetPageName": "会员",
+            "targetCanvasCid": "rcV39SqhV41R91HEFKyiai",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV41R91HEFKyiai"
+          }
+        },
+        {
+          "order": 7,
+          "label": "会员 / 销售量：10万+",
+          "cid": "V41UTe21V41UXIO9jAw93E",
+          "linkCid": "itaV41UZ0cd6VBCry",
+          "bounds": {
+            "x": 462.982666015625,
+            "y": 1817.517333984375,
+            "w": 79.603515625,
+            "h": 118.706787109375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 10,
+            "targetPageName": "我的",
+            "targetCanvasCid": "rcV39SqhV3AnkFsnNwH5dy",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AnkFsnNwH5dy"
+          }
+        },
+        {
+          "order": 8,
+          "label": "会员 / 销售量：10万+",
+          "cid": "V41UTe21V41UXIO9jAw93E",
+          "linkCid": "itaV41UZ0cd6VBCry",
+          "bounds": {
+            "x": 462.982666015625,
+            "y": 1817.517333984375,
+            "w": 79.603515625,
+            "h": 118.706787109375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 11,
+            "targetPageName": "首页",
+            "targetCanvasCid": "rcV39SqhV3FSCruau1HXSD",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 9,
+      "pageName": "采购车",
+      "canvasCid": "rcV39SqhV3AdXhGdz1jAZU",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AdXhGdz1jAZU",
+      "screenshotFile": "page-09.png",
+      "keyTexts": [
+        "采购车",
+        "采购车共有：5件商品",
+        "管理",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "1",
+        "结算",
+        "全选",
+        "合计：¥0"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpV41OHbAtpW25lG",
+          "linkCid": "itaV3SjSxwDILx6d4",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 9,
+            "targetPageName": "采购车",
+            "targetCanvasCid": "rcV39SqhV3AdXhGdz1jAZU",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AdXhGdz1jAZU"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpV41OHbAtpW25lG",
+          "linkCid": "itaV3SjSxwDILx6d4",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 17,
+            "targetPageName": "我的-我的订单-待付款",
+            "targetCanvasCid": "rcV39SqhV3NpeZ8pAYRBRC",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NpeZ8pAYRBRC"
+          }
+        },
+        {
+          "order": 3,
+          "label": "结算",
+          "cid": "V3SrhUuJtsBzNX",
+          "linkCid": "itaV3SrkXcl567hOs",
+          "bounds": {
+            "x": 506.27587890625,
+            "y": 1792.37939453125,
+            "w": 356.12060546875,
+            "h": 153.62060546875
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 9,
+            "targetPageName": "采购车",
+            "targetCanvasCid": "rcV39SqhV3AdXhGdz1jAZU",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AdXhGdz1jAZU"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 10,
+      "pageName": "我的",
+      "canvasCid": "rcV39SqhV3AnkFsnNwH5dy",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AnkFsnNwH5dy",
+      "screenshotFile": "page-10.png",
+      "keyTexts": [
+        "我的",
+        "橙橙子",
+        "全部订单",
+        "我的订单",
+        "待付款",
+        "待发货",
+        "待收货",
+        "待评价",
+        "售后",
+        "OEM订单",
+        "待确认",
+        "待生产",
+        "已完成",
+        "服务工具",
+        "联系客服",
+        "地址管理",
+        "发票管理",
+        "用户协议",
+        "隐私政策",
+        "帮助中心",
+        "联系业务员",
+        "商城",
+        "首页",
+        "会员"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "我的订单 / 全部订单 / 待收货",
+          "cid": "V3Sqe8tO4OCzkB",
+          "linkCid": "itaV3SqeaobaEEBGT",
+          "bounds": {
+            "x": -64.913818359375,
+            "y": 231.03448486328125,
+            "w": 918.9310302734375,
+            "h": 266.74139404296875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 16,
+            "targetPageName": "我的-我的订单",
+            "targetCanvasCid": "rcV39SqhV3Nlpqakm6331T",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nlpqakm6331T"
+          }
+        },
+        {
+          "order": 2,
+          "label": "OEM订单 / 全部订单 / 待生产",
+          "cid": "V3SsRt1rJACM8A",
+          "linkCid": "itaV3SsTcKhqVj82I",
+          "bounds": {
+            "x": -64.913818359375,
+            "y": 596.9310302734375,
+            "w": 875.637939453125,
+            "h": 307.2413330078125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 29,
+            "targetPageName": "我的-OEM订单",
+            "targetCanvasCid": "rcV39SqhV3RyZbczlscMvp",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3RyZbczlscMvp"
+          }
+        },
+        {
+          "order": 3,
+          "label": "地址管理",
+          "cid": "V3StreGtMzIbY4",
+          "linkCid": "itaV3StvtTbtkH2BP",
+          "bounds": {
+            "x": 199.03448486328125,
+            "y": 1055,
+            "w": 163.39654541015625,
+            "h": 189.9310302734375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 37,
+            "targetPageName": "我的-发票管理",
+            "targetCanvasCid": "rcV39SqhV3ShISUthxNNpZ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3ShISUthxNNpZ"
+          }
+        },
+        {
+          "order": 4,
+          "label": "发票管理",
+          "cid": "V3SteV5zcnAHUr",
+          "linkCid": "itaV3StpvGQ2TQNCh",
+          "bounds": {
+            "x": -31.39654541015625,
+            "y": 1068.965576171875,
+            "w": 139.6551513671875,
+            "h": 167.586181640625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 38,
+            "targetPageName": "我的-地址管理",
+            "targetCanvasCid": "rcV39SqhV3ShoTFRTmzJc0",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3ShoTFRTmzJc0"
+          }
+        },
+        {
+          "order": 5,
+          "label": "联系业务员",
+          "cid": "V5qS4WGva0fK6i",
+          "linkCid": "itaV5qS50YIyJiRgt",
+          "bounds": {
+            "x": 690.62060546875,
+            "y": 1401.3448486328125,
+            "w": 181.5517578125,
+            "h": 164.7930908203125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 11,
+            "targetPageName": "首页",
+            "targetCanvasCid": "rcV39SqhV3FSCruau1HXSD",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD"
+          }
+        },
+        {
+          "order": 6,
+          "label": "首页",
+          "cid": "V3SpulgvV41OzLPQvJP0vi",
+          "linkCid": "itaV41OshfHOTBrCQ",
+          "bounds": {
+            "x": -71.89654541015625,
+            "y": 1649.9310302734375,
+            "w": 68.4310302734375,
+            "h": 124.2930908203125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 8,
+            "targetPageName": "商城",
+            "targetCanvasCid": "rcV39SqhV3Aa9J5Pa0kMYe",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Aa9J5Pa0kMYe"
+          }
+        },
+        {
+          "order": 7,
+          "label": "商城",
+          "cid": "V3SqKBTkV41OzLPXI0KTg7",
+          "linkCid": "itaV41PSFsFzYdHIu",
+          "bounds": {
+            "x": 179.4827880859375,
+            "y": 1652.72412109375,
+            "w": 132.67236328125,
+            "h": 115.913818359375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 40,
+            "targetPageName": "会员",
+            "targetCanvasCid": "rcV39SqhV41R91HEFKyiai",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV41R91HEFKyiai"
+          }
+        },
+        {
+          "order": 8,
+          "label": "商城",
+          "cid": "V3SqKBTkV41OzLPXI0KTg7",
+          "linkCid": "itaV41PSFsFzYdHIu",
+          "bounds": {
+            "x": 179.4827880859375,
+            "y": 1806.3447265625,
+            "w": 132.67236328125,
+            "h": 115.913818359375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 43,
+            "targetPageName": "企微-聊天界面",
+            "targetCanvasCid": "rcV3a69jV5qS2CuOUrJRPG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV3a69jV5qS2CuOUrJRPG"
+          }
+        },
+        {
+          "order": 9,
+          "label": "商城",
+          "cid": "V3SqKBTkV41OzLPXI0KTg7",
+          "linkCid": "itaV41PSFsFzYdHIu",
+          "bounds": {
+            "x": 179.4827880859375,
+            "y": 1806.3447265625,
+            "w": 132.67236328125,
+            "h": 115.913818359375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 40,
+            "targetPageName": "会员",
+            "targetCanvasCid": "rcV39SqhV41R91HEFKyiai",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV41R91HEFKyiai"
+          }
+        },
+        {
+          "order": 10,
+          "label": "会员",
+          "cid": "V41UgNrB2kDQid",
+          "linkCid": "itaV41Uhs1qP7DvHL",
+          "bounds": {
+            "x": 457.396484375,
+            "y": 1810.534423828125,
+            "w": 104.741455078125,
+            "h": 111.72412109375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 8,
+            "targetPageName": "商城",
+            "targetCanvasCid": "rcV39SqhV3Aa9J5Pa0kMYe",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Aa9J5Pa0kMYe"
+          }
+        },
+        {
+          "order": 11,
+          "label": "会员",
+          "cid": "V41UgNrB2kDQid",
+          "linkCid": "itaV41Uhs1qP7DvHL",
+          "bounds": {
+            "x": 457.396484375,
+            "y": 1810.534423828125,
+            "w": 104.741455078125,
+            "h": 111.72412109375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 11,
+            "targetPageName": "首页",
+            "targetCanvasCid": "rcV39SqhV3FSCruau1HXSD",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 11,
+      "pageName": "首页",
+      "canvasCid": "rcV39SqhV3FSCruau1HXSD",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD",
+      "screenshotFile": "page-11.png",
+      "keyTexts": [
+        "冠春药厂",
+        "商城",
+        "商学院",
+        "很高兴为您服务",
+        "搜索关键词",
+        "云台活血贴",
+        "青城护脊贴",
+        "灵墟安神贴",
+        "凝霜祛瘀膏",
+        "紫金活血膏",
+        "药贴",
+        "药油",
+        "药膏",
+        "药粉",
+        "自研配方 百年药方  精心制作而成",
+        "乳膏品",
+        "关于国林",
+        "工厂OEM",
+        "推荐组合",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "¥ 12.88",
+        "销售量：10万+",
+        "首页",
+        "我的",
+        "会员"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "灵墟安神贴 / 青城护脊贴 / 凝霜祛瘀膏",
+          "cid": "V3SjK84AT2A1cg",
+          "linkCid": "itaV3SjKXJmpVZq1n",
+          "bounds": {
+            "x": -131.94830322265625,
+            "y": 42.5,
+            "w": 949.6552124023438,
+            "h": 58.655181884765625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 15,
+            "targetPageName": "首页-云台活血贴",
+            "targetCanvasCid": "rcV39SqhV3Nidiafzo9PCJ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nidiafzo9PCJ"
+          }
+        },
+        {
+          "order": 2,
+          "label": "自研配方 百年药方  精心制作而成 / 药油 / 药膏",
+          "cid": "V5qcbydwPwCAy8",
+          "linkCid": "itaV5qcckcrBTNwOp",
+          "bounds": {
+            "x": -112.39654541015625,
+            "y": 760.32763671875,
+            "w": 949.6550903320312,
+            "h": 318.4136962890625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 15,
+            "targetPageName": "首页-云台活血贴",
+            "targetCanvasCid": "rcV39SqhV3Nidiafzo9PCJ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nidiafzo9PCJ"
+          }
+        },
+        {
+          "order": 3,
+          "label": "关于国林",
+          "cid": "V5q7rm6TQl12W5",
+          "linkCid": "itaV5q9PFmHZREAn7",
+          "bounds": {
+            "x": -129.1551513671875,
+            "y": 1306.3792724609375,
+            "w": 319.810302734375,
+            "h": 297.465576171875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 8,
+            "targetPageName": "商城",
+            "targetCanvasCid": "rcV39SqhV3Aa9J5Pa0kMYe",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Aa9J5Pa0kMYe"
+          }
+        },
+        {
+          "order": 4,
+          "label": "商学院",
+          "cid": "V5q7WOh4CJWtxc",
+          "linkCid": "itaV5q7WePxpTGw78",
+          "bounds": {
+            "x": 557.9482421875,
+            "y": 1152.7586669921875,
+            "w": 303.0517578125,
+            "h": 308.637939453125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 10,
+            "targetPageName": "我的",
+            "targetCanvasCid": "rcV39SqhV3AnkFsnNwH5dy",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AnkFsnNwH5dy"
+          }
+        },
+        {
+          "order": 5,
+          "label": "工厂OEM",
+          "cid": "V5qemXuLrsrIuz",
+          "linkCid": "itaV60ClK9WuarY4c",
+          "bounds": {
+            "x": 214.39654541015625,
+            "y": 1154.1551513671875,
+            "w": 330.98272705078125,
+            "h": 294.6724853515625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 8,
+            "targetPageName": "商城",
+            "targetCanvasCid": "rcV39SqhV3Aa9J5Pa0kMYe",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Aa9J5Pa0kMYe"
+          }
+        },
+        {
+          "order": 6,
+          "label": "五福面人参茶养生茶组合熬夜疲劳恢复茶 / 销售量：10万+",
+          "cid": "V3SpqVgBUWRSXW",
+          "linkCid": "itaV41OVWoBDqWbd",
+          "bounds": {
+            "x": -115.189697265625,
+            "y": 1538.2069091796875,
+            "w": 966.413818359375,
+            "h": 638.2242431640625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 41,
+            "targetPageName": "商学院",
+            "targetCanvasCid": "rcV39SqhV5q7LPc95Tapgo",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV5q7LPc95Tapgo"
+          }
+        },
+        {
+          "order": 7,
+          "label": "商城",
+          "cid": "V3SpulgvkuAPjk",
+          "linkCid": "itaV3Spw4PiMjSANk",
+          "bounds": {
+            "x": 203.22412109375,
+            "y": 1799.362060546875,
+            "w": 68.4310302734375,
+            "h": 124.293212890625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 42,
+            "targetPageName": "关于国林",
+            "targetCanvasCid": "rcV39SqhV5q88MBfXBMXKe",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV5q88MBfXBMXKe"
+          }
+        },
+        {
+          "order": 8,
+          "label": "我的",
+          "cid": "V3SqKBTkLcY9z4",
+          "linkCid": "itaV3SqL6GmcB4e8h",
+          "bounds": {
+            "x": 714.362060546875,
+            "y": 1804.9482421875,
+            "w": 132.67236328125,
+            "h": 115.913818359375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 14,
+            "targetPageName": "首页-药贴",
+            "targetCanvasCid": "rcV39SqhV3NgEQu2670WPq",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NgEQu2670WPq"
+          }
+        },
+        {
+          "order": 9,
+          "label": "会员 / 销售量：10万+",
+          "cid": "V41UTe21PJTJYT",
+          "linkCid": "itaV41UVKTdfIvCpm",
+          "bounds": {
+            "x": 462.982666015625,
+            "y": 1806.3447265625,
+            "w": 79.603515625,
+            "h": 118.70703125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 44,
+            "targetPageName": "工厂OEM",
+            "targetCanvasCid": "rcV39SqhV606Xi0vjvxcBF",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV606Xi0vjvxcBF"
+          }
+        },
+        {
+          "order": 10,
+          "label": "商城",
+          "cid": "V3SpulgvkuAPjk",
+          "linkCid": "itaV3Spw4PiMjSANk",
+          "bounds": {
+            "x": 203.22412109375,
+            "y": 3127.482666015625,
+            "w": 68.4310302734375,
+            "h": 124.293212890625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 8,
+            "targetPageName": "商城",
+            "targetCanvasCid": "rcV39SqhV3Aa9J5Pa0kMYe",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Aa9J5Pa0kMYe"
+          }
+        },
+        {
+          "order": 11,
+          "label": "我的",
+          "cid": "V3SqKBTkLcY9z4",
+          "linkCid": "itaV3SqL6GmcB4e8h",
+          "bounds": {
+            "x": 714.362060546875,
+            "y": 3133.069091796875,
+            "w": 132.67236328125,
+            "h": 115.91357421875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 10,
+            "targetPageName": "我的",
+            "targetCanvasCid": "rcV39SqhV3AnkFsnNwH5dy",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AnkFsnNwH5dy"
+          }
+        },
+        {
+          "order": 12,
+          "label": "会员 / 销售量：10万+",
+          "cid": "V41UTe21PJTJYT",
+          "linkCid": "itaV41UVKTdfIvCpm",
+          "bounds": {
+            "x": 462.982666015625,
+            "y": 3134.465576171875,
+            "w": 79.603515625,
+            "h": 118.706787109375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 8,
+            "targetPageName": "商城",
+            "targetCanvasCid": "rcV39SqhV3Aa9J5Pa0kMYe",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Aa9J5Pa0kMYe"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 12,
+      "pageName": "首页-商品详情 -下单",
+      "canvasCid": "rcV39SqhV3NQuQPZvPYq3k",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NQuQPZvPYq3k",
+      "screenshotFile": "page-12.png",
+      "keyTexts": [
+        "张三",
+        "13288888888",
+        "广东省广州市天河区这是地址这是地址",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "确认订单",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "48小时内发货",
+        "x1",
+        "待付款",
+        "商品总价",
+        "请在 23:59:29内付款",
+        "运费",
+        "¥ 0",
+        "订单信息",
+        "订单编号",
+        "1234567890987654321123",
+        "创建时间",
+        "2025-11-22 21:18:30",
+        "付款方式",
+        "微信付款",
+        "支付宝付款",
+        "相关推荐",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "销售量：10万+",
+        "继续付款",
+        "客服",
+        "加入采购车",
+        "剩余23:59:29"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpV3SpOBsvI2JDpJ",
+          "linkCid": "itaV3SjSxwDILx6d4,itaV3SpTZ4dBkrkmP",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 17,
+            "targetPageName": "我的-我的订单-待付款",
+            "targetCanvasCid": "rcV39SqhV3NpeZ8pAYRBRC",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NpeZ8pAYRBRC"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpV3SpOBsvI2JDpJ",
+          "linkCid": "itaV3SjSxwDILx6d4,itaV3SpTZ4dBkrkmP",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 12,
+            "targetPageName": "首页-商品详情 -下单",
+            "targetCanvasCid": "rcV39SqhV3NQuQPZvPYq3k",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NQuQPZvPYq3k"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 13,
+      "pageName": "搜索",
+      "canvasCid": "rcV39SqhV3NaDPHJ9jPHWy",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NaDPHJ9jPHWy",
+      "screenshotFile": "page-13.png",
+      "keyTexts": [
+        "搜索",
+        "搜索关键词",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "¥ 12.88",
+        "销售量：10万+"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpV3Sp5xpD3drqhn",
+          "linkCid": "itaV3SjSxwDILx6d4",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 13,
+            "targetPageName": "搜索",
+            "targetCanvasCid": "rcV39SqhV3NaDPHJ9jPHWy",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NaDPHJ9jPHWy"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpV3Sp5xpD3drqhn",
+          "linkCid": "itaV3SjSxwDILx6d4",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 13,
+            "targetPageName": "搜索",
+            "targetCanvasCid": "rcV39SqhV3NaDPHJ9jPHWy",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NaDPHJ9jPHWy"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 14,
+      "pageName": "首页-药贴",
+      "canvasCid": "rcV39SqhV3NgEQu2670WPq",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NgEQu2670WPq",
+      "screenshotFile": "page-14.png",
+      "keyTexts": [
+        "药贴",
+        "很高兴为您服务",
+        "搜索关键词",
+        "云台活血贴",
+        "青城护脊贴",
+        "灵墟安神贴",
+        "凝霜祛瘀膏",
+        "紫金活血膏",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "¥ 12.88",
+        "销售量：10万+"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpMyxFZy",
+          "linkCid": "itaV3SjSxwDILx6d4",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 14,
+            "targetPageName": "首页-药贴",
+            "targetCanvasCid": "rcV39SqhV3NgEQu2670WPq",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NgEQu2670WPq"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpMyxFZy",
+          "linkCid": "itaV3SjSxwDILx6d4",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 14,
+            "targetPageName": "首页-药贴",
+            "targetCanvasCid": "rcV39SqhV3NgEQu2670WPq",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NgEQu2670WPq"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 15,
+      "pageName": "首页-云台活血贴",
+      "canvasCid": "rcV39SqhV3Nidiafzo9PCJ",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nidiafzo9PCJ",
+      "screenshotFile": "page-15.png",
+      "keyTexts": [
+        "云台活血贴",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "¥ 12.88",
+        "销售量：10万+"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjLpLAXhT3W3",
+          "linkCid": "itaV3SjNYOanzBjpw,itaV3Sp3ctWfbaCyf",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -186.53448486328125,
+            "w": 94.965576171875,
+            "h": 78.2069091796875
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 15,
+            "targetPageName": "首页-云台活血贴",
+            "targetCanvasCid": "rcV39SqhV3Nidiafzo9PCJ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nidiafzo9PCJ"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjLpLAXhT3W3",
+          "linkCid": "itaV3SjNYOanzBjpw,itaV3Sp3ctWfbaCyf",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -186.53448486328125,
+            "w": 94.965576171875,
+            "h": 78.2069091796875
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 15,
+            "targetPageName": "首页-云台活血贴",
+            "targetCanvasCid": "rcV39SqhV3Nidiafzo9PCJ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nidiafzo9PCJ"
+          }
+        },
+        {
+          "order": 3,
+          "label": "五福面人参茶养生茶组合熬夜疲劳恢复茶 / 销售量：10万+ / 北东虫夏草粉",
+          "cid": "V3SrW4wGnoecoP",
+          "linkCid": "itaV3SrWidULIUvjm",
+          "bounds": {
+            "x": -116.586181640625,
+            "y": 852.5,
+            "w": 987.362060546875,
+            "h": 712.2413330078125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 7,
+            "targetPageName": "首页-商品详情",
+            "targetCanvasCid": "rcV39SqhV3AH4SOTTdlwAB",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AH4SOTTdlwAB"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 16,
+      "pageName": "我的-我的订单",
+      "canvasCid": "rcV39SqhV3Nlpqakm6331T",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nlpqakm6331T",
+      "screenshotFile": "page-16.png",
+      "keyTexts": [
+        "我的订单",
+        "搜索关键词",
+        "全部",
+        "待付款",
+        "待发货",
+        "待收货",
+        "待评价",
+        "退回/售后",
+        "订单编号",
+        "1234567890987654321123",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "48小时内发货",
+        "x1",
+        "剩余23:59:29",
+        "待售后"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsQ66x5Vej1X",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 16,
+            "targetPageName": "我的-我的订单",
+            "targetCanvasCid": "rcV39SqhV3Nlpqakm6331T",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nlpqakm6331T"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsQ66x5Vej1X",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 17,
+            "targetPageName": "我的-我的订单-待付款",
+            "targetCanvasCid": "rcV39SqhV3NpeZ8pAYRBRC",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NpeZ8pAYRBRC"
+          }
+        },
+        {
+          "order": 3,
+          "label": "五福面人参茶养生茶组合熬夜疲劳恢复茶 / 1234567890987654321123 / 产品规格：1盒",
+          "cid": "V3Sqgc7gLrY1Jw",
+          "linkCid": "itaV3Sqh9bO2SWjMM",
+          "bounds": {
+            "x": -98.4310302734375,
+            "y": 282.7069091796875,
+            "w": 948.2586669921875,
+            "h": 297.46551513671875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 18,
+            "targetPageName": "我的-我的订单-待发货",
+            "targetCanvasCid": "rcV39SqhV3NpynHBELfEY8",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NpynHBELfEY8"
+          }
+        },
+        {
+          "order": 4,
+          "label": "五福面人参茶养生茶组合熬夜疲劳恢复茶 / 1234567890987654321123 / 产品规格：1盒",
+          "cid": "V3SqmPm6JCXg5Q",
+          "linkCid": "itaV3SqqmY6H3UPDS",
+          "bounds": {
+            "x": -109.60345458984375,
+            "y": 816.189697265625,
+            "w": 980.3793334960938,
+            "h": 353.3275146484375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 19,
+            "targetPageName": "我的-我的订单-待收货",
+            "targetCanvasCid": "rcV39SqhV3NuTG8ZKvikm1",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NuTG8ZKvikm1"
+          }
+        },
+        {
+          "order": 5,
+          "label": "五福面人参茶养生茶组合熬夜疲劳恢复茶 / 1234567890987654321123 / 产品规格：1盒",
+          "cid": "V3SrD9FcLY3HnR",
+          "linkCid": "itaV3SrHmMv8k8co5",
+          "bounds": {
+            "x": -99.82763671875,
+            "y": 1376.2069091796875,
+            "w": 925.913818359375,
+            "h": 307.2413330078125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 20,
+            "targetPageName": "我的-我的订单-待评价",
+            "targetCanvasCid": "rcV39SqhV3NwRSZQVVTRos",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NwRSZQVVTRos"
+          }
+        },
+        {
+          "order": 6,
+          "label": "五福面人参茶养生茶组合熬夜疲劳恢复茶 / 1234567890987654321123 / 产品规格：1盒",
+          "cid": "V3SrpLZmhcoakf",
+          "linkCid": "itaV3SrqlzXnVxhCo",
+          "bounds": {
+            "x": -109.60345458984375,
+            "y": 1927.8447265625,
+            "w": 980.3793334960938,
+            "h": 317.017333984375
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 16,
+            "targetPageName": "我的-我的订单",
+            "targetCanvasCid": "rcV39SqhV3Nlpqakm6331T",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nlpqakm6331T"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 17,
+      "pageName": "我的-我的订单-待付款",
+      "canvasCid": "rcV39SqhV3NpeZ8pAYRBRC",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NpeZ8pAYRBRC",
+      "screenshotFile": "page-17.png",
+      "keyTexts": [
+        "待付款",
+        "请在 23:59:29内付款",
+        "张三",
+        "13288888888",
+        "广东省广州市天河区这是地址这是地址",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "48小时内发货",
+        "x1",
+        "商品总价",
+        "运费",
+        "¥ 0",
+        "订单信息",
+        "订单编号",
+        "1234567890987654321123",
+        "创建时间",
+        "2025-11-22 21:18:30",
+        "付款方式",
+        "微信付款",
+        "支付宝付款",
+        "相关推荐",
+        "继续付款",
+        "客服",
+        "加入采购车",
+        "剩余23:59:29",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "销售量：10万+"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPUq7Gla",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 17,
+            "targetPageName": "我的-我的订单-待付款",
+            "targetCanvasCid": "rcV39SqhV3NpeZ8pAYRBRC",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NpeZ8pAYRBRC"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPUq7Gla",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 17,
+            "targetPageName": "我的-我的订单-待付款",
+            "targetCanvasCid": "rcV39SqhV3NpeZ8pAYRBRC",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NpeZ8pAYRBRC"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 18,
+      "pageName": "我的-我的订单-待发货",
+      "canvasCid": "rcV39SqhV3NpynHBELfEY8",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NpynHBELfEY8",
+      "screenshotFile": "page-18.png",
+      "keyTexts": [
+        "待发货",
+        "已付款，等待商家发货",
+        "张三",
+        "13288888888",
+        "广东省广州市天河区这是地址这是地址",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "48小时内发货",
+        "x1",
+        "商品总价",
+        "运费",
+        "¥ 0",
+        "订单信息",
+        "订单编号",
+        "1234567890987654321123",
+        "创建时间",
+        "2025-11-22 21:18:30",
+        "下单时间",
+        "付款时间",
+        "付款方式",
+        "微信付款",
+        "支付宝付款",
+        "相关推荐",
+        "申请退款",
+        "客服",
+        "加入采购车",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "销售量：10万+"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsJDa4SLhXjN",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 18,
+            "targetPageName": "我的-我的订单-待发货",
+            "targetCanvasCid": "rcV39SqhV3NpynHBELfEY8",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NpynHBELfEY8"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsJDa4SLhXjN",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 23,
+            "targetPageName": "我的-我的订单-待发货-申请退款",
+            "targetCanvasCid": "rcV39SqhV3O2SG7p5juCm8",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O2SG7p5juCm8"
+          }
+        },
+        {
+          "order": 3,
+          "label": "申请退款",
+          "cid": "V3Sqv95GNlU3bR",
+          "linkCid": "itaV3SqvfFHHSnckd",
+          "bounds": {
+            "x": 513.258544921875,
+            "y": 1788.189697265625,
+            "w": 365.8966064453125,
+            "h": 139.655029296875
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 18,
+            "targetPageName": "我的-我的订单-待发货",
+            "targetCanvasCid": "rcV39SqhV3NpynHBELfEY8",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NpynHBELfEY8"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 19,
+      "pageName": "我的-我的订单-待收货",
+      "canvasCid": "rcV39SqhV3NuTG8ZKvikm1",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NuTG8ZKvikm1",
+      "screenshotFile": "page-19.png",
+      "keyTexts": [
+        "待收货",
+        "还剩3天16小时自动确认",
+        "中通物流  ZT1234567890",
+        "运输中  快件离开【广州站点】已发往【郑州站点】",
+        "张三",
+        "13288888888",
+        "广东省广州市天河区这是地址这是地址",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "48小时内发货",
+        "x1",
+        "商品总价",
+        "运费",
+        "¥ 0",
+        "订单信息",
+        "订单编号",
+        "1234567890987654321123",
+        "创建时间",
+        "2025-11-22 21:18:30",
+        "下单时间",
+        "付款时间",
+        "付款方式",
+        "微信付款",
+        "相关推荐",
+        "申请退款",
+        "确认收货",
+        "客服",
+        "加入采购车",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "销售量：10万+"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsJs39Npx1Qc",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 19,
+            "targetPageName": "我的-我的订单-待收货",
+            "targetCanvasCid": "rcV39SqhV3NuTG8ZKvikm1",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NuTG8ZKvikm1"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsJs39Npx1Qc",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 22,
+            "targetPageName": "我的-我的订单-待发货-申请退款",
+            "targetCanvasCid": "rcV39SqhV3O19XArK2p1OX",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O19XArK2p1OX"
+          }
+        },
+        {
+          "order": 3,
+          "label": "申请退款",
+          "cid": "V3SrKAhMDB2ynP",
+          "linkCid": "itaV3SrKiwEJw46L4",
+          "bounds": {
+            "x": 192.0517578125,
+            "y": 1788.189697265625,
+            "w": 330.982666015625,
+            "h": 139.655029296875
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 19,
+            "targetPageName": "我的-我的订单-待收货",
+            "targetCanvasCid": "rcV39SqhV3NuTG8ZKvikm1",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NuTG8ZKvikm1"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 20,
+      "pageName": "我的-我的订单-待评价",
+      "canvasCid": "rcV39SqhV3NwRSZQVVTRos",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NwRSZQVVTRos",
+      "screenshotFile": "page-20.png",
+      "keyTexts": [
+        "交易成功",
+        "已签收",
+        "交易成功，期待您的评价",
+        "中通物流  ZT1234567890",
+        "快递已签收 签收人：张某三",
+        "张三",
+        "13288888888",
+        "广东省广州市天河区这是地址这是地址",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "48小时内发货",
+        "x1",
+        "商品总价",
+        "运费",
+        "¥ 0",
+        "订单信息",
+        "订单编号",
+        "1234567890987654321123",
+        "创建时间",
+        "2025-11-22 21:18:30",
+        "下单时间",
+        "付款时间",
+        "付款方式",
+        "微信付款",
+        "相关推荐",
+        "申请退款",
+        "去评价",
+        "客服",
+        "加入采购车",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "确认收货",
+        "销售量：10万+"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsKFUX8DSGr6",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 20,
+            "targetPageName": "我的-我的订单-待评价",
+            "targetCanvasCid": "rcV39SqhV3NwRSZQVVTRos",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NwRSZQVVTRos"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsKFUX8DSGr6",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 28,
+            "targetPageName": "我的-我的订单-待评价-评价",
+            "targetCanvasCid": "rcV39SqhV3OFmSmbLCcNzd",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3OFmSmbLCcNzd"
+          }
+        },
+        {
+          "order": 3,
+          "label": "去评价",
+          "cid": "V3SrsOOeZnYVCR",
+          "linkCid": "itaV3SrtHUDJZjsqb",
+          "bounds": {
+            "x": 537,
+            "y": 1799.362060546875,
+            "w": 351.9310302734375,
+            "h": 139.6552734375
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 20,
+            "targetPageName": "我的-我的订单-待评价",
+            "targetCanvasCid": "rcV39SqhV3NwRSZQVVTRos",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NwRSZQVVTRos"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 21,
+      "pageName": "我的-我的订单-售后",
+      "canvasCid": "rcV39SqhV3Nyz2UYBnjfmG",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nyz2UYBnjfmG",
+      "screenshotFile": "page-21.png",
+      "keyTexts": [
+        "售后",
+        "已申请售后服务",
+        "已确认售后，请退回商品",
+        "中通物流  ZT1234567890",
+        "快递已签收 签收人：张某三",
+        "张三",
+        "13288888888",
+        "广东省广州市天河区这是地址这是地址",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "48小时内发货",
+        "x1",
+        "商品总价",
+        "运费",
+        "¥ 0",
+        "订单信息",
+        "订单编号",
+        "1234567890987654321123",
+        "创建时间",
+        "2025-11-22 21:18:30",
+        "下单时间",
+        "付款时间",
+        "付款方式",
+        "微信付款",
+        "相关推荐",
+        "再次购买",
+        "填写物流",
+        "客服",
+        "加入采购车",
+        "北东虫夏草粉",
+        "申请退款",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "确认收货",
+        "销售量：10万+"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsKoCOCXuAnA",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 21,
+            "targetPageName": "我的-我的订单-售后",
+            "targetCanvasCid": "rcV39SqhV3Nyz2UYBnjfmG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nyz2UYBnjfmG"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsKoCOCXuAnA",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 25,
+            "targetPageName": "我的-我的订单-售后 -填写单号",
+            "targetCanvasCid": "rcV39SqhV3O5mWK1DGtCFd",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O5mWK1DGtCFd"
+          }
+        },
+        {
+          "order": 3,
+          "label": "填写物流",
+          "cid": "V3Ss4zqr9zScLp",
+          "linkCid": "itaV3Ss5Pa5OZ171l,itaV3Ss773EMYw3R0",
+          "bounds": {
+            "x": 543.982666015625,
+            "y": 1803.5517578125,
+            "w": 326.793212890625,
+            "h": 145.241455078125
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 21,
+            "targetPageName": "我的-我的订单-售后",
+            "targetCanvasCid": "rcV39SqhV3Nyz2UYBnjfmG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nyz2UYBnjfmG"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 22,
+      "pageName": "我的-我的订单-待发货-申请退款",
+      "canvasCid": "rcV39SqhV3O19XArK2p1OX",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O19XArK2p1OX",
+      "screenshotFile": "page-22.png",
+      "keyTexts": [
+        "申请退款",
+        "订单编号",
+        "1234567890987654321123",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "x1",
+        "物流状态",
+        "已收到货",
+        "未收到货",
+        "退款原因",
+        "拍多了",
+        "退款金额",
+        "退款方式",
+        "自行寄回",
+        "补充描述和凭证",
+        "补充描述，有助于商家更好的处理售后问题",
+        "点击提交并确定《冠春商城退款协议》",
+        "提交"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsO67tlgyCiQ",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 22,
+            "targetPageName": "我的-我的订单-待发货-申请退款",
+            "targetCanvasCid": "rcV39SqhV3O19XArK2p1OX",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O19XArK2p1OX"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsO67tlgyCiQ",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 21,
+            "targetPageName": "我的-我的订单-售后",
+            "targetCanvasCid": "rcV39SqhV3Nyz2UYBnjfmG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Nyz2UYBnjfmG"
+          }
+        },
+        {
+          "order": 3,
+          "label": "提交",
+          "cid": "V3Ss3NsxYyxX8T",
+          "linkCid": "itaV3Ss3x7oi0ExDW",
+          "bounds": {
+            "x": -116.586181640625,
+            "y": 1742.103515625,
+            "w": 1015.2930908203125,
+            "h": 146.637939453125
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 22,
+            "targetPageName": "我的-我的订单-待发货-申请退款",
+            "targetCanvasCid": "rcV39SqhV3O19XArK2p1OX",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O19XArK2p1OX"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 23,
+      "pageName": "我的-我的订单-待发货-申请退款",
+      "canvasCid": "rcV39SqhV3O2SG7p5juCm8",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O2SG7p5juCm8",
+      "screenshotFile": "page-23.png",
+      "keyTexts": [
+        "待发货",
+        "已付款，等待商家发货",
+        "张三",
+        "13288888888",
+        "广东省广州市天河区这是地址这是地址",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "48小时内发货",
+        "x1",
+        "商品总价",
+        "运费",
+        "¥ 0",
+        "订单信息",
+        "订单编号",
+        "1234567890987654321123",
+        "退款原因",
+        "取消",
+        "创建时间",
+        "2025-11-22 21:18:30",
+        "不想要了",
+        "下单时间",
+        "拍多了",
+        "付款时间",
+        "地址有误",
+        "付款方式",
+        "微信付款",
+        "支付宝付款",
+        "相关推荐",
+        "确认",
+        "申请退款",
+        "客服",
+        "加入采购车",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "销售量：10万+"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsOmtUOMuxxk",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 23,
+            "targetPageName": "我的-我的订单-待发货-申请退款",
+            "targetCanvasCid": "rcV39SqhV3O2SG7p5juCm8",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O2SG7p5juCm8"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsOmtUOMuxxk",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 18,
+            "targetPageName": "我的-我的订单-待发货",
+            "targetCanvasCid": "rcV39SqhV3NpynHBELfEY8",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NpynHBELfEY8"
+          }
+        },
+        {
+          "order": 3,
+          "label": "申请退款 / 确认 / 加入采购车",
+          "cid": "V3Sqxgewr14zOT",
+          "linkCid": "itaV3Sr2msxO1wp6A",
+          "bounds": {
+            "x": -108.2069091796875,
+            "y": 1739.310302734375,
+            "w": 966.413818359375,
+            "h": 164.793212890625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 23,
+            "targetPageName": "我的-我的订单-待发货-申请退款",
+            "targetCanvasCid": "rcV39SqhV3O2SG7p5juCm8",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O2SG7p5juCm8"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 24,
+      "pageName": "我的-我的订单-售后 -已寄回",
+      "canvasCid": "rcV39SqhV3O57KwxJbMvMH",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O57KwxJbMvMH",
+      "screenshotFile": "page-24.png",
+      "keyTexts": [
+        "售后",
+        "已寄回",
+        "已确认售后，还剩3天16小时自动确认",
+        "中通物流  ZT1234567890",
+        "快递已签收 签收人：张某三（这是退回物流信息）",
+        "厂家售后人",
+        "13288888888",
+        "广东省广州市天河区这是地址这是地址",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "48小时内发货",
+        "x1",
+        "商品总价",
+        "运费",
+        "¥ 0",
+        "订单信息",
+        "订单编号",
+        "1234567890987654321123",
+        "创建时间",
+        "2025-11-22 21:18:30",
+        "下单时间",
+        "付款时间",
+        "付款方式",
+        "微信付款",
+        "支付宝付款",
+        "相关推荐",
+        "再次购买",
+        "客服",
+        "加入采购车",
+        "申请退款",
+        "确认收货",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "销售量：10万+"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsMWdf63ybys",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 24,
+            "targetPageName": "我的-我的订单-售后 -已寄回",
+            "targetCanvasCid": "rcV39SqhV3O57KwxJbMvMH",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O57KwxJbMvMH"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsMWdf63ybys",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 26,
+            "targetPageName": "我的-我的订单-售后 -已退款",
+            "targetCanvasCid": "rcV39SqhV3O7lh28kMpKCz",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O7lh28kMpKCz"
+          }
+        },
+        {
+          "order": 3,
+          "label": "快递已签收 签收人：张某三（这是退回物流信息） / 中通物流  ZT1234567890",
+          "cid": "V3SsEiidGceTbh",
+          "linkCid": "itaV3SsGP61f4wU65",
+          "bounds": {
+            "x": -116.586181640625,
+            "y": 117.91378784179688,
+            "w": 966.413818359375,
+            "h": 217.86209106445312
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 24,
+            "targetPageName": "我的-我的订单-售后 -已寄回",
+            "targetCanvasCid": "rcV39SqhV3O57KwxJbMvMH",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O57KwxJbMvMH"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 25,
+      "pageName": "我的-我的订单-售后 -填写单号",
+      "canvasCid": "rcV39SqhV3O5mWK1DGtCFd",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O5mWK1DGtCFd",
+      "screenshotFile": "page-25.png",
+      "keyTexts": [
+        "填写单号",
+        "物流公司",
+        "选择物流公司",
+        "中通快递",
+        "退货单号",
+        "请填写退货单号",
+        "确认"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsLZSi8FsmkL",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 25,
+            "targetPageName": "我的-我的订单-售后 -填写单号",
+            "targetCanvasCid": "rcV39SqhV3O5mWK1DGtCFd",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O5mWK1DGtCFd"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsLZSi8FsmkL",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 24,
+            "targetPageName": "我的-我的订单-售后 -已寄回",
+            "targetCanvasCid": "rcV39SqhV3O57KwxJbMvMH",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O57KwxJbMvMH"
+          }
+        },
+        {
+          "order": 3,
+          "label": "确认",
+          "cid": "V3Ss8KvVomIKZ5",
+          "linkCid": "itaV3SsBFlFcs7ptR",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": 1742.103515625,
+            "w": 976.189697265625,
+            "h": 203.896484375
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 25,
+            "targetPageName": "我的-我的订单-售后 -填写单号",
+            "targetCanvasCid": "rcV39SqhV3O5mWK1DGtCFd",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O5mWK1DGtCFd"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 26,
+      "pageName": "我的-我的订单-售后 -已退款",
+      "canvasCid": "rcV39SqhV3O7lh28kMpKCz",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3O7lh28kMpKCz",
+      "screenshotFile": "page-26.png",
+      "keyTexts": [
+        "售后",
+        "已退款",
+        "已原路退回至付款账号",
+        "中通物流  ZT1234567890",
+        "快递已签收 签收人：张某三（这是退回物流信息）",
+        "厂家售后人",
+        "13288888888",
+        "广东省广州市天河区这是地址这是地址",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "48小时内发货",
+        "x1",
+        "商品总价",
+        "运费",
+        "¥ 0",
+        "订单信息",
+        "订单编号",
+        "1234567890987654321123",
+        "创建时间",
+        "2025-11-22 21:18:30",
+        "下单时间",
+        "付款时间",
+        "退款时间",
+        "付款方式",
+        "微信付款",
+        "相关推荐",
+        "再次购买",
+        "客服",
+        "加入采购车",
+        "申请退款",
+        "确认收货",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "销售量：10万+"
+      ],
+      "interactions": []
+    },
+    {
+      "pageNumber": 27,
+      "pageName": "我的-我的订单-待评价-交易成功",
+      "canvasCid": "rcV39SqhV3OFFYJpyxCD8G",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3OFFYJpyxCD8G",
+      "screenshotFile": "page-27.png",
+      "keyTexts": [
+        "交易成功",
+        "已签收",
+        "交易成功，期待您的评价",
+        "中通物流  ZT1234567890",
+        "快递已签收 签收人：张某三",
+        "张三",
+        "13288888888",
+        "广东省广州市天河区这是地址这是地址",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "48小时内发货",
+        "x1",
+        "商品总价",
+        "运费",
+        "¥ 0",
+        "订单信息",
+        "订单编号",
+        "1234567890987654321123",
+        "创建时间",
+        "2025-11-22 21:18:30",
+        "下单时间",
+        "付款时间",
+        "付款方式",
+        "微信付款",
+        "相关推荐",
+        "申请退款",
+        "开发票",
+        "客服",
+        "加入采购车",
+        "北东虫夏草粉",
+        "¥ 20.88",
+        "批发价：¥8.88",
+        "确认收货",
+        "销售量：10万+"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsMrxiqJe2v3",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 27,
+            "targetPageName": "我的-我的订单-待评价-交易成功",
+            "targetCanvasCid": "rcV39SqhV3OFFYJpyxCD8G",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3OFFYJpyxCD8G"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsMrxiqJe2v3",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 27,
+            "targetPageName": "我的-我的订单-待评价-交易成功",
+            "targetCanvasCid": "rcV39SqhV3OFFYJpyxCD8G",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3OFFYJpyxCD8G"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 28,
+      "pageName": "我的-我的订单-待评价-评价",
+      "canvasCid": "rcV39SqhV3OFmSmbLCcNzd",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3OFmSmbLCcNzd",
+      "screenshotFile": "page-28.png",
+      "keyTexts": [
+        "评价",
+        "订单编号",
+        "1234567890987654321123",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "x1",
+        "真实描述商品和感受，可更有效地帮助他人",
+        "确认"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsM0Eg1Nxrzx",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 28,
+            "targetPageName": "我的-我的订单-待评价-评价",
+            "targetCanvasCid": "rcV39SqhV3OFmSmbLCcNzd",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3OFmSmbLCcNzd"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsM0Eg1Nxrzx",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 27,
+            "targetPageName": "我的-我的订单-待评价-交易成功",
+            "targetCanvasCid": "rcV39SqhV3OFFYJpyxCD8G",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3OFFYJpyxCD8G"
+          }
+        },
+        {
+          "order": 3,
+          "label": "确认",
+          "cid": "V3SrvnqA8hMpLQ",
+          "linkCid": "itaV3SrwJUP5GwyeB",
+          "bounds": {
+            "x": -127.7586669921875,
+            "y": 1735.12060546875,
+            "w": 991.5517578125,
+            "h": 210.87939453125
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 28,
+            "targetPageName": "我的-我的订单-待评价-评价",
+            "targetCanvasCid": "rcV39SqhV3OFmSmbLCcNzd",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3OFmSmbLCcNzd"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 29,
+      "pageName": "我的-OEM订单",
+      "canvasCid": "rcV39SqhV3RyZbczlscMvp",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3RyZbczlscMvp",
+      "screenshotFile": "page-29.png",
+      "keyTexts": [
+        "OEM订单",
+        "搜索关键词",
+        "全部",
+        "待确认",
+        "生产中",
+        "待收货",
+        "已完成",
+        "订单编号",
+        "1234567890987654321123",
+        "等待确认样品",
+        "维生素C泡腾片 (OEM定制)",
+        "x10000",
+        "等待确认生成"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsV1iG9WKaEB",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 29,
+            "targetPageName": "我的-OEM订单",
+            "targetCanvasCid": "rcV39SqhV3RyZbczlscMvp",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3RyZbczlscMvp"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3SsV1iG9WKaEB",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 29,
+            "targetPageName": "我的-OEM订单",
+            "targetCanvasCid": "rcV39SqhV3RyZbczlscMvp",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3RyZbczlscMvp"
+          }
+        },
+        {
+          "order": 3,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SsZrJXRN5vcV",
+          "linkCid": "itaV3SsaP3ratN8zi",
+          "bounds": {
+            "x": 525.82763671875,
+            "y": 507.55169677734375,
+            "w": 324,
+            "h": 168.98272705078125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 30,
+            "targetPageName": "我的-OEM订单-待确认",
+            "targetCanvasCid": "rcV39SqhV3S6lBj6piaj8P",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3S6lBj6piaj8P"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 30,
+      "pageName": "我的-OEM订单-待确认",
+      "canvasCid": "rcV39SqhV3S6lBj6piaj8P",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3S6lBj6piaj8P",
+      "screenshotFile": "page-30.png",
+      "keyTexts": [
+        "待确认",
+        "等待确认需求",
+        "订单编号",
+        "1234567890987654321123",
+        "维生素C泡腾片 (OEM定制)",
+        "x10000",
+        "需求信息",
+        "样品阶段",
+        "合同协议",
+        "设计确认",
+        "生产阶段",
+        "完成阶段",
+        "需求确认",
+        "合作方式",
+        "OEM贴牌",
+        "外包装",
+        "纸质",
+        "内包装",
+        "塑料",
+        "商标",
+        "已有商标",
+        "批件",
+        "这是批件内容",
+        "加工",
+        "普通加工",
+        "订单信息",
+        "订单金额",
+        "¥ 10000",
+        "预期数量",
+        "10000",
+        "定制要求",
+        "橙子口味,定制包装（定制需求）",
+        "其他需求",
+        "暂无",
+        "业务员信息",
+        "业务员姓名",
+        "张某三",
+        "电话",
+        "13288888888",
+        "联系业务员"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StXG9tz8lOwK",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 30,
+            "targetPageName": "我的-OEM订单-待确认",
+            "targetCanvasCid": "rcV39SqhV3S6lBj6piaj8P",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3S6lBj6piaj8P"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StXG9tz8lOwK",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 31,
+            "targetPageName": "我的-OEM订单-样品记录",
+            "targetCanvasCid": "rcV39SqhV3SCJ1BOsOsQls",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SCJ1BOsOsQls"
+          }
+        },
+        {
+          "order": 3,
+          "label": "样品阶段 / 需求信息",
+          "cid": "V3SsiKZdvAw9UY",
+          "linkCid": "itaV3SsiqODZRqvhQ",
+          "bounds": {
+            "x": 13.2930908203125,
+            "y": 233.82757568359375,
+            "w": 184.3448486328125,
+            "h": 78.2069091796875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 31,
+            "targetPageName": "我的-OEM订单-样品记录",
+            "targetCanvasCid": "rcV39SqhV3SCJ1BOsOsQls",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SCJ1BOsOsQls"
+          }
+        },
+        {
+          "order": 4,
+          "label": "合同协议",
+          "cid": "V3SskOCElMNNaM",
+          "linkCid": "itaV3SslAwYDBvWRw",
+          "bounds": {
+            "x": 208.810302734375,
+            "y": 247.7930908203125,
+            "w": 156.413818359375,
+            "h": 62.8448486328125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 33,
+            "targetPageName": "我的-OEM订单-合同协议",
+            "targetCanvasCid": "rcV39SqhV3SJYFnF3lyf8s",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SJYFnF3lyf8s"
+          }
+        },
+        {
+          "order": 5,
+          "label": "设计确认",
+          "cid": "V3SsmjUO2J0rMt",
+          "linkCid": "itaV3SsnVZz5xlaRQ",
+          "bounds": {
+            "x": 387.5689697265625,
+            "y": 247.7930908203125,
+            "w": 156.4136962890625,
+            "h": 53.0689697265625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 32,
+            "targetPageName": "我的-OEM订单-设计确认",
+            "targetCanvasCid": "rcV39SqhV3SFCDUy81hyBG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SFCDUy81hyBG"
+          }
+        },
+        {
+          "order": 6,
+          "label": "生产阶段",
+          "cid": "V3Ssovqe55aiyA",
+          "linkCid": "itaV3Sspter8hXlm",
+          "bounds": {
+            "x": 550.965576171875,
+            "y": 247.7930908203125,
+            "w": 155.01708984375,
+            "h": 71.22418212890625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 34,
+            "targetPageName": "我的-OEM订单-生产阶段",
+            "targetCanvasCid": "rcV39SqhV3SKNoeBzF4V8A",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SKNoeBzF4V8A"
+          }
+        },
+        {
+          "order": 7,
+          "label": "完成阶段",
+          "cid": "V3Sss75lVtU24",
+          "linkCid": "itaV3Sst8p3b180AG",
+          "bounds": {
+            "x": 710.17236328125,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 36,
+            "targetPageName": "我的-OEM订单-已完成",
+            "targetCanvasCid": "rcV39SqhV3SYgd6jBEvREZ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SYgd6jBEvREZ"
+          }
+        },
+        {
+          "order": 8,
+          "label": "确认需求 / 13288888888",
+          "cid": "V3SscjjH4FjJQ",
+          "linkCid": "itaV3SsdCgBZuXUZj",
+          "bounds": {
+            "x": 408.5172119140625,
+            "y": 1797.965576171875,
+            "w": 462.2586669921875,
+            "h": 148.034423828125
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 30,
+            "targetPageName": "我的-OEM订单-待确认",
+            "targetCanvasCid": "rcV39SqhV3S6lBj6piaj8P",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3S6lBj6piaj8P"
+          }
+        },
+        {
+          "order": 9,
+          "label": "确认需求",
+          "cid": "V3SscjjH4FjJQ",
+          "linkCid": "itaV3SsdCgBZuXUZj",
+          "bounds": {
+            "x": 408.5172119140625,
+            "y": 1929.241455078125,
+            "w": 462.2586669921875,
+            "h": 148.034423828125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 31,
+            "targetPageName": "我的-OEM订单-样品记录",
+            "targetCanvasCid": "rcV39SqhV3SCJ1BOsOsQls",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SCJ1BOsOsQls"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 31,
+      "pageName": "我的-OEM订单-样品记录",
+      "canvasCid": "rcV39SqhV3SCJ1BOsOsQls",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SCJ1BOsOsQls",
+      "screenshotFile": "page-31.png",
+      "keyTexts": [
+        "待确认",
+        "等待确认需求",
+        "订单编号",
+        "1234567890987654321123",
+        "维生素C泡腾片 (OEM定制)",
+        "x10000",
+        "需求信息",
+        "样品阶段",
+        "合同协议",
+        "设计确认",
+        "生产阶段",
+        "完成阶段",
+        "样品02",
+        "寄出时间",
+        "2025-11-22 21:18:30",
+        "物流信息",
+        "顺丰 SF1234567890",
+        "样品01",
+        "样品反馈",
+        "这是反馈的内容这是反馈的内容这是反馈的内容",
+        "申请新的样品"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StXd6LDNKJWy",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 31,
+            "targetPageName": "我的-OEM订单-样品记录",
+            "targetCanvasCid": "rcV39SqhV3SCJ1BOsOsQls",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SCJ1BOsOsQls"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StXd6LDNKJWy",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 30,
+            "targetPageName": "我的-OEM订单-待确认",
+            "targetCanvasCid": "rcV39SqhV3S6lBj6piaj8P",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3S6lBj6piaj8P"
+          }
+        },
+        {
+          "order": 3,
+          "label": "需求信息",
+          "cid": "V3SsiKZdV3SswuDMYH3c7V",
+          "linkCid": "itaV3Ssy7eN0PVV9t",
+          "bounds": {
+            "x": -140.32763671875,
+            "y": 386.05169677734375,
+            "w": 184.3448486328125,
+            "h": 78.2069091796875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 33,
+            "targetPageName": "我的-OEM订单-合同协议",
+            "targetCanvasCid": "rcV39SqhV3SJYFnF3lyf8s",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SJYFnF3lyf8s"
+          }
+        },
+        {
+          "order": 4,
+          "label": "合同协议",
+          "cid": "V3SskOCEV3SswuDJhH0rmB",
+          "linkCid": "itaV3SslAwYDBvWRw",
+          "bounds": {
+            "x": 208.810302734375,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 32,
+            "targetPageName": "我的-OEM订单-设计确认",
+            "targetCanvasCid": "rcV39SqhV3SFCDUy81hyBG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SFCDUy81hyBG"
+          }
+        },
+        {
+          "order": 5,
+          "label": "设计确认",
+          "cid": "V3SsmjUOV3SswuDVxO8qSQ",
+          "linkCid": "itaV3SsnVZz5xlaRQ",
+          "bounds": {
+            "x": 387.5689697265625,
+            "y": 401.413818359375,
+            "w": 156.4136962890625,
+            "h": 53.0689697265625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 34,
+            "targetPageName": "我的-OEM订单-生产阶段",
+            "targetCanvasCid": "rcV39SqhV3SKNoeBzF4V8A",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SKNoeBzF4V8A"
+          }
+        },
+        {
+          "order": 6,
+          "label": "生产阶段",
+          "cid": "V3SsovqeV3SswuD6L4BSOJ",
+          "linkCid": "itaV3Sspter8hXlm",
+          "bounds": {
+            "x": 550.965576171875,
+            "y": 401.413818359375,
+            "w": 155.01708984375,
+            "h": 71.22412109375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 36,
+            "targetPageName": "我的-OEM订单-已完成",
+            "targetCanvasCid": "rcV39SqhV3SYgd6jBEvREZ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SYgd6jBEvREZ"
+          }
+        },
+        {
+          "order": 7,
+          "label": "完成阶段",
+          "cid": "V3Sss75lV3SswuDHgWn3u3",
+          "linkCid": "itaV3Sst8p3b180AG",
+          "bounds": {
+            "x": 710.17236328125,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 31,
+            "targetPageName": "我的-OEM订单-样品记录",
+            "targetCanvasCid": "rcV39SqhV3SCJ1BOsOsQls",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SCJ1BOsOsQls"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 32,
+      "pageName": "我的-OEM订单-设计确认",
+      "canvasCid": "rcV39SqhV3SFCDUy81hyBG",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SFCDUy81hyBG",
+      "screenshotFile": "page-32.png",
+      "keyTexts": [
+        "待确认",
+        "等待确认需求",
+        "订单编号",
+        "1234567890987654321123",
+        "维生素C泡腾片 (OEM定制)",
+        "x10000",
+        "需求信息",
+        "样品阶段",
+        "合同协议",
+        "设计确认",
+        "生产阶段",
+        "完成阶段",
+        "设计稿预览",
+        "提出修改意见",
+        "确认设计稿",
+        "• 调整主色调为客户企业色",
+        "• 优化产品卖点文字排版",
+        "• 增加防伪标识位置",
+        "版本历史",
+        "v2.1 (06-01) · 根据反馈调整配色",
+        "v2.0 (05-28) · 修改logo位置",
+        "v1.0 (05-25) · 初版设计"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StYRBhZRLl8s",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 32,
+            "targetPageName": "我的-OEM订单-设计确认",
+            "targetCanvasCid": "rcV39SqhV3SFCDUy81hyBG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SFCDUy81hyBG"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StYRBhZRLl8s",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 31,
+            "targetPageName": "我的-OEM订单-样品记录",
+            "targetCanvasCid": "rcV39SqhV3SCJ1BOsOsQls",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SCJ1BOsOsQls"
+          }
+        },
+        {
+          "order": 3,
+          "label": "样品阶段 / 需求信息",
+          "cid": "V3SsiKZdV3St2fDMxnLtn4",
+          "linkCid": "itaV3SsiqODZRqvhQ",
+          "bounds": {
+            "x": 13.2930908203125,
+            "y": 387.44830322265625,
+            "w": 184.3448486328125,
+            "h": 78.20684814453125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 33,
+            "targetPageName": "我的-OEM订单-合同协议",
+            "targetCanvasCid": "rcV39SqhV3SJYFnF3lyf8s",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SJYFnF3lyf8s"
+          }
+        },
+        {
+          "order": 4,
+          "label": "合同协议",
+          "cid": "V3SskOCEV3St2fDUsCtAHj",
+          "linkCid": "itaV3SslAwYDBvWRw",
+          "bounds": {
+            "x": 208.810302734375,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 30,
+            "targetPageName": "我的-OEM订单-待确认",
+            "targetCanvasCid": "rcV39SqhV3S6lBj6piaj8P",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3S6lBj6piaj8P"
+          }
+        },
+        {
+          "order": 5,
+          "label": "生产阶段",
+          "cid": "V3SsovqeV3St2fDnJ7kISZ",
+          "linkCid": "itaV3Sspter8hXlm",
+          "bounds": {
+            "x": 550.965576171875,
+            "y": 401.413818359375,
+            "w": 155.01708984375,
+            "h": 71.22412109375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 34,
+            "targetPageName": "我的-OEM订单-生产阶段",
+            "targetCanvasCid": "rcV39SqhV3SKNoeBzF4V8A",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SKNoeBzF4V8A"
+          }
+        },
+        {
+          "order": 6,
+          "label": "完成阶段",
+          "cid": "V3Sss75lV3St2fDLJsVzTK",
+          "linkCid": "itaV3Sst8p3b180AG",
+          "bounds": {
+            "x": 710.17236328125,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 36,
+            "targetPageName": "我的-OEM订单-已完成",
+            "targetCanvasCid": "rcV39SqhV3SYgd6jBEvREZ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SYgd6jBEvREZ"
+          }
+        },
+        {
+          "order": 7,
+          "label": "需求信息",
+          "cid": "V3SsmjUOV3St2fDlNq54Ub",
+          "linkCid": "itaV3St5RqJ4Qu60L",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": 409.7930908203125,
+            "w": 156.413818359375,
+            "h": 53.0689697265625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 32,
+            "targetPageName": "我的-OEM订单-设计确认",
+            "targetCanvasCid": "rcV39SqhV3SFCDUy81hyBG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SFCDUy81hyBG"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 33,
+      "pageName": "我的-OEM订单-合同协议",
+      "canvasCid": "rcV39SqhV3SJYFnF3lyf8s",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SJYFnF3lyf8s",
+      "screenshotFile": "page-33.png",
+      "keyTexts": [
+        "待确认",
+        "等待确认需求",
+        "订单编号",
+        "1234567890987654321123",
+        "维生素C泡腾片 (OEM定制)",
+        "x10000",
+        "需求信息",
+        "样品阶段",
+        "合同协议",
+        "设计确认",
+        "生产阶段",
+        "完成阶段",
+        "合同名称",
+        "2025-11-22 21:18:30",
+        "确认合同无误"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StYBwJ9w3aej",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 33,
+            "targetPageName": "我的-OEM订单-合同协议",
+            "targetCanvasCid": "rcV39SqhV3SJYFnF3lyf8s",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SJYFnF3lyf8s"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StYBwJ9w3aej",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 31,
+            "targetPageName": "我的-OEM订单-样品记录",
+            "targetCanvasCid": "rcV39SqhV3SCJ1BOsOsQls",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SCJ1BOsOsQls"
+          }
+        },
+        {
+          "order": 3,
+          "label": "样品阶段 / 需求信息",
+          "cid": "V3SsiKZdV3SszextNrYeFW",
+          "linkCid": "itaV3SsiqODZRqvhQ",
+          "bounds": {
+            "x": 13.2930908203125,
+            "y": 387.44830322265625,
+            "w": 184.3448486328125,
+            "h": 78.20684814453125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 30,
+            "targetPageName": "我的-OEM订单-待确认",
+            "targetCanvasCid": "rcV39SqhV3S6lBj6piaj8P",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3S6lBj6piaj8P"
+          }
+        },
+        {
+          "order": 4,
+          "label": "需求信息",
+          "cid": "V3SskOCEV3Sszexn0YDV3t",
+          "linkCid": "itaV3St1kw4PUHBhl",
+          "bounds": {
+            "x": -131.94830322265625,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 32,
+            "targetPageName": "我的-OEM订单-设计确认",
+            "targetCanvasCid": "rcV39SqhV3SFCDUy81hyBG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SFCDUy81hyBG"
+          }
+        },
+        {
+          "order": 5,
+          "label": "设计确认",
+          "cid": "V3SsmjUOV3SszexI3egsqL",
+          "linkCid": "itaV3SsnVZz5xlaRQ",
+          "bounds": {
+            "x": 387.5689697265625,
+            "y": 401.413818359375,
+            "w": 156.4136962890625,
+            "h": 53.0689697265625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 34,
+            "targetPageName": "我的-OEM订单-生产阶段",
+            "targetCanvasCid": "rcV39SqhV3SKNoeBzF4V8A",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SKNoeBzF4V8A"
+          }
+        },
+        {
+          "order": 6,
+          "label": "生产阶段",
+          "cid": "V3SsovqeV3SszexA181LT9",
+          "linkCid": "itaV3Sspter8hXlm",
+          "bounds": {
+            "x": 550.965576171875,
+            "y": 401.413818359375,
+            "w": 155.01708984375,
+            "h": 71.22412109375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 36,
+            "targetPageName": "我的-OEM订单-已完成",
+            "targetCanvasCid": "rcV39SqhV3SYgd6jBEvREZ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SYgd6jBEvREZ"
+          }
+        },
+        {
+          "order": 7,
+          "label": "完成阶段",
+          "cid": "V3Sss75lV3SszexrVJaLfW",
+          "linkCid": "itaV3Sst8p3b180AG",
+          "bounds": {
+            "x": 710.17236328125,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 33,
+            "targetPageName": "我的-OEM订单-合同协议",
+            "targetCanvasCid": "rcV39SqhV3SJYFnF3lyf8s",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SJYFnF3lyf8s"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 34,
+      "pageName": "我的-OEM订单-生产阶段",
+      "canvasCid": "rcV39SqhV3SKNoeBzF4V8A",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SKNoeBzF4V8A",
+      "screenshotFile": "page-34.png",
+      "keyTexts": [
+        "待确认",
+        "等待生产",
+        "订单编号",
+        "1234567890987654321123",
+        "维生素C泡腾片 (OEM定制)",
+        "x10000",
+        "需求信息",
+        "样品阶段",
+        "合同协议",
+        "设计确认",
+        "生产阶段",
+        "完成阶段",
+        "品牌商标授权",
+        "商标",
+        "已有商标",
+        "商标文件",
+        "这是商标文件或图片",
+        "泡罩包装",
+        "上盖材料",
+        "药用铝箔 (YBC-001)",
+        "注册证号",
+        "国药包字20231234567",
+        "底材材料",
+        "PVC硬片",
+        "泡罩尺寸",
+        "15mm x 15mm x 4mm",
+        "干燥剂",
+        "类型",
+        "药用硅胶干燥剂 (1g)",
+        "生产许可证",
+        "补充包材",
+        "确认所有包材"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StYu8uFBFa6j",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 34,
+            "targetPageName": "我的-OEM订单-生产阶段",
+            "targetCanvasCid": "rcV39SqhV3SKNoeBzF4V8A",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SKNoeBzF4V8A"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StYu8uFBFa6j",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 31,
+            "targetPageName": "我的-OEM订单-样品记录",
+            "targetCanvasCid": "rcV39SqhV3SCJ1BOsOsQls",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SCJ1BOsOsQls"
+          }
+        },
+        {
+          "order": 3,
+          "label": "样品阶段",
+          "cid": "V3SsiKZdV3St6cyyoNEZqm",
+          "linkCid": "itaV3SsiqODZRqvhQ",
+          "bounds": {
+            "x": 46.810302734375,
+            "y": 388.8448486328125,
+            "w": 160.603515625,
+            "h": 78.20684814453125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 33,
+            "targetPageName": "我的-OEM订单-合同协议",
+            "targetCanvasCid": "rcV39SqhV3SJYFnF3lyf8s",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SJYFnF3lyf8s"
+          }
+        },
+        {
+          "order": 4,
+          "label": "需求信息",
+          "cid": "V3SsovqeV3St6cy8dam5MW",
+          "linkCid": "itaV3StA4Jusih1hm",
+          "bounds": {
+            "x": -120.77587890625,
+            "y": 394.4310302734375,
+            "w": 155.0172119140625,
+            "h": 71.22412109375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 32,
+            "targetPageName": "我的-OEM订单-设计确认",
+            "targetCanvasCid": "rcV39SqhV3SFCDUy81hyBG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SFCDUy81hyBG"
+          }
+        },
+        {
+          "order": 5,
+          "label": "合同协议",
+          "cid": "V3SskOCEV3St6cyAbYNG4X",
+          "linkCid": "itaV3SslAwYDBvWRw",
+          "bounds": {
+            "x": 208.810302734375,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 30,
+            "targetPageName": "我的-OEM订单-待确认",
+            "targetCanvasCid": "rcV39SqhV3S6lBj6piaj8P",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3S6lBj6piaj8P"
+          }
+        },
+        {
+          "order": 6,
+          "label": "设计确认",
+          "cid": "V3SsmjUOV3St6cymdphLOh",
+          "linkCid": "itaV3SsnVZz5xlaRQ",
+          "bounds": {
+            "x": 387.5689697265625,
+            "y": 401.413818359375,
+            "w": 156.4136962890625,
+            "h": 53.0689697265625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 36,
+            "targetPageName": "我的-OEM订单-已完成",
+            "targetCanvasCid": "rcV39SqhV3SYgd6jBEvREZ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SYgd6jBEvREZ"
+          }
+        },
+        {
+          "order": 7,
+          "label": "完成阶段",
+          "cid": "V3Sss75lV3St6cymNCGlHj",
+          "linkCid": "itaV3Sst8p3b180AG",
+          "bounds": {
+            "x": 710.17236328125,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 35,
+            "targetPageName": "我的-OEM订单-生产阶段 -待生产-2",
+            "targetCanvasCid": "rcV39SqhV3STRDhK470dRR",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3STRDhK470dRR"
+          }
+        },
+        {
+          "order": 8,
+          "label": "国药包字20231234567 / 药用硅胶干燥剂 (1g) / 生产许可证",
+          "cid": "V3StOJuMXcs6EX",
+          "linkCid": "itaV3StOeRMcdT1LM",
+          "bounds": {
+            "x": -126.362060546875,
+            "y": 1247.72412109375,
+            "w": 1004.1207275390625,
+            "h": 317.0172119140625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 34,
+            "targetPageName": "我的-OEM订单-生产阶段",
+            "targetCanvasCid": "rcV39SqhV3SKNoeBzF4V8A",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SKNoeBzF4V8A"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 35,
+      "pageName": "我的-OEM订单-生产阶段 -待生产-2",
+      "canvasCid": "rcV39SqhV3STRDhK470dRR",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3STRDhK470dRR",
+      "screenshotFile": "page-35.png",
+      "keyTexts": [
+        "待生产",
+        "生产中",
+        "订单编号",
+        "1234567890987654321123",
+        "维生素C泡腾片 (OEM定制)",
+        "x10000",
+        "需求信息",
+        "样品阶段",
+        "合同协议",
+        "设计确认",
+        "生产阶段",
+        "完成阶段",
+        "生产流程",
+        "物流打包",
+        "2025-11-22 21:18:30",
+        "抽样检测",
+        "批量生产",
+        "样品检测",
+        "样品生产",
+        "包材确认",
+        "设计稿确认",
+        "合同签署",
+        "确认样品",
+        "品牌商标授权",
+        "商标",
+        "已有商标",
+        "商标文件",
+        "这是商标文件或图片",
+        "泡罩包装",
+        "上盖材料",
+        "药用铝箔 (YBC-001)",
+        "注册证号",
+        "国药包字20231234567",
+        "底材材料",
+        "PVC硬片",
+        "泡罩尺寸",
+        "15mm x 15mm x 4mm",
+        "干燥剂",
+        "类型",
+        "药用硅胶干燥剂 (1g)"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StZNRbA4jvW",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 35,
+            "targetPageName": "我的-OEM订单-生产阶段 -待生产-2",
+            "targetCanvasCid": "rcV39SqhV3STRDhK470dRR",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3STRDhK470dRR"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StZNRbA4jvW",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 31,
+            "targetPageName": "我的-OEM订单-样品记录",
+            "targetCanvasCid": "rcV39SqhV3SCJ1BOsOsQls",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SCJ1BOsOsQls"
+          }
+        },
+        {
+          "order": 3,
+          "label": "样品阶段",
+          "cid": "V3SsiKZdV3StULFhMuPVij",
+          "linkCid": "itaV3SsiqODZRqvhQ",
+          "bounds": {
+            "x": 46.810302734375,
+            "y": 388.8448486328125,
+            "w": 160.603515625,
+            "h": 78.20684814453125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 33,
+            "targetPageName": "我的-OEM订单-合同协议",
+            "targetCanvasCid": "rcV39SqhV3SJYFnF3lyf8s",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SJYFnF3lyf8s"
+          }
+        },
+        {
+          "order": 4,
+          "label": "需求信息",
+          "cid": "V3SsovqeV3StULFjQVgRs5",
+          "linkCid": "itaV3Sspter8hXlm,itaV3StA4Jusih1hm",
+          "bounds": {
+            "x": -120.77587890625,
+            "y": 394.4310302734375,
+            "w": 155.0172119140625,
+            "h": 71.22412109375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 32,
+            "targetPageName": "我的-OEM订单-设计确认",
+            "targetCanvasCid": "rcV39SqhV3SFCDUy81hyBG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SFCDUy81hyBG"
+          }
+        },
+        {
+          "order": 5,
+          "label": "合同协议",
+          "cid": "V3SskOCEV3StULFLjSrbAt",
+          "linkCid": "itaV3SslAwYDBvWRw",
+          "bounds": {
+            "x": 208.810302734375,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 30,
+            "targetPageName": "我的-OEM订单-待确认",
+            "targetCanvasCid": "rcV39SqhV3S6lBj6piaj8P",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3S6lBj6piaj8P"
+          }
+        },
+        {
+          "order": 6,
+          "label": "设计确认",
+          "cid": "V3SsmjUOV3StULFX8U8W0a",
+          "linkCid": "itaV3SsnVZz5xlaRQ",
+          "bounds": {
+            "x": 387.5689697265625,
+            "y": 401.413818359375,
+            "w": 156.4136962890625,
+            "h": 53.0689697265625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 36,
+            "targetPageName": "我的-OEM订单-已完成",
+            "targetCanvasCid": "rcV39SqhV3SYgd6jBEvREZ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SYgd6jBEvREZ"
+          }
+        },
+        {
+          "order": 7,
+          "label": "完成阶段",
+          "cid": "V3Sss75lV3StULFowzGZOg",
+          "linkCid": "itaV3Sst8p3b180AG",
+          "bounds": {
+            "x": 710.17236328125,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 35,
+            "targetPageName": "我的-OEM订单-生产阶段 -待生产-2",
+            "targetCanvasCid": "rcV39SqhV3STRDhK470dRR",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3STRDhK470dRR"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 36,
+      "pageName": "我的-OEM订单-已完成",
+      "canvasCid": "rcV39SqhV3SYgd6jBEvREZ",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SYgd6jBEvREZ",
+      "screenshotFile": "page-36.png",
+      "keyTexts": [
+        "已完成",
+        "订单编号",
+        "1234567890987654321123",
+        "维生素C泡腾片 (OEM定制)",
+        "x10000",
+        "需求信息",
+        "样品阶段",
+        "合同协议",
+        "设计确认",
+        "生产阶段",
+        "完成阶段",
+        "物流信息",
+        "寄出时间",
+        "2025-11-22 21:18:30",
+        "顺丰 SF1234567890",
+        "项目概览",
+        "项目周期",
+        "2025-11-22~2026-01-22",
+        "计划生产数量",
+        "10,000盒",
+        "实际完成数量",
+        "9,850盒",
+        "良品率",
+        "98.5%",
+        "生产周期",
+        "60天",
+        "结算明细",
+        "项目",
+        "数量",
+        "金额",
+        "生产加工费",
+        "¥120,000",
+        "包材费用",
+        "-",
+        "¥25,000",
+        "样品费用",
+        "¥3,500",
+        "运费",
+        "¥2,000",
+        "合计"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StZoar4LcA77",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 36,
+            "targetPageName": "我的-OEM订单-已完成",
+            "targetCanvasCid": "rcV39SqhV3SYgd6jBEvREZ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SYgd6jBEvREZ"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StZoar4LcA77",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 31,
+            "targetPageName": "我的-OEM订单-样品记录",
+            "targetCanvasCid": "rcV39SqhV3SCJ1BOsOsQls",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SCJ1BOsOsQls"
+          }
+        },
+        {
+          "order": 3,
+          "label": "样品阶段",
+          "cid": "V3SsiKZdV3StI9HqC1tP72",
+          "linkCid": "itaV3SsiqODZRqvhQ",
+          "bounds": {
+            "x": 42.62066650390625,
+            "y": 387.44830322265625,
+            "w": 155.01727294921875,
+            "h": 78.20684814453125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 33,
+            "targetPageName": "我的-OEM订单-合同协议",
+            "targetCanvasCid": "rcV39SqhV3SJYFnF3lyf8s",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SJYFnF3lyf8s"
+          }
+        },
+        {
+          "order": 4,
+          "label": "需求信息",
+          "cid": "V3Sss75lV3StI9H3yE251A",
+          "linkCid": "itaV3StKZ17Vro5iA",
+          "bounds": {
+            "x": -129.1551513671875,
+            "y": 397.22412109375,
+            "w": 156.41375732421875,
+            "h": 62.8448486328125
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 32,
+            "targetPageName": "我的-OEM订单-设计确认",
+            "targetCanvasCid": "rcV39SqhV3SFCDUy81hyBG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SFCDUy81hyBG"
+          }
+        },
+        {
+          "order": 5,
+          "label": "合同协议",
+          "cid": "V3SskOCEV3StI9H1edXnU1",
+          "linkCid": "itaV3SslAwYDBvWRw",
+          "bounds": {
+            "x": 208.810302734375,
+            "y": 401.413818359375,
+            "w": 156.413818359375,
+            "h": 62.84478759765625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 34,
+            "targetPageName": "我的-OEM订单-生产阶段",
+            "targetCanvasCid": "rcV39SqhV3SKNoeBzF4V8A",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SKNoeBzF4V8A"
+          }
+        },
+        {
+          "order": 6,
+          "label": "设计确认",
+          "cid": "V3SsmjUOV3StI9HZ24PMM2",
+          "linkCid": "itaV3SsnVZz5xlaRQ",
+          "bounds": {
+            "x": 387.5689697265625,
+            "y": 401.413818359375,
+            "w": 156.4136962890625,
+            "h": 53.0689697265625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 30,
+            "targetPageName": "我的-OEM订单-待确认",
+            "targetCanvasCid": "rcV39SqhV3S6lBj6piaj8P",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3S6lBj6piaj8P"
+          }
+        },
+        {
+          "order": 7,
+          "label": "生产阶段",
+          "cid": "V3SsovqeV3StI9HCRiJYi5",
+          "linkCid": "itaV3Sspter8hXlm",
+          "bounds": {
+            "x": 550.965576171875,
+            "y": 401.413818359375,
+            "w": 155.01708984375,
+            "h": 71.22412109375
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 36,
+            "targetPageName": "我的-OEM订单-已完成",
+            "targetCanvasCid": "rcV39SqhV3SYgd6jBEvREZ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3SYgd6jBEvREZ"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 37,
+      "pageName": "我的-发票管理",
+      "canvasCid": "rcV39SqhV3ShISUthxNNpZ",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3ShISUthxNNpZ",
+      "screenshotFile": "page-37.png",
+      "keyTexts": [
+        "发票管理",
+        "搜索关键词"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StahtAS7C0Jr",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 37,
+            "targetPageName": "我的-发票管理",
+            "targetCanvasCid": "rcV39SqhV3ShISUthxNNpZ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3ShISUthxNNpZ"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3StahtAS7C0Jr",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 37,
+            "targetPageName": "我的-发票管理",
+            "targetCanvasCid": "rcV39SqhV3ShISUthxNNpZ",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3ShISUthxNNpZ"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 38,
+      "pageName": "我的-地址管理",
+      "canvasCid": "rcV39SqhV3ShoTFRTmzJc0",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3ShoTFRTmzJc0",
+      "screenshotFile": "page-38.png",
+      "keyTexts": [
+        "地址管理"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3Stb8cHoUQ1BY",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 38,
+            "targetPageName": "我的-地址管理",
+            "targetCanvasCid": "rcV39SqhV3ShoTFRTmzJc0",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3ShoTFRTmzJc0"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV3Stb8cHoUQ1BY",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 38,
+            "targetPageName": "我的-地址管理",
+            "targetCanvasCid": "rcV39SqhV3ShoTFRTmzJc0",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3ShoTFRTmzJc0"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 39,
+      "pageName": "首页-商品详情 -我要批发",
+      "canvasCid": "rcV39SqhV3egUAgq8QhK25",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3egUAgq8QhK25",
+      "screenshotFile": "page-39.png",
+      "keyTexts": [
+        "我的名片",
+        "添加业务员企微有机会抽免单",
+        "您注册的手机号",
+        "13288888888",
+        "更换手机号",
+        "专属业务员",
+        "为您提供“一对一”服务",
+        "联系业务员",
+        "冠春药厂商城",
+        "公司介绍",
+        "工厂介绍",
+        "这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案",
+        "生产线介绍"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpgwbpV3egUAgjgj1qfQ",
+          "linkCid": "itaV3SplfM4FvliXv",
+          "bounds": {
+            "x": -102.6207275390625,
+            "y": -179.55172729492188,
+            "w": 62.8448486328125,
+            "h": 62.844818115234375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 11,
+            "targetPageName": "首页",
+            "targetCanvasCid": "rcV39SqhV3FSCruau1HXSD",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpgwbpV3egUAgjgj1qfQ",
+          "linkCid": "itaV3SplfM4FvliXv",
+          "bounds": {
+            "x": -102.6207275390625,
+            "y": -179.55172729492188,
+            "w": 62.8448486328125,
+            "h": 62.844818115234375
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 39,
+            "targetPageName": "首页-商品详情 -我要批发",
+            "targetCanvasCid": "rcV39SqhV3egUAgq8QhK25",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3egUAgq8QhK25"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 40,
+      "pageName": "会员",
+      "canvasCid": "rcV39SqhV41R91HEFKyiai",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV41R91HEFKyiai",
+      "screenshotFile": "page-40.png",
+      "keyTexts": [
+        "会员",
+        "加入冠春商城会员",
+        "联系业务员获得更多优惠",
+        "专属客服",
+        "会员权限介绍",
+        "商城",
+        "首页",
+        "我的"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV41R91HKtxLg0M",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 40,
+            "targetPageName": "会员",
+            "targetCanvasCid": "rcV39SqhV41R91HEFKyiai",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV41R91HEFKyiai"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SpVtHPV41R91HKtxLg0M",
+          "linkCid": "itaV3SpX8klT69GY1",
+          "bounds": {
+            "x": -123.5689697265625,
+            "y": -178.15516662597656,
+            "w": 94.96551513671875,
+            "h": 69.82759094238281
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 40,
+            "targetPageName": "会员",
+            "targetCanvasCid": "rcV39SqhV41R91HEFKyiai",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV41R91HEFKyiai"
+          }
+        },
+        {
+          "order": 3,
+          "label": "首页",
+          "cid": "V3SpulgvV41RKBRksnorB9",
+          "linkCid": "itaV41OshfHOTBrCQ",
+          "bounds": {
+            "x": -71.89654541015625,
+            "y": 1803.5517578125,
+            "w": 68.4310302734375,
+            "h": 124.29296875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 11,
+            "targetPageName": "首页",
+            "targetCanvasCid": "rcV39SqhV3FSCruau1HXSD",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD"
+          }
+        },
+        {
+          "order": 4,
+          "label": "商城",
+          "cid": "V3SqKBTkV41RKBR2VXlTF7",
+          "linkCid": "itaV41PSFsFzYdHIu",
+          "bounds": {
+            "x": 179.4827880859375,
+            "y": 1806.3447265625,
+            "w": 132.67236328125,
+            "h": 115.913818359375
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 8,
+            "targetPageName": "商城",
+            "targetCanvasCid": "rcV39SqhV3Aa9J5Pa0kMYe",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3Aa9J5Pa0kMYe"
+          }
+        },
+        {
+          "order": 5,
+          "label": "我的",
+          "cid": "V41UdYKY0y6dyM",
+          "linkCid": "itaV41UedjyWG2t3q",
+          "bounds": {
+            "x": 728.32763671875,
+            "y": 1809.137939453125,
+            "w": 92.17236328125,
+            "h": 113.12060546875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 10,
+            "targetPageName": "我的",
+            "targetCanvasCid": "rcV39SqhV3AnkFsnNwH5dy",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3AnkFsnNwH5dy"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 41,
+      "pageName": "商学院",
+      "canvasCid": "rcV39SqhV5q7LPc95Tapgo",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV5q7LPc95Tapgo",
+      "screenshotFile": "page-41.png",
+      "keyTexts": [
+        "商学院",
+        "搜索关键词",
+        "老师案例",
+        "销售玩法",
+        "产品工艺",
+        "张某三",
+        "这是描述这是描述这是描述这是描述"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3dWxheUV5q7LPcytUxJTM",
+          "linkCid": "itaV3dWy5ZeDKrW8j,itaV5qAIIGHS12QWD",
+          "bounds": {
+            "x": -111,
+            "y": -183.7413787841797,
+            "w": 76.810302734375,
+            "h": 71.22413635253906
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 11,
+            "targetPageName": "首页",
+            "targetCanvasCid": "rcV39SqhV3FSCruau1HXSD",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3dWxheUV5q7LPcytUxJTM",
+          "linkCid": "itaV3dWy5ZeDKrW8j,itaV5qAIIGHS12QWD",
+          "bounds": {
+            "x": -111,
+            "y": -183.7413787841797,
+            "w": 76.810302734375,
+            "h": 71.22413635253906
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 41,
+            "targetPageName": "商学院",
+            "targetCanvasCid": "rcV39SqhV5q7LPc95Tapgo",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV5q7LPc95Tapgo"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 42,
+      "pageName": "关于国林",
+      "canvasCid": "rcV39SqhV5q88MBfXBMXKe",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV5q88MBfXBMXKe",
+      "screenshotFile": "page-42.png",
+      "keyTexts": [
+        "关于国林",
+        "搜索关键词",
+        "国林简介",
+        "国林文化",
+        "团队管理",
+        "发展历程",
+        "公司介绍",
+        "工厂介绍",
+        "这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案这是工厂介绍文案",
+        "生产线介绍"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3dWxheUV5qAPLwmGU3mpz",
+          "linkCid": "itaV3dWy5ZeDKrW8j,itaV5qAIIGHS12QWD",
+          "bounds": {
+            "x": -111,
+            "y": -183.7413787841797,
+            "w": 76.810302734375,
+            "h": 71.22413635253906
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 11,
+            "targetPageName": "首页",
+            "targetCanvasCid": "rcV39SqhV3FSCruau1HXSD",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3FSCruau1HXSD"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3dWxheUV5qAPLwmGU3mpz",
+          "linkCid": "itaV3dWy5ZeDKrW8j,itaV5qAIIGHS12QWD",
+          "bounds": {
+            "x": -111,
+            "y": -183.7413787841797,
+            "w": 76.810302734375,
+            "h": 71.22413635253906
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 42,
+            "targetPageName": "关于国林",
+            "targetCanvasCid": "rcV39SqhV5q88MBfXBMXKe",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV5q88MBfXBMXKe"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 43,
+      "pageName": "企微-聊天界面",
+      "canvasCid": "rcV3a69jV5qS2CuOUrJRPG",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV3a69jV5qS2CuOUrJRPG",
+      "screenshotFile": "page-43.png",
+      "keyTexts": [
+        "客户微信名称",
+        "欢迎来到冠春商城",
+        "客户选单系统"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3dWnmh6V5qS2CuoEwnpcY",
+          "linkCid": "itaV3dWo82r462N3g",
+          "bounds": {
+            "x": -127.7586669921875,
+            "y": -178.15516662597656,
+            "w": 76.81036376953125,
+            "h": 82.39656066894531
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 43,
+            "targetPageName": "企微-聊天界面",
+            "targetCanvasCid": "rcV3a69jV5qS2CuOUrJRPG",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV3a69jV5qS2CuOUrJRPG"
+          }
+        },
+        {
+          "order": 2,
+          "label": "欢迎来到冠春商城 / 客户选单系统",
+          "cid": "V5qRndURV5qS2CuQoJ1Ao0",
+          "linkCid": "itaV5qRsU1VwlxpkC,itaV5qddmO7SWQnoq",
+          "bounds": {
+            "x": -21.6207275390625,
+            "y": -23.137939453125,
+            "w": 555.82763671875,
+            "h": 446.89654541015625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 30,
+            "targetPageName": "我的-OEM订单-待确认",
+            "targetCanvasCid": "rcV39SqhV3S6lBj6piaj8P",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3S6lBj6piaj8P"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 44,
+      "pageName": "工厂OEM",
+      "canvasCid": "rcV39SqhV606Xi0vjvxcBF",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV606Xi0vjvxcBF",
+      "screenshotFile": "page-44.png",
+      "keyTexts": [
+        "OEM",
+        "搜索关键词",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "产品规格：1盒",
+        "¥ 12.88",
+        "确认"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3dWxheUV606Xi1gpOlyhY",
+          "linkCid": "itaV3dWy5ZeDKrW8j",
+          "bounds": {
+            "x": -111,
+            "y": -183.7413787841797,
+            "w": 76.810302734375,
+            "h": 71.22413635253906
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 44,
+            "targetPageName": "工厂OEM",
+            "targetCanvasCid": "rcV39SqhV606Xi0vjvxcBF",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV606Xi0vjvxcBF"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3dWxheUV606Xi1gpOlyhY",
+          "linkCid": "itaV3dWy5ZeDKrW8j",
+          "bounds": {
+            "x": -111,
+            "y": -183.7413787841797,
+            "w": 76.810302734375,
+            "h": 71.22413635253906
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 44,
+            "targetPageName": "工厂OEM",
+            "targetCanvasCid": "rcV39SqhV606Xi0vjvxcBF",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV606Xi0vjvxcBF"
+          }
+        },
+        {
+          "order": 3,
+          "label": "(unlabeled hotspot)",
+          "cid": "V60CmylCWSFqih",
+          "linkCid": "itaV60CnFUMHvCKFy",
+          "bounds": {
+            "x": 253.5,
+            "y": -24.53448486328125,
+            "w": 308.637939453125,
+            "h": 104.74139404296875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 45,
+            "targetPageName": "工厂OEM-1",
+            "targetCanvasCid": "rcV39SqhV60BanuXtwG8bg",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV60BanuXtwG8bg"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 45,
+      "pageName": "工厂OEM-1",
+      "canvasCid": "rcV39SqhV60BanuXtwG8bg",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV60BanuXtwG8bg",
+      "screenshotFile": "page-45.png",
+      "keyTexts": [
+        "OEM",
+        "搜索关键词",
+        "文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明文字说明",
+        "确认"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3dWxheUV60Banuu1J7xfX",
+          "linkCid": "itaV3dWy5ZeDKrW8j",
+          "bounds": {
+            "x": -111,
+            "y": -183.7413787841797,
+            "w": 76.810302734375,
+            "h": 71.22413635253906
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 45,
+            "targetPageName": "工厂OEM-1",
+            "targetCanvasCid": "rcV39SqhV60BanuXtwG8bg",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV60BanuXtwG8bg"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3dWxheUV60Banuu1J7xfX",
+          "linkCid": "itaV3dWy5ZeDKrW8j",
+          "bounds": {
+            "x": -111,
+            "y": -183.7413787841797,
+            "w": 76.810302734375,
+            "h": 71.22413635253906
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 45,
+            "targetPageName": "工厂OEM-1",
+            "targetCanvasCid": "rcV39SqhV60BanuXtwG8bg",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV60BanuXtwG8bg"
+          }
+        },
+        {
+          "order": 3,
+          "label": "(unlabeled hotspot)",
+          "cid": "V60CmylCV60Cnq5VD2fOoK",
+          "linkCid": "itaV60Cofb2Ud695g",
+          "bounds": {
+            "x": -101.22412109375,
+            "y": -23.137939453125,
+            "w": 308.637939453125,
+            "h": 104.74139404296875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 44,
+            "targetPageName": "工厂OEM",
+            "targetCanvasCid": "rcV39SqhV606Xi0vjvxcBF",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV606Xi0vjvxcBF"
+          }
+        }
+      ]
+    },
+    {
+      "pageNumber": 46,
+      "pageName": "首页-商品详情 Copy 1",
+      "canvasCid": "rcV39SqhV6w876GGvlaEq6",
+      "url": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV6w876GGvlaEq6",
+      "screenshotFile": "page-46.png",
+      "keyTexts": [
+        "商品详情",
+        "五福面人参茶养生茶组合熬夜疲劳恢复茶",
+        "¥ 20.88",
+        "销售量：10万+",
+        "批发价",
+        "¥8.88",
+        "联系业务员获取批发价格",
+        "去联系",
+        "产品规格",
+        "发货信息",
+        "广东广州丨48小时内发货丨运费：免运费",
+        "厂家信息",
+        "两只老虎药品有限公司",
+        "保质期",
+        "36个月",
+        "OEM采购",
+        "存储条件",
+        "存储至阴凉处，避免太阳直射",
+        "我要批发",
+        "立即购买",
+        "客服",
+        "加入采购车",
+        "查看全部",
+        "用户评价·1000+",
+        "好评人数900+",
+        "有图/视频·200",
+        "用户昵称",
+        "产品规格：10盒",
+        "质量非常好，完全超出期望值，发货速度非常快，包装非常仔细、严实，很满意的一次购物",
+        "相关推荐",
+        "北东虫夏草粉",
+        "批发价：¥8.88",
+        "¥ 12.88"
+      ],
+      "interactions": [
+        {
+          "order": 1,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpV6w876GLRkNbiR",
+          "linkCid": "itaV3SjSxwDILx6d4",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 46,
+            "targetPageName": "首页-商品详情 Copy 1",
+            "targetCanvasCid": "rcV39SqhV6w876GGvlaEq6",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV6w876GGvlaEq6"
+          }
+        },
+        {
+          "order": 2,
+          "label": "(unlabeled hotspot)",
+          "cid": "V3SjS7RpV6w876GLRkNbiR",
+          "linkCid": "itaV3SjSxwDILx6d4",
+          "bounds": {
+            "x": -117.9827880859375,
+            "y": -199.10345458984375,
+            "w": 87.9827880859375,
+            "h": 90.77587890625
+          },
+          "result": {
+            "type": "no_visible_change",
+            "targetPageNumber": 46,
+            "targetPageName": "首页-商品详情 Copy 1",
+            "targetCanvasCid": "rcV39SqhV6w876GGvlaEq6",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV6w876GGvlaEq6"
+          }
+        },
+        {
+          "order": 3,
+          "label": "立即购买 / 存储至阴凉处，避免太阳直射",
+          "cid": "V3Sp8C9lV6w876G9snQwMl",
+          "linkCid": "itaV3Sp8oBhb0FOiU",
+          "bounds": {
+            "x": 521.637939453125,
+            "y": 1774.22412109375,
+            "w": 349.137939453125,
+            "h": 164.793212890625
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 12,
+            "targetPageName": "首页-商品详情 -下单",
+            "targetCanvasCid": "rcV39SqhV3NQuQPZvPYq3k",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NQuQPZvPYq3k"
+          }
+        },
+        {
+          "order": 4,
+          "label": "立即购买",
+          "cid": "V3Sp8C9lV6w876G9snQwMl",
+          "linkCid": "itaV3Sp8oBhb0FOiU",
+          "bounds": {
+            "x": 521.637939453125,
+            "y": 4558.9482421875,
+            "w": 349.137939453125,
+            "h": 164.79296875
+          },
+          "result": {
+            "type": "navigate",
+            "targetPageNumber": 12,
+            "targetPageName": "首页-商品详情 -下单",
+            "targetCanvasCid": "rcV39SqhV3NQuQPZvPYq3k",
+            "targetUrl": "https://modao.cc/proto/vleU6gPXt6247eY5kWf5Qa/sharing?view_mode=device&screen=rbpV39SqgzdXv3CbX&canvasId=rcV39SqhV3NQuQPZvPYq3k"
+          }
+        }
+      ]
+    }
+  ]
+}

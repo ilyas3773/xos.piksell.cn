@@ -1,0 +1,217 @@
+<template>
+  <scroll-view class="page-shell" scroll-y="true">
+    <view class="page-container category-page">
+      <view class="section-card intro-card">
+        <text class="section-title">分类导航</text>
+        <text class="section-subtitle">类型分类和类别分类都已经接入后台，点一下就能进入对应商品列表。</text>
+      </view>
+
+      <view class="section-card">
+        <view class="title-block">
+          <text class="section-title">类型分类</text>
+          <text class="section-subtitle">适合按内容方向找商品</text>
+        </view>
+        <view class="tree-block" v-for="root in typeTree" :key="'type-' + root.id">
+          <view class="tree-header" @click="openType(root)">
+            <text class="tree-root-name">{{ root.name }}</text>
+            <text class="tree-link">查看全部</text>
+          </view>
+          <view class="tree-chip-row" v-if="root.children && root.children.length > 0">
+            <view class="tree-chip type-chip" v-for="child in root.children" :key="'type-child-' + child.id" @click="openType(child)">
+              <text class="tree-chip-text">{{ child.name }}</text>
+            </view>
+          </view>
+          <view class="tree-sub-group" v-if="root.children && root.children.length > 0">
+            <view class="tree-sub-block" v-for="child in root.children" :key="'type-deep-' + child.id" v-if="child.children && child.children.length > 0">
+              <text class="tree-sub-title">{{ child.name }}</text>
+              <view class="tree-chip-row">
+                <view class="tree-chip sub-chip" v-for="grand in child.children" :key="'type-grand-' + grand.id" @click="openType(grand)">
+                  <text class="tree-chip-text">{{ grand.name }}</text>
+                </view>
+              </view>
+              <view class="tree-chip-row tree-chip-row-small" v-if="grandChildren(child).length > 0">
+                <view class="tree-chip tiny-chip" v-for="last in grandChildren(child)" :key="'type-last-' + last.id" @click="openType(last)">
+                  <text class="tree-chip-text">{{ last.name }}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="section-card">
+        <view class="title-block">
+          <text class="section-title">类别分类</text>
+          <text class="section-subtitle">适合按设备平台快速筛选</text>
+        </view>
+        <view class="tree-block" v-for="root in kindTree" :key="'kind-' + root.id">
+          <view class="tree-header" @click="openKind(root)">
+            <text class="tree-root-name">{{ root.name }}</text>
+            <text class="tree-link">查看商品</text>
+          </view>
+          <view class="tree-chip-row" v-if="root.children && root.children.length > 0">
+            <view class="tree-chip kind-chip" v-for="child in root.children" :key="'kind-child-' + child.id" @click="openKind(child)">
+              <text class="tree-chip-text">{{ child.name }}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</template>
+
+<script setup lang="uts">
+import {
+  fetchCategories,
+  openProductList,
+} from '../../utils/shop.uts'
+
+const typeTree = ref([])
+const kindTree = ref([])
+
+function grandChildren(node: any): any[] {
+  let rows: any[] = []
+  if (!node || !node.children) {
+    return rows
+  }
+  node.children.forEach((item) => {
+    if (item.children && item.children.length > 0) {
+      rows = rows.concat(item.children)
+    }
+  })
+  return rows
+}
+
+function openType(node: any) {
+  openProductList({
+    category_id: node.id,
+    title: node.name,
+  })
+}
+
+function openKind(node: any) {
+  openProductList({
+    kind_category_id: node.id,
+    title: node.name,
+  })
+}
+
+function loadCategories() {
+  uni.showLoading({
+    title: '加载中',
+  })
+  fetchCategories().then((data) => {
+    typeTree.value = data && data.type_tree ? data.type_tree : []
+    kindTree.value = data && data.kind_tree ? data.kind_tree : []
+  }).catch((message) => {
+    uni.showToast({
+      title: String(message || '分类加载失败'),
+      icon: 'none',
+    })
+  }).finally(() => {
+    uni.hideLoading()
+    uni.stopPullDownRefresh()
+  })
+}
+
+onLoad(() => {
+  loadCategories()
+})
+
+onPullDownRefresh(() => {
+  loadCategories()
+})
+</script>
+
+<style>
+.category-page {
+  padding-bottom: 32rpx;
+}
+
+.intro-card {
+  background: linear-gradient(135deg, #ffffff 0%, #edf5ff 100%);
+}
+
+.tree-block {
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 2rpx solid #edf1f7;
+}
+
+.tree-block:first-of-type {
+  border-top: 0;
+  padding-top: 18rpx;
+}
+
+.tree-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.tree-root-name {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #16213a;
+}
+
+.tree-link {
+  font-size: 24rpx;
+  color: #2f67f6;
+}
+
+.tree-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-top: 18rpx;
+}
+
+.tree-chip {
+  padding: 16rpx 22rpx;
+  border-radius: 999rpx;
+}
+
+.type-chip {
+  background: #eef4ff;
+}
+
+.kind-chip {
+  background: #eefaf1;
+}
+
+.sub-chip {
+  background: #f7f9fd;
+}
+
+.tiny-chip {
+  background: #fff5ed;
+}
+
+.tree-chip-text {
+  font-size: 24rpx;
+  color: #28405f;
+}
+
+.tree-sub-group {
+  margin-top: 18rpx;
+}
+
+.tree-sub-block {
+  margin-top: 18rpx;
+  padding: 18rpx;
+  border-radius: 20rpx;
+  background: #f8fbff;
+}
+
+.tree-sub-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #25406a;
+}
+
+.tree-chip-row-small {
+  margin-top: 12rpx;
+}
+</style>

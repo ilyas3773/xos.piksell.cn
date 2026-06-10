@@ -1,0 +1,2358 @@
+<template>
+  <view class="page-wrapper" :class="themeClass()">
+    <!-- 自定义导航栏 -->
+    <view class="custom-navbar" :style="navbarStyle">
+      <view class="navbar-status-bar" :style="statusBarStyle"></view>
+      <view class="navbar-content">
+        <view class="navbar-left">
+          <view class="navbar-brand-logo">
+            <image
+              v-if="serviceLogo() != ''"
+              class="navbar-logo-image"
+              :src="serviceLogo()"
+              mode="aspectFit"
+            ></image>
+            <view v-else class="navbar-logo-fallback">
+              <view class="navbar-logo-leaf"></view>
+              <view class="navbar-logo-bite"></view>
+            </view>
+          </view>
+          <view class="navbar-brand-info">
+            <text class="navbar-site-name">{{ displaySiteName() }}</text>
+            <text class="navbar-site-tagline">{{ displaySiteTagline() }}</text>
+          </view>
+        </view>
+        <view class="navbar-right">
+          <view class="navbar-icon-btn" @click="handleLogin">
+            <text class="navbar-icon-text">{{ loggedIn ? '我的' : '登录' }}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <scroll-view class="page-shell" scroll-y="true" :style="scrollViewStyle">
+      <view class="page-container home-page">
+      <view class="mp-header">
+        <view class="mp-search-bar">
+          <input
+            class="mp-search-input"
+            v-model="searchKeyword"
+            placeholder="输入关键词搜索"
+            confirm-type="search"
+            @confirm="submitSearch"
+          />
+          <button class="mp-search-btn" @click="submitSearch">搜索</button>
+        </view>
+      </view>
+
+      <view class="section-card quick-card">
+        <view class="quick-grid">
+          <view
+            class="quick-item"
+            v-for="item in quickEntries"
+            :key="item.key"
+            @click="handleQuickEntry(item)"
+          >
+            <view class="quick-icon-wrap" :class="'tone-' + item.tone">
+              <text class="quick-icon-symbol">{{ item.icon }}</text>
+            </view>
+            <text class="quick-item-label">{{ item.label }}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="notice-bar">
+        <text class="notice-icon">公告</text>
+        <text class="notice-text">{{ displayAnnouncementText() }}</text>
+      </view>
+
+      <view class="section-card hot-card">
+        <view class="section-head">
+          <view>
+            <view class="hot-title-line">
+              <text class="section-title">热门游戏</text>
+              <text class="hot-swipe-tip">👇右滑查看更多</text>
+            </view>
+          </view>
+        </view>
+
+        <scroll-view class="hot-scroll" scroll-x="true" show-scrollbar="false" v-if="featuredProducts.length > 0">
+          <view class="hot-row">
+            <view
+              class="hot-item"
+              v-for="item in visibleHotProducts()"
+              :key="item.id"
+              @click="goDetail(item.id)"
+            >
+              <image class="hot-cover" :src="cover(item.display_image)" mode="aspectFill"></image>
+              <view class="hot-info">
+                <text class="hot-name">{{ item.name }}</text>
+              </view>
+            </view>
+            <view class="hot-more-item" @click="openHotProducts" @tap="openHotProducts">
+              <view class="hot-more-icon">
+                <text class="hot-more-icon-text">›</text>
+              </view>
+              <text class="hot-more-text">查看更多</text>
+            </view>
+          </view>
+        </scroll-view>
+        <view class="empty-box hot-empty" v-else>
+          暂时还没有热门内容
+        </view>
+      </view>
+
+      <view class="section-card hot-card">
+        <view class="section-head">
+          <view>
+            <view class="hot-title-line">
+              <text class="section-title">最新游戏</text>
+              <text class="hot-swipe-tip">👇右滑查看更多</text>
+            </view>
+          </view>
+        </view>
+
+        <scroll-view class="hot-scroll" scroll-x="true" show-scrollbar="false" v-if="latestGameProducts().length > 0">
+          <view class="hot-row">
+            <view
+              class="hot-item"
+              v-for="item in latestGameProducts()"
+              :key="'latest-' + item.id"
+              @click="goDetail(item.id)"
+            >
+              <image class="hot-cover" :src="cover(item.display_image)" mode="aspectFill"></image>
+              <view class="hot-info">
+                <text class="hot-name">{{ item.name }}</text>
+              </view>
+            </view>
+            <view class="hot-more-item" @click="openLatestProducts" @tap="openLatestProducts">
+              <view class="hot-more-icon">
+                <text class="hot-more-icon-text">›</text>
+              </view>
+              <text class="hot-more-text">查看更多</text>
+            </view>
+          </view>
+        </scroll-view>
+        <view class="empty-box hot-empty" v-else>
+          暂时还没有最新内容
+        </view>
+      </view>
+
+      <view class="section-card game-section-card">
+        <view class="game-section-head">
+          <view class="game-section-title-wrap">
+            <view class="bottom-category-tabs">
+              <view
+                class="bottom-category-tab"
+                v-for="item in bottomCategoryTabs"
+                :key="'bottom-category-' + item.key"
+                :class="{ active: bottomCategoryKey == item.key }"
+                @click="selectBottomCategory(item.key)"
+              >
+                <text class="bottom-category-tab-text" :class="{ active: bottomCategoryKey == item.key }">{{ item.label }}</text>
+              </view>
+            </view>
+            <text class="bottom-section-label">{{ bottomSectionLabel() }}</text>
+          </view>
+          <view class="game-view-switch">
+            <view
+              class="game-view-button"
+              :class="{ active: gameViewMode == 'grid' }"
+              @click="switchBottomGameView('grid')"
+            >
+              <view class="game-grid-icon">
+                <view class="game-grid-dot"></view>
+                <view class="game-grid-dot"></view>
+                <view class="game-grid-dot"></view>
+                <view class="game-grid-dot"></view>
+              </view>
+            </view>
+            <view
+              class="game-view-button"
+              :class="{ active: gameViewMode == 'list' }"
+              @click="switchBottomGameView('list')"
+            >
+              <view class="game-list-icon">
+                <view class="game-list-line"></view>
+                <view class="game-list-line"></view>
+                <view class="game-list-line"></view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="bottom-game-control">
+          <view class="bottom-sort-row">
+            <text class="bottom-sort-label">排序：</text>
+            <view class="bottom-sort-main">
+              <view
+                class="bottom-sort-tab"
+                v-for="item in bottomGameSortTabs"
+                :key="'bottom-sort-' + item.key"
+                :class="{ active: gameSortKey == item.key }"
+                @click="selectBottomGameSort(item.key)"
+              >
+                <text class="bottom-sort-tab-text" :class="{ active: gameSortKey == item.key }">{{ item.label }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="bottom-game-grid" v-if="bottomGameProducts().length > 0 && gameViewMode == 'grid'">
+          <view
+            class="bottom-game-card"
+            v-for="item in bottomGameProducts()"
+            :key="'bottom-grid-' + item.id"
+            @click="goDetail(item.id)"
+          >
+            <image class="bottom-game-cover" :src="cover(item.display_image)" mode="aspectFill"></image>
+            <view class="bottom-game-info">
+              <text class="bottom-game-name">{{ item.name }}</text>
+            </view>
+          </view>
+        </view>
+        <view class="bottom-game-list" v-else-if="bottomGameProducts().length > 0">
+          <view
+            class="bottom-game-list-item"
+            v-for="item in bottomGameProducts()"
+            :key="'bottom-list-' + item.id"
+            @click="goDetail(item.id)"
+          >
+            <image class="bottom-game-list-cover" :src="cover(item.display_image)" mode="aspectFill"></image>
+            <view class="bottom-game-list-info">
+              <text class="bottom-game-name">{{ item.name }}</text>
+            </view>
+          </view>
+        </view>
+        <view class="empty-box hot-empty" v-else>
+          暂时还没有{{ bottomCategoryName() }}内容
+        </view>
+
+        <!-- 加载更多 / 已显示全 + 许愿 -->
+        <view class="bottom-list-foot" v-if="bottomGameProducts().length > 0">
+          <view v-if="bottomLoading" class="bottom-list-loading">
+            <text class="bottom-list-loading-text">加载中...</text>
+          </view>
+          <view v-else-if="bottomHasMore" class="bottom-list-more-btn" @click="loadMoreBottomProducts">
+            <text class="bottom-list-more-text">加载更多</text>
+          </view>
+          <view v-else class="bottom-list-end">
+            <text class="bottom-list-end-text">— 已显示全部 —</text>
+            <text class="bottom-list-end-tip">没有找到您想要的{{ bottomCategoryName() }}？</text>
+            <view class="bottom-list-actions">
+              <view class="bottom-list-contact-btn" @click="openContactCustomer">
+                <text class="bottom-list-contact-text">📞 联系客服</text>
+              </view>
+              <view class="bottom-list-wish-btn" @click="openWishModal">
+                <text class="bottom-list-wish-text">✨ 我要许愿</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+    <view class="theme-float-button" @click="toggleTheme" @tap="toggleTheme">
+      <text class="theme-float-icon">{{ themeMode == 'dark' ? '☀️' : '🌕' }}</text>
+    </view>
+
+    <!-- 联系客服弹窗 -->
+    <view class="wish-modal-mask" v-if="contactModalVisible" @click="closeContactCustomer">
+      <view class="wish-modal" @click.stop>
+        <view class="wish-modal-head">
+          <text class="wish-modal-title">📞 联系客服</text>
+          <text class="wish-modal-close" @click="closeContactCustomer">✕</text>
+        </view>
+        <view class="wish-modal-body">
+          <text class="wish-modal-tip">在线客服为您解答疑问、处理上架请求</text>
+
+          <view class="contact-list">
+            <view class="contact-row" v-if="customerContact.wechat != ''">
+              <view class="contact-row-left">
+                <text class="contact-icon">💬</text>
+                <view class="contact-info">
+                  <text class="contact-label">客服微信</text>
+                  <text class="contact-value">{{ customerContact.wechat }}</text>
+                </view>
+              </view>
+              <view class="contact-copy-btn" @click="copyContact(customerContact.wechat, '微信号')">
+                <text class="contact-copy-text">复制</text>
+              </view>
+            </view>
+
+            <view class="contact-row" v-if="customerContact.qq != ''">
+              <view class="contact-row-left">
+                <text class="contact-icon">🐧</text>
+                <view class="contact-info">
+                  <text class="contact-label">客服 QQ</text>
+                  <text class="contact-value">{{ customerContact.qq }}</text>
+                </view>
+              </view>
+              <view class="contact-copy-btn" @click="copyContact(customerContact.qq, 'QQ号')">
+                <text class="contact-copy-text">复制</text>
+              </view>
+            </view>
+
+            <view class="contact-row" v-if="customerContact.phone != ''">
+              <view class="contact-row-left">
+                <text class="contact-icon">📱</text>
+                <view class="contact-info">
+                  <text class="contact-label">客服电话</text>
+                  <text class="contact-value">{{ customerContact.phone }}</text>
+                </view>
+              </view>
+              <view class="contact-copy-btn" @click="copyContact(customerContact.phone, '电话号')">
+                <text class="contact-copy-text">复制</text>
+              </view>
+            </view>
+
+            <view class="contact-row" v-if="customerContact.email != ''">
+              <view class="contact-row-left">
+                <text class="contact-icon">📧</text>
+                <view class="contact-info">
+                  <text class="contact-label">客服邮箱</text>
+                  <text class="contact-value">{{ customerContact.email }}</text>
+                </view>
+              </view>
+              <view class="contact-copy-btn" @click="copyContact(customerContact.email, '邮箱')">
+                <text class="contact-copy-text">复制</text>
+              </view>
+            </view>
+
+            <view v-if="customerContact.wechat == '' && customerContact.qq == '' && customerContact.phone == '' && customerContact.email == ''" class="contact-empty">
+              <text class="contact-empty-text">暂未配置客服联系方式</text>
+            </view>
+          </view>
+
+          <text v-if="customerContact.work_time != ''" class="contact-work-time">
+            🕐 客服工作时间：{{ customerContact.work_time }}
+          </text>
+        </view>
+        <view class="wish-modal-foot">
+          <button class="wish-modal-btn confirm" style="flex:1;" @click="closeContactCustomer">关闭</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 许愿弹窗 -->
+    <view class="wish-modal-mask" v-if="wishModalVisible" @click="closeWishModal">
+      <view class="wish-modal" @click.stop>
+        <view class="wish-modal-head">
+          <text class="wish-modal-title">✨ 我要许愿</text>
+          <text class="wish-modal-close" @click="closeWishModal">✕</text>
+        </view>
+        <view class="wish-modal-body">
+          <text class="wish-modal-tip">告诉我们您想要的游戏 / 应用，我们会尽快上架</text>
+
+          <view class="wish-form-group">
+            <text class="wish-form-label">名称 <text class="wish-required">*</text></text>
+            <input class="wish-form-input" v-model="wishName" placeholder="请输入想要的游戏 / 应用名称" />
+          </view>
+
+          <view class="wish-form-group">
+            <text class="wish-form-label">描述 <text class="wish-form-optional">（选填）</text></text>
+            <textarea class="wish-form-textarea" v-model="wishDescription" placeholder="可以描述一下您想要的版本、功能等" />
+          </view>
+
+          <view class="wish-form-group">
+            <text class="wish-form-label">联系方式 <text class="wish-form-optional">（选填）</text></text>
+            <input class="wish-form-input" v-model="wishContact" placeholder="留下QQ / 微信等联系方式，我们上架后通知您" />
+          </view>
+
+          <view class="wish-customer-block" v-if="customerContact.wechat || customerContact.qq || customerContact.phone || customerContact.email">
+            <text class="wish-customer-title">📞 客服联系方式</text>
+            <view class="wish-customer-row" v-if="customerContact.wechat != ''">
+              <text class="wish-customer-key">微信：</text>
+              <text class="wish-customer-value">{{ customerContact.wechat }}</text>
+            </view>
+            <view class="wish-customer-row" v-if="customerContact.qq != ''">
+              <text class="wish-customer-key">QQ：</text>
+              <text class="wish-customer-value">{{ customerContact.qq }}</text>
+            </view>
+            <view class="wish-customer-row" v-if="customerContact.phone != ''">
+              <text class="wish-customer-key">电话：</text>
+              <text class="wish-customer-value">{{ customerContact.phone }}</text>
+            </view>
+            <view class="wish-customer-row" v-if="customerContact.email != ''">
+              <text class="wish-customer-key">邮箱：</text>
+              <text class="wish-customer-value">{{ customerContact.email }}</text>
+            </view>
+            <text class="wish-customer-time" v-if="customerContact.work_time != ''">{{ customerContact.work_time }}</text>
+          </view>
+        </view>
+
+        <view class="wish-modal-foot">
+          <button class="wish-modal-btn cancel" @click="closeWishModal">取消</button>
+          <button class="wish-modal-btn confirm" @click="submitWish">提交许愿</button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup lang="uts">
+import {
+  fetchHome,
+  fetchProducts,
+  imageUrl,
+  openFaqPage,
+  openProductDetail,
+  openProductList,
+  apiOrigin,
+} from '../../utils/shop.uts'
+import {
+  hasUserSession,
+} from '../../utils/user.uts'
+import {
+  openEnergyPage,
+  openMinePage,
+} from '../../utils/navigation.uts'
+import {
+  wxLogin,
+  isWxLoggedIn,
+  getWxUserInfo,
+} from '../../utils/wx-auth.uts'
+
+const searchKeyword = ref('')
+const loggedIn = ref(false)
+const homeDataStatus = ref('loading')
+const typeCategories = ref([])
+const kindCategories = ref([])
+const featuredProducts = ref([])
+const latestProducts = ref([])
+const bottomProducts = ref([])
+const bottomPage = ref(1)
+const bottomHasMore = ref(false)
+const bottomLoading = ref(false)
+const wishModalVisible = ref(false)
+const contactModalVisible = ref(false)
+const wishName = ref('')
+const wishDescription = ref('')
+const wishContact = ref('')
+const customerContact = reactive({
+  wechat: '',
+  qq: '',
+  phone: '',
+  email: '',
+  qr_image: '',
+  work_time: '',
+})
+const bottomCategoryKey = ref('games')
+const gameSortKey = ref('hot')
+const gameViewMode = ref('grid')
+const themeMode = ref('light')
+const announcementText = ref('')
+const statusBarHeight = ref(0)
+const navbarHeight = ref(44)
+const service = reactive({
+  site_name: '',
+  tagline: '',
+  logo: '',
+  icon: '',
+})
+
+const navbarStyle = computed(() => {
+  return `height: ${statusBarHeight.value + navbarHeight.value}px;`
+})
+
+const statusBarStyle = computed(() => {
+  return `height: ${statusBarHeight.value}px;`
+})
+
+const scrollViewStyle = computed(() => {
+  return `margin-top: ${statusBarHeight.value + navbarHeight.value}px;`
+})
+
+const quickEntries = [
+  { key: 'games', label: '游戏列表', icon: 'G', tone: 'orange' },
+  { key: 'software', label: '软件列表', icon: 'S', tone: 'blue' },
+  { key: 'earn', label: '获取能量', icon: '领', tone: 'gold' },
+  { key: 'faq', label: '常见问题', icon: '问', tone: 'cyan' },
+]
+
+const bottomGameSortTabs = [
+  { key: 'hot', label: '热门' },
+  { key: 'click', label: '点击量' },
+  { key: 'exchange', label: '兑换量' },
+  { key: 'latest', label: '最新发布' },
+]
+
+const bottomCategoryTabs = [
+  { key: 'games', label: '游戏' },
+  { key: 'software', label: '应用' },
+]
+
+const HOME_THEME_KEY = 'home_ui_theme_mode'
+
+function textValue(value: any): string {
+  return String(value || '').trim()
+}
+
+function normalizedThemeMode(value: string): string {
+  return textValue(value) == 'dark' ? 'dark' : 'light'
+}
+
+function themeClass(): string {
+  return themeMode.value == 'dark' ? 'theme-dark' : 'theme-light'
+}
+
+function applyHomeTheme(mode: string) {
+  themeMode.value = normalizedThemeMode(mode)
+  uni.setStorageSync(HOME_THEME_KEY, themeMode.value)
+  syncThemeChrome()
+}
+
+function loadHomeTheme() {
+  const saved = String(uni.getStorageSync(HOME_THEME_KEY) || '')
+  themeMode.value = normalizedThemeMode(saved)
+  syncThemeChrome()
+}
+
+function syncThemeChrome() {
+  if (themeMode.value == 'dark') {
+    uni.setNavigationBarColor({
+      frontColor: '#ffffff',
+      backgroundColor: '#050505',
+    })
+    uni.setTabBarStyle({
+      color: '#9ca3af',
+      selectedColor: '#1677ff',
+      backgroundColor: '#000000',
+      borderStyle: 'black',
+    })
+    return
+  }
+
+  uni.setNavigationBarColor({
+    frontColor: '#000000',
+    backgroundColor: '#ffffff',
+  })
+  uni.setTabBarStyle({
+    color: '#6b7280',
+    selectedColor: '#1677ff',
+    backgroundColor: '#ffffff',
+    borderStyle: 'white',
+  })
+}
+
+function cover(path: string): string {
+  return imageUrl(path)
+}
+
+function visibleHotProducts(): any[] {
+  return featuredProducts.value.slice(0, 8)
+}
+
+function latestGameProducts(): any[] {
+  if (latestProducts.value.length > 0) {
+    return latestProducts.value.slice(0, 8)
+  }
+  return featuredProducts.value.slice(0, 8)
+}
+
+function productSubtitle(item: any): string {
+  const nameEn = textValue(item && item.name_en ? item.name_en : '')
+  if (nameEn != '') {
+    return nameEn
+  }
+
+  const compatibility = textValue(item && item.compatibility ? item.compatibility : '')
+  if (compatibility != '') {
+    return compatibility
+  }
+
+  const languages = textValue(item && item.supported_languages ? item.supported_languages : '')
+  if (languages != '') {
+    return languages
+  }
+
+  return 'Digital Product'
+}
+
+function bottomCategoryName(): string {
+  return bottomCategoryKey.value == 'software' ? '应用' : '游戏'
+}
+
+function bottomSectionLabel(): string {
+  if (gameSortKey.value == 'hot') {
+    return bottomCategoryKey.value == 'software' ? '热门应用' : '热门游戏'
+  }
+
+  if (gameSortKey.value == 'click') {
+    return '点击量最多'
+  }
+
+  if (gameSortKey.value == 'exchange') {
+    return '兑换量最多'
+  }
+
+  return '最新发布'
+}
+
+function bottomGameProducts(): any[] {
+  const source = bottomProducts.value
+  const rows = source.slice()
+  rows.sort((left, right) => {
+    const leftId = Number(left && left.id ? left.id : 0)
+    const rightId = Number(right && right.id ? right.id : 0)
+    const leftCreatedAt = Date.parse(String(left && left.created_at ? left.created_at : '')) || 0
+    const rightCreatedAt = Date.parse(String(right && right.created_at ? right.created_at : '')) || 0
+
+    if (gameSortKey.value == 'hot') {
+      const leftClicks = Number(left && left.click_count ? left.click_count : 0)
+      const rightClicks = Number(right && right.click_count ? right.click_count : 0)
+      const leftExchanges = Number(left && left.exchange_count ? left.exchange_count : 0)
+      const rightExchanges = Number(right && right.exchange_count ? right.exchange_count : 0)
+      const leftValue = leftClicks + leftExchanges
+      const rightValue = rightClicks + rightExchanges
+      if (leftValue == rightValue) {
+        return rightId - leftId
+      }
+      return rightValue - leftValue
+    }
+
+    if (gameSortKey.value == 'click') {
+      const leftClicks = Number(left && left.click_count ? left.click_count : 0)
+      const rightClicks = Number(right && right.click_count ? right.click_count : 0)
+      if (leftClicks == rightClicks) {
+        return rightId - leftId
+      }
+      return rightClicks - leftClicks
+    }
+
+    if (gameSortKey.value == 'exchange') {
+      const leftExchanges = Number(left && left.exchange_count ? left.exchange_count : 0)
+      const rightExchanges = Number(right && right.exchange_count ? right.exchange_count : 0)
+      if (leftExchanges == rightExchanges) {
+        return rightId - leftId
+      }
+      return rightExchanges - leftExchanges
+    }
+
+    if (leftCreatedAt == rightCreatedAt) {
+      return rightId - leftId
+    }
+    return rightCreatedAt - leftCreatedAt
+  })
+
+  return rows
+}
+
+function selectBottomGameSort(key: string) {
+  gameSortKey.value = textValue(key)
+  loadBottomProducts()
+}
+
+function selectBottomCategory(key: string) {
+  bottomCategoryKey.value = textValue(key) == 'software' ? 'software' : 'games'
+  loadBottomProducts()
+}
+
+function switchBottomGameView(mode: string) {
+  gameViewMode.value = textValue(mode) == 'list' ? 'list' : 'grid'
+}
+
+function serviceLogo(): string {
+  const value = textValue(service.logo || service.icon)
+  if (value == '') {
+    return ''
+  }
+  return imageUrl(value)
+}
+
+function displaySiteName(): string {
+  const value = textValue(service.site_name)
+  if (value != '') {
+    return value
+  }
+  if (homeDataStatus.value == 'loading') {
+    return '加载中...'
+  }
+  if (homeDataStatus.value == 'error') {
+    return '暂时无法获取网站信息'
+  }
+  return 'Piksell Store'
+}
+
+function displaySiteTagline(): string {
+  const value = textValue(service.tagline)
+  if (value != '') {
+    return value
+  }
+  if (homeDataStatus.value == 'loading') {
+    return '正在获取网站信息'
+  }
+  if (homeDataStatus.value == 'error') {
+    return '暂时无法获取站点简介'
+  }
+  return '浏览商品，兑换卡密'
+}
+
+function displayAnnouncementText(): string {
+  const value = textValue(announcementText.value)
+  if (value != '') {
+    return value
+  }
+  if (homeDataStatus.value == 'loading') {
+    return '加载中...'
+  }
+  if (homeDataStatus.value == 'error') {
+    return '暂时无法获取公告'
+  }
+  return '暂无公告'
+}
+
+function navigationTitle(): string {
+  const siteName = textValue(service.site_name)
+  if (siteName != '') {
+    return siteName
+  }
+  if (homeDataStatus.value == 'loading') {
+    return '加载中...'
+  }
+  return 'Piksell Store'
+}
+
+function syncNavigationTitle() {
+  const title = navigationTitle()
+  uni.setNavigationBarTitle({
+    title: title,
+  })
+}
+
+function syncLoginState() {
+  loggedIn.value = isWxLoggedIn()
+}
+
+function handleLogin() {
+  if (loggedIn.value) {
+    goMine()
+    return
+  }
+  
+  // 执行微信登录
+  uni.showLoading({
+    title: '登录中...'
+  })
+  
+  wxLogin().then((data) => {
+    uni.hideLoading()
+    loggedIn.value = true
+    
+    uni.showToast({
+      title: '登录成功',
+      icon: 'success'
+    })
+    
+    // 刷新页面数据
+    loadHomeData()
+  }).catch((error) => {
+    uni.hideLoading()
+    uni.showToast({
+      title: String(error || '登录失败'),
+      icon: 'none',
+      duration: 2000
+    })
+  })
+}
+
+function goDetail(id: any) {
+  openProductDetail(id)
+}
+
+function openAllProducts() {
+  openProductList()
+}
+
+function openHotProducts() {
+  const params: any = {
+    title: '热门游戏',
+    quick_key: 'games',
+    sort: 'hot',
+  }
+  const gameType = resolveGameTypeCategory()
+  if (gameType && gameType.id) {
+    params.category_id = gameType.id
+  }
+  openProductList(params)
+}
+
+function openLatestProducts() {
+  const params: any = {
+    title: '最新游戏',
+    quick_key: 'games',
+    sort: 'latest',
+  }
+  const gameType = resolveGameTypeCategory()
+  if (gameType && gameType.id) {
+    params.category_id = gameType.id
+  }
+  openProductList(params)
+}
+
+function goMine() {
+  openMinePage()
+}
+
+function normalizeCategoryName(value: string): string {
+  return textValue(value).toLowerCase().replace(/\s+/g, '')
+}
+
+function findTypeCategoryByName(targetName: string): any {
+  const expected = normalizeCategoryName(targetName)
+  const rows = typeCategories.value
+  for (let i = 0; i < rows.length; i = i + 1) {
+    const item = rows[i]
+    if (!item) {
+      continue
+    }
+
+    const itemName = item.name ? String(item.name) : ''
+    const normalized = normalizeCategoryName(itemName)
+    if (normalized == expected || normalized.indexOf(expected) >= 0 || expected.indexOf(normalized) >= 0) {
+      return item
+    }
+  }
+
+  return null
+}
+
+function resolveGameTypeCategory(): any {
+  let matchedType = findTypeCategoryByName('Game游戏')
+  if (!matchedType) {
+    matchedType = findTypeCategoryByName('Game')
+  }
+  if (!matchedType) {
+    matchedType = findTypeCategoryByName('游戏')
+  }
+  if (!matchedType) {
+    matchedType = findTypeCategoryByName('游戏列表')
+  }
+  return matchedType
+}
+
+function resolveAppTypeCategory(): any {
+  let matchedType = findTypeCategoryByName('APP应用')
+  if (!matchedType) {
+    matchedType = findTypeCategoryByName('APP')
+  }
+  if (!matchedType) {
+    matchedType = findTypeCategoryByName('应用')
+  }
+  if (!matchedType) {
+    matchedType = findTypeCategoryByName('软件')
+  }
+  return matchedType
+}
+
+function activeBottomTypeCategory(): any {
+  return bottomCategoryKey.value == 'software' ? resolveAppTypeCategory() : resolveGameTypeCategory()
+}
+
+function loadBottomProducts() {
+  bottomPage.value = 1
+  bottomHasMore.value = false
+  const typeCategory = activeBottomTypeCategory()
+  const params: any = {
+    page: 1,
+    limit: 12,
+    sort: gameSortKey.value,
+  }
+  if (typeCategory && typeCategory.id) {
+    params.category_id = typeCategory.id
+  }
+
+  bottomLoading.value = true
+  fetchProducts(params).then((data) => {
+    bottomProducts.value = data && data.list ? data.list : []
+    bottomHasMore.value = !!(data && data.pagination && data.pagination.has_more)
+  }).catch(() => {
+    bottomProducts.value = []
+    bottomHasMore.value = false
+  }).finally(() => {
+    bottomLoading.value = false
+  })
+}
+
+function loadMoreBottomProducts() {
+  if (bottomLoading.value || !bottomHasMore.value) {
+    return
+  }
+  const nextPage = bottomPage.value + 1
+  const typeCategory = activeBottomTypeCategory()
+  const params: any = {
+    page: nextPage,
+    limit: 12,
+    sort: gameSortKey.value,
+  }
+  if (typeCategory && typeCategory.id) {
+    params.category_id = typeCategory.id
+  }
+
+  bottomLoading.value = true
+  fetchProducts(params).then((data) => {
+    const more = data && data.list ? data.list : []
+    bottomProducts.value = bottomProducts.value.concat(more)
+    bottomHasMore.value = !!(data && data.pagination && data.pagination.has_more)
+    bottomPage.value = nextPage
+  }).catch(() => {
+    // 失败不影响已有数据
+  }).finally(() => {
+    bottomLoading.value = false
+  })
+}
+
+function openWishModal() {
+  wishName.value = ''
+  wishDescription.value = ''
+  wishContact.value = ''
+  wishModalVisible.value = true
+  // 顺便加载客服联系方式（首次打开才请求）
+  if (customerContact.wechat == '' && customerContact.qq == '' && customerContact.phone == '' && customerContact.email == '') {
+    loadCustomerContact()
+  }
+}
+
+function closeWishModal() {
+  wishModalVisible.value = false
+}
+
+function openContactCustomer() {
+  contactModalVisible.value = true
+  if (customerContact.wechat == '' && customerContact.qq == '' && customerContact.phone == '' && customerContact.email == '') {
+    loadCustomerContact()
+  }
+}
+
+function closeContactCustomer() {
+  contactModalVisible.value = false
+}
+
+function copyContact(value: string, label: string) {
+  const text = String(value || '').trim()
+  if (text == '') {
+    uni.showToast({ title: '内容为空', icon: 'none' })
+    return
+  }
+  uni.setClipboardData({
+    data: text,
+    success: () => {
+      uni.showToast({ title: label + '已复制', icon: 'none' })
+    },
+  })
+}
+
+function loadCustomerContact() {
+  uni.request({
+    url: apiOrigin() + '/api/shop/customer-contact',
+    method: 'GET',
+    success: (res: any) => {
+      const body = res && res.data ? res.data : null
+      if (body && Number(body.code) === 0 && body.data) {
+        const data = body.data
+        customerContact.wechat = String(data.wechat || '')
+        customerContact.qq = String(data.qq || '')
+        customerContact.phone = String(data.phone || '')
+        customerContact.email = String(data.email || '')
+        customerContact.qr_image = String(data.qr_image || '')
+        customerContact.work_time = String(data.work_time || '')
+      }
+    },
+  })
+}
+
+function submitWish() {
+  const name = String(wishName.value || '').trim()
+  if (name == '') {
+    uni.showToast({ title: '请填写名称', icon: 'none' })
+    return
+  }
+
+  uni.showLoading({ title: '提交中...' })
+  uni.request({
+    url: apiOrigin() + '/api/shop/wishes',
+    method: 'POST',
+    header: { 'content-type': 'application/x-www-form-urlencoded' },
+    data: {
+      name: name,
+      description: String(wishDescription.value || '').trim(),
+      contact: String(wishContact.value || '').trim(),
+    },
+    success: (res: any) => {
+      uni.hideLoading()
+      const body = res && res.data ? res.data : null
+      if (body && Number(body.code) === 0) {
+        uni.showToast({ title: '许愿成功，感谢您的反馈！', icon: 'none' })
+        closeWishModal()
+      } else {
+        uni.showToast({
+          title: String(body && body.msg ? body.msg : '提交失败'),
+          icon: 'none',
+        })
+      }
+    },
+    fail: () => {
+      uni.hideLoading()
+      uni.showToast({ title: '网络错误，请重试', icon: 'none' })
+    },
+  })
+}
+
+function submitSearch() {
+  const keyword = textValue(searchKeyword.value)
+  if (keyword == '') {
+    openAllProducts()
+    return
+  }
+
+  openProductList({
+    keyword: keyword,
+    title: '搜索：' + keyword,
+  })
+}
+
+function showBuildingTip(message: string) {
+  uni.showToast({
+    title: message,
+    icon: 'none',
+  })
+}
+
+function handleQuickEntry(item: any) {
+  if (!item) {
+    return
+  }
+
+  if (item.key == 'games') {
+    const params: any = {
+      title: '游戏列表',
+      quick_key: 'games',
+    }
+    const matchedType = resolveGameTypeCategory()
+    if (matchedType && matchedType.id) {
+      params.category_id = matchedType.id
+    }
+    openProductList(params)
+    return
+  }
+
+  if (item.key == 'software') {
+    const params: any = {
+      title: '软件列表',
+      quick_key: 'software',
+    }
+    let matchedType = findTypeCategoryByName('APP应用')
+    if (!matchedType) {
+      matchedType = findTypeCategoryByName('APP')
+    }
+    if (!matchedType) {
+      matchedType = findTypeCategoryByName('应用')
+    }
+    if (!matchedType) {
+      matchedType = findTypeCategoryByName('软件')
+    }
+    if (matchedType && matchedType.id) {
+      params.category_id = matchedType.id
+    }
+    openProductList(params)
+    return
+  }
+
+  if (item.key == 'earn') {
+    openEnergyPage()
+    return
+  }
+
+  if (item.key == 'faq') {
+    openFaqPage()
+    return
+  }
+}
+
+function openThemeSwitcher() {
+  uni.showActionSheet({
+    itemList: ['白色 UI', '黑色 UI'],
+    success: (res) => {
+      if (res.tapIndex == 0) {
+        applyHomeTheme('light')
+      } else if (res.tapIndex == 1) {
+        applyHomeTheme('dark')
+      }
+    },
+  })
+}
+
+function toggleTheme() {
+  applyHomeTheme(themeMode.value == 'dark' ? 'light' : 'dark')
+  uni.showToast({
+    title: themeMode.value == 'dark' ? '已切换至黑色UI' : '已切换至白色UI',
+    icon: 'none',
+  })
+}
+
+function loadHomeData() {
+  homeDataStatus.value = 'loading'
+  syncNavigationTitle()
+
+  uni.showLoading({
+    title: '加载中',
+  })
+
+  console.log('开始请求首页数据...')
+  console.log('API地址:', apiOrigin())
+
+  fetchHome().then((data) => {
+    console.log('首页数据加载成功:', data)
+    
+    typeCategories.value = data && data.type_categories ? data.type_categories : []
+    kindCategories.value = data && data.kind_categories ? data.kind_categories : []
+    featuredProducts.value = data && data.featured_products ? data.featured_products : []
+    latestProducts.value = data && data.latest_products ? data.latest_products : []
+
+    service.site_name = data && data.service ? textValue(data.service.site_name) : ''
+    service.tagline = data && data.service ? textValue(data.service.tagline) : ''
+    service.logo = data && data.service ? textValue(data.service.logo) : ''
+    service.icon = data && data.service ? textValue(data.service.icon) : ''
+
+    let nextAnnouncement = ''
+    if (data && data.announcement) {
+      nextAnnouncement = textValue(data.announcement.summary || data.announcement.title)
+    }
+    if (nextAnnouncement == '' && data && data.service) {
+      nextAnnouncement = textValue(data.service.service_notice)
+    }
+    announcementText.value = nextAnnouncement
+
+    homeDataStatus.value = 'ready'
+    syncNavigationTitle()
+    loadBottomProducts()
+  }).catch((message) => {
+    console.error('首页数据加载失败:', message)
+    
+    homeDataStatus.value = 'error'
+    syncNavigationTitle()
+    uni.showToast({
+      title: String(message || '首页加载失败'),
+      icon: 'none',
+      duration: 3000
+    })
+  }).finally(() => {
+    uni.hideLoading()
+    uni.stopPullDownRefresh()
+  })
+}
+
+onLoad(() => {
+  // 获取系统信息
+  const systemInfo = uni.getSystemInfoSync()
+  statusBarHeight.value = systemInfo.statusBarHeight || 0
+  
+  loadHomeTheme()
+  syncLoginState()
+  syncNavigationTitle()
+  loadHomeData()
+})
+
+onShow(() => {
+  loadHomeTheme()
+  syncLoginState()
+})
+
+onPullDownRefresh(() => {
+  syncLoginState()
+  loadHomeData()
+})
+</script>
+
+<style>
+.page-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f3f5f9 0%, #eef1f6 100%);
+}
+
+/* 自定义导航栏 */
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fb 100%);
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
+}
+
+.navbar-status-bar {
+  width: 100%;
+  background: transparent;
+}
+
+.navbar-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx 24rpx;
+  height: 88rpx;
+}
+
+.navbar-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.navbar-brand-logo {
+  width: 72rpx;
+  height: 72rpx;
+  flex-shrink: 0;
+}
+
+.navbar-logo-image {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 18rpx;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 6rpx 16rpx rgba(37, 99, 235, 0.12);
+}
+
+.navbar-logo-fallback {
+  position: relative;
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 20rpx 22rpx 26rpx 26rpx;
+  background: linear-gradient(135deg, #ff6151 0%, #c31212 100%);
+  box-shadow: 0 6rpx 16rpx rgba(214, 63, 38, 0.2);
+}
+
+.navbar-logo-leaf {
+  position: absolute;
+  top: -6rpx;
+  right: 10rpx;
+  width: 20rpx;
+  height: 14rpx;
+  border-radius: 14rpx 14rpx 0 14rpx;
+  background: #5ebd46;
+  transform: rotate(-20deg);
+}
+
+.navbar-logo-bite {
+  position: absolute;
+  top: 16rpx;
+  right: -4rpx;
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.navbar-brand-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.navbar-site-name {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1a1f36;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.navbar-site-tagline {
+  font-size: 22rpx;
+  color: #8994aa;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.navbar-right {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.navbar-icon-btn {
+  padding: 12rpx 24rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #1677ff 0%, #0d5fd8 100%);
+  box-shadow: 0 6rpx 16rpx rgba(22, 119, 255, 0.25);
+}
+
+.navbar-icon-text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.page-shell {
+  width: 100%;
+  height: 100vh;
+}
+
+.home-page {
+  padding-top: 0;
+  padding-bottom: 40rpx;
+  background: linear-gradient(180deg, #f3f5f9 0%, #eef1f6 100%);
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mp-header {
+  padding: 24rpx;
+  background: #ffffff;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.mp-search-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+  padding: 12rpx;
+  border-radius: 24rpx;
+  background: #f5f7fb;
+}
+
+.mp-search-input {
+  flex: 1;
+  min-width: 0;
+  height: 68rpx;
+  padding: 0 24rpx;
+  border-radius: 16rpx;
+  background: #ffffff;
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.mp-search-btn {
+  width: 128rpx;
+  height: 68rpx;
+  line-height: 68rpx;
+  padding: 0;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #ffb123 0%, #ff8a00 100%);
+  color: #ffffff;
+  font-size: 28rpx;
+  font-weight: 600;
+  border: none;
+}
+
+.theme-float-button {
+  position: fixed;
+  right: 28rpx;
+  bottom: 148rpx;
+  z-index: 998;
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c8cff 0%, #a266ff 100%);
+  box-shadow: 0 12rpx 28rpx rgba(108, 140, 255, 0.4), 0 0 0 4rpx rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-float-icon {
+  font-size: 44rpx;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.theme-dark .theme-float-button {
+  background: linear-gradient(135deg, #2a2a2a 0%, #4a4a4a 100%);
+  box-shadow: 0 12rpx 28rpx rgba(0, 0, 0, 0.6), 0 0 0 4rpx rgba(255, 255, 255, 0.15);
+}
+
+.section-card {
+  width: 100%;
+  margin-top: 22rpx;
+  padding: 28rpx 24rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12rpx 30rpx rgba(36, 53, 86, 0.06);
+  box-sizing: border-box;
+}
+
+.quick-card {
+  padding-bottom: 12rpx;
+}
+
+.quick-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.quick-item {
+  width: 25%;
+  padding: 10rpx 0 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quick-icon-wrap {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10rpx 24rpx rgba(32, 40, 58, 0.06);
+}
+
+.tone-orange {
+  background: linear-gradient(135deg, #ffe3b0 0%, #fff0d1 100%);
+}
+
+.tone-blue {
+  background: linear-gradient(135deg, #dbeeff 0%, #eaf5ff 100%);
+}
+
+.tone-purple {
+  background: linear-gradient(135deg, #ece3ff 0%, #f4efff 100%);
+}
+
+.tone-red {
+  background: linear-gradient(135deg, #ffd9d0 0%, #ffece8 100%);
+}
+
+.tone-red-soft {
+  background: linear-gradient(135deg, #ffe4ea 0%, #fff1f4 100%);
+}
+
+.tone-gold {
+  background: linear-gradient(135deg, #ffe5a8 0%, #fff2cf 100%);
+}
+
+.tone-cyan {
+  background: linear-gradient(135deg, #d8f3ff 0%, #ebfaff 100%);
+}
+
+.tone-amber {
+  background: linear-gradient(135deg, #ffe7b8 0%, #fff4da 100%);
+}
+
+.quick-icon-symbol {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #24324f;
+}
+
+.quick-item-label {
+  margin-top: 14rpx;
+  font-size: 24rpx;
+  color: #293245;
+}
+
+.notice-bar {
+  margin-top: 20rpx;
+  padding: 18rpx 24rpx;
+  border-radius: 22rpx;
+  background: rgba(255, 255, 255, 0.94);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+  box-shadow: 0 10rpx 24rpx rgba(36, 53, 86, 0.05);
+}
+
+.notice-icon {
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
+  background: #fff7ed;
+  color: #ea580c;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.notice-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 24rpx;
+  color: #42516e;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.section-head {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18rpx;
+}
+
+.section-title {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.section-subtitle {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #94a3b8;
+}
+
+.section-link {
+  flex-shrink: 0;
+  padding-top: 6rpx;
+  font-size: 24rpx;
+  color: #ff8a00;
+}
+
+.hot-title-line {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14rpx;
+}
+
+.hot-swipe-tip {
+  font-size: 30rpx;
+  color: #1f2937;
+}
+
+.hot-scroll {
+  margin-top: 24rpx;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hot-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 22rpx;
+  width: max-content;
+  min-width: 100%;
+}
+
+.hot-item {
+  width: 128rpx;
+  flex-shrink: 0;
+  border-radius: 22rpx;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hot-cover {
+  flex-shrink: 0;
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 20rpx;
+  background: #e2e8f0;
+  box-shadow: inset 0 0 0 2rpx rgba(226, 232, 240, 0.9);
+}
+
+.hot-info {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hot-name {
+  width: 100%;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #6b7280;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.hot-more-item {
+  width: 128rpx;
+  display: inline-flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hot-more-icon {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 20rpx;
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 2rpx rgba(251, 146, 60, 0.24);
+}
+
+.hot-more-icon-text {
+  font-size: 54rpx;
+  line-height: 1;
+  color: #ff8a00;
+}
+
+.hot-more-text {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #ff8a00;
+  text-align: center;
+}
+
+.game-section-card {
+  padding: 28rpx 24rpx 30rpx;
+}
+
+.game-section-head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.game-section-title-wrap {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18rpx;
+}
+
+.game-section-title {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.bottom-category-tabs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
+  flex-shrink: 0;
+}
+
+.bottom-category-tab {
+  padding: 8rpx 20rpx;
+  border-radius: 999rpx;
+  background: #f3f4f6;
+}
+
+.bottom-category-tab.active {
+  background: linear-gradient(135deg, #ff7a45 0%, #ff5f6d 100%);
+}
+
+.bottom-category-tab-text {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #4b5563;
+}
+
+.bottom-category-tab-text.active {
+  color: #ffffff;
+}
+
+.bottom-section-label {
+  min-width: 0;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #ff5f6d;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.game-view-switch {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 22rpx;
+}
+
+.game-view-button {
+  width: 54rpx;
+  height: 54rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-grid-icon {
+  width: 42rpx;
+  height: 42rpx;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.game-grid-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 5rpx;
+  background: #9ca3af;
+}
+
+.game-view-button.active .game-grid-dot {
+  background: #ff5f6d;
+}
+
+.game-list-icon {
+  width: 44rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 9rpx;
+}
+
+.game-list-line {
+  width: 44rpx;
+  height: 7rpx;
+  border-radius: 999rpx;
+  background: #9ca3af;
+}
+
+.game-view-button.active .game-list-line {
+  background: #ff5f6d;
+}
+
+.bottom-game-control {
+  margin-top: 30rpx;
+  border-top: 2rpx solid #eef1f6;
+  border-bottom: 2rpx solid #eef1f6;
+}
+
+.bottom-sort-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 24rpx 0;
+}
+
+.bottom-sort-label {
+  width: 104rpx;
+  flex-shrink: 0;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #4b5563;
+}
+
+.bottom-sort-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 42rpx;
+}
+
+.bottom-sort-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 8rpx 0;
+}
+
+.bottom-sort-tab-text {
+  font-size: 30rpx;
+  color: #6b7280;
+}
+
+.bottom-sort-tab-text.active {
+  color: #ff5f6d;
+  font-weight: 700;
+}
+
+.bottom-game-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-top: 24rpx;
+}
+
+.bottom-game-card {
+  width: 128rpx;
+  border-radius: 22rpx;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.bottom-game-cover {
+  flex-shrink: 0;
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 20rpx;
+  background: #e2e8f0;
+  box-shadow: inset 0 0 0 2rpx rgba(226, 232, 240, 0.9);
+}
+
+.bottom-game-info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.bottom-game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+  margin-top: 24rpx;
+}
+
+.bottom-game-list-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18rpx;
+  padding: 18rpx;
+  border-radius: 24rpx;
+  background: #f8fafc;
+  box-shadow: inset 0 0 0 2rpx rgba(226, 232, 240, 0.75);
+}
+
+.bottom-game-list-cover {
+  width: 128rpx;
+  height: 128rpx;
+  flex-shrink: 0;
+  border-radius: 20rpx;
+  background: #e2e8f0;
+}
+
+.bottom-game-list-info {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.bottom-game-name {
+  width: 100%;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #6b7280;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.bottom-game-subtitle {
+  font-size: 20rpx;
+  color: #8a95a8;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  width: 100%;
+}
+
+.empty-box {
+  padding: 56rpx 24rpx;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 24rpx;
+}
+
+.hot-empty {
+  margin-top: 18rpx;
+  border-radius: 18rpx;
+  background: #f8fafc;
+}
+
+/* 加载更多 / 已显示全 / 许愿 */
+.bottom-list-foot {
+  margin-top: 32rpx;
+  padding: 32rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.bottom-list-loading {
+  padding: 16rpx 0;
+}
+
+.bottom-list-loading-text {
+  font-size: 24rpx;
+  color: #94a3b8;
+}
+
+.bottom-list-more-btn {
+  padding: 18rpx 64rpx;
+  border-radius: 999rpx;
+  background: #f1f5f9;
+  border: 2rpx solid #e2e8f0;
+}
+
+.bottom-list-more-text {
+  font-size: 26rpx;
+  color: #475569;
+  font-weight: 600;
+}
+
+.bottom-list-end {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14rpx;
+  width: 100%;
+}
+
+.bottom-list-end-text {
+  font-size: 24rpx;
+  color: #94a3b8;
+  letter-spacing: 2rpx;
+}
+
+.bottom-list-end-tip {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #64748b;
+}
+
+.bottom-list-wish-btn {
+  margin-top: 6rpx;
+  padding: 18rpx 56rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #ff8a3d 0%, #ff5778 100%);
+  box-shadow: 0 8rpx 24rpx rgba(255, 138, 61, 0.4);
+}
+
+.bottom-list-wish-text {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 2rpx;
+}
+
+.bottom-list-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 18rpx;
+  margin-top: 6rpx;
+}
+
+.bottom-list-contact-btn {
+  padding: 18rpx 40rpx;
+  border-radius: 999rpx;
+  background: #ffffff;
+  border: 2rpx solid #1f6bff;
+  box-shadow: 0 6rpx 18rpx rgba(31, 107, 255, 0.15);
+}
+
+.bottom-list-contact-text {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1f6bff;
+  letter-spacing: 1rpx;
+}
+
+/* 联系客服弹窗内行 */
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+  margin-top: 6rpx;
+}
+
+.contact-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14rpx;
+  padding: 22rpx 24rpx;
+  border-radius: 18rpx;
+  background: #f8fafc;
+  border: 2rpx solid #eef2f7;
+}
+
+.contact-row-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-icon {
+  font-size: 40rpx;
+}
+
+.contact-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-label {
+  display: block;
+  font-size: 22rpx;
+  color: #94a3b8;
+}
+
+.contact-value {
+  display: block;
+  margin-top: 4rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f2937;
+  word-break: break-all;
+}
+
+.contact-copy-btn {
+  flex-shrink: 0;
+  padding: 12rpx 26rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #1f6bff 0%, #5a99ff 100%);
+  box-shadow: 0 4rpx 12rpx rgba(31, 107, 255, 0.3);
+}
+
+.contact-copy-text {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.contact-empty {
+  padding: 40rpx 0;
+  text-align: center;
+}
+
+.contact-empty-text {
+  font-size: 24rpx;
+  color: #94a3b8;
+}
+
+.contact-work-time {
+  display: block;
+  margin-top: 18rpx;
+  padding: 14rpx 22rpx;
+  border-radius: 16rpx;
+  background: #fff8eb;
+  font-size: 24rpx;
+  color: #b85a26;
+  text-align: center;
+}
+
+/* 许愿弹窗 */
+.wish-modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.wish-modal {
+  width: 640rpx;
+  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 28rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.wish-modal-head {
+  padding: 28rpx 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2rpx solid #f0f3f8;
+}
+
+.wish-modal-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.wish-modal-close {
+  font-size: 36rpx;
+  color: #94a3b8;
+  padding: 0 8rpx;
+}
+
+.wish-modal-body {
+  padding: 24rpx 32rpx;
+  flex: 1;
+}
+
+.wish-modal-tip {
+  display: block;
+  font-size: 24rpx;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 24rpx;
+}
+
+.wish-form-group {
+  margin-bottom: 22rpx;
+}
+
+.wish-form-label {
+  display: block;
+  margin-bottom: 12rpx;
+  font-size: 26rpx;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.wish-required {
+  color: #d14343;
+  margin-left: 4rpx;
+}
+
+.wish-form-optional {
+  color: #94a3b8;
+  font-weight: 400;
+  font-size: 22rpx;
+}
+
+.wish-form-input {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 22rpx;
+  border-radius: 16rpx;
+  background: #f3f6fb;
+  font-size: 26rpx;
+  color: #1d2b47;
+}
+
+.wish-form-textarea {
+  width: 100%;
+  height: 140rpx;
+  padding: 18rpx 22rpx;
+  border-radius: 16rpx;
+  background: #f3f6fb;
+  font-size: 26rpx;
+  color: #1d2b47;
+}
+
+.wish-customer-block {
+  margin-top: 16rpx;
+  padding: 22rpx;
+  border-radius: 18rpx;
+  background: #fff8eb;
+  border: 2rpx dashed #f5a623;
+}
+
+.wish-customer-title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #b85a26;
+  margin-bottom: 14rpx;
+}
+
+.wish-customer-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 8rpx;
+}
+
+.wish-customer-key {
+  font-size: 24rpx;
+  color: #6b6358;
+  width: 90rpx;
+}
+
+.wish-customer-value {
+  flex: 1;
+  font-size: 26rpx;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.wish-customer-time {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: #94896f;
+}
+
+.wish-modal-foot {
+  display: flex;
+  border-top: 2rpx solid #f0f3f8;
+}
+
+.wish-modal-btn {
+  flex: 1;
+  height: 96rpx;
+  line-height: 96rpx;
+  border: none;
+  background: #ffffff;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 0;
+  margin: 0;
+}
+
+.wish-modal-btn::after {
+  border: none;
+}
+
+.wish-modal-btn.cancel {
+  color: #64748b;
+  border-right: 2rpx solid #f0f3f8;
+}
+
+.wish-modal-btn.confirm {
+  color: #ffffff;
+  background: linear-gradient(135deg, #ff8a3d 0%, #ff5778 100%);
+}
+
+.theme-dark {
+  background: #050505;
+}
+
+.theme-dark .custom-navbar {
+  background: #050505;
+  box-shadow: 0 4rpx 22rpx rgba(255, 255, 255, 0.06);
+}
+
+.theme-dark .navbar-logo-image {
+  background: #111111;
+  box-shadow: 0 6rpx 16rpx rgba(255, 255, 255, 0.08);
+}
+
+.theme-dark .navbar-logo-bite {
+  background: #050505;
+}
+
+.theme-dark .navbar-site-name {
+  color: #f8fafc;
+}
+
+.theme-dark .navbar-site-tagline {
+  color: #a1a1aa;
+}
+
+.theme-dark .home-page {
+  background: #050505;
+}
+
+.theme-dark .mp-header {
+  background: #050505;
+  border-bottom-color: #1f2937;
+}
+
+.theme-dark .mp-search-bar {
+  background: #111827;
+}
+
+.theme-dark .mp-search-input {
+  background: #000000;
+  color: #f8fafc;
+}
+
+.theme-dark .section-card,
+.theme-dark .notice-bar {
+  background: #111111;
+  box-shadow: 0 12rpx 30rpx rgba(0, 0, 0, 0.28);
+}
+
+.theme-dark .quick-item-label,
+.theme-dark .section-title,
+.theme-dark .hot-swipe-tip,
+.theme-dark .bottom-category-tab-text,
+.theme-dark .bottom-sort-label,
+.theme-dark .bottom-game-name {
+  color: #f8fafc;
+}
+
+.theme-dark .notice-text,
+.theme-dark .hot-name,
+.theme-dark .bottom-sort-tab-text,
+.theme-dark .bottom-game-subtitle {
+  color: #a1a1aa;
+}
+
+.theme-dark .bottom-sort-tab-text.active,
+.theme-dark .bottom-section-label {
+  color: #ff8a00;
+}
+
+.theme-dark .bottom-category-tab {
+  background: #1f2937;
+}
+
+.theme-dark .bottom-category-tab.active {
+  background: linear-gradient(135deg, #ff7a45 0%, #ff5f6d 100%);
+}
+
+.theme-dark .bottom-category-tab-text.active {
+  color: #ffffff;
+}
+
+.theme-dark .bottom-game-control {
+  border-top-color: #1f2937;
+  border-bottom-color: #1f2937;
+}
+
+.theme-dark .bottom-game-card,
+.theme-dark .bottom-game-list-item,
+.theme-dark .hot-empty {
+  background: #0b0b0b;
+  box-shadow: inset 0 0 0 2rpx rgba(55, 65, 81, 0.8);
+}
+
+.theme-dark .hot-cover,
+.theme-dark .bottom-game-cover,
+.theme-dark .bottom-game-list-cover {
+  background: #1f2937;
+  box-shadow: inset 0 0 0 2rpx rgba(55, 65, 81, 0.85);
+}
+
+.theme-dark .hot-more-icon {
+  background: #1f2937;
+  box-shadow: inset 0 0 0 2rpx rgba(255, 138, 0, 0.4);
+}
+
+.theme-dark .game-grid-dot,
+.theme-dark .game-list-line {
+  background: #6b7280;
+}
+
+.theme-dark .game-view-button.active .game-grid-dot,
+.theme-dark .game-view-button.active .game-list-line {
+  background: #ff8a00;
+}
+
+.theme-dark .empty-box {
+  color: #9ca3af;
+}
+</style>

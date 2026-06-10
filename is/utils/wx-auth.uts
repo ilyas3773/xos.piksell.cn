@@ -1,0 +1,221 @@
+import { buildApiUrl } from './api.uts'
+import {
+  clearAuth,
+  saveAuth,
+} from './user.uts'
+
+const WX_USER_TOKEN_KEY = 'wx_user_token'
+const WX_USER_INFO_KEY = 'wx_user_info'
+
+/**
+ * 微信小程序登录
+ */
+export function wxLogin(): Promise<any> {
+  return wxSilentLogin()
+}
+
+export function wxProfileLogin(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    // 调用微信登录
+    uni.login({
+      provider: 'weixin',
+      success: (loginRes) => {
+        const code = loginRes.code
+        
+        // 获取用户信息
+        uni.getUserProfile({
+          desc: '用于完善用户资料',
+          success: (infoRes) => {
+            const { encryptedData, iv, rawData, signature } = infoRes
+            
+            // 发送到后端
+            uni.request({
+              url: buildApiUrl('/api/user/wx/login'),
+              method: 'POST',
+              data: {
+                code: code,
+                encryptedData: encryptedData,
+                iv: iv,
+                rawData: rawData,
+                signature: signature
+              },
+              success: (res: any) => {
+                const body = res.data
+                if (body && Number(body.code) === 0) {
+                  const data = body.data
+                  // 保存token和用户信息
+                  saveWxAuth(data)
+                  resolve(data)
+                } else {
+                  reject(body && body.msg ? String(body.msg) : '登录失败')
+                }
+              },
+              fail: (error) => {
+                reject(error && error.errMsg ? String(error.errMsg) : '网络错误')
+              }
+            })
+          },
+          fail: (error) => {
+            reject(error && error.errMsg ? String(error.errMsg) : '获取用户信息失败')
+          }
+        })
+      },
+      fail: (error) => {
+        reject(error && error.errMsg ? String(error.errMsg) : '微信登录失败')
+      }
+    })
+  })
+}
+
+/**
+ * 静默登录（仅使用code）
+ */
+export function wxSilentLogin(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    uni.login({
+      provider: 'weixin',
+      success: (loginRes) => {
+        const code = loginRes.code
+        
+        uni.request({
+          url: buildApiUrl('/api/user/wx/login'),
+          method: 'POST',
+          data: {
+            code: code
+          },
+          success: (res: any) => {
+            const body = res.data
+            if (body && Number(body.code) === 0) {
+              const data = body.data
+              saveWxAuth(data)
+              resolve(data)
+            } else {
+              reject(body && body.msg ? String(body.msg) : '登录失败')
+            }
+          },
+          fail: (error) => {
+            reject(error && error.errMsg ? String(error.errMsg) : '网络错误')
+          }
+        })
+      },
+      fail: (error) => {
+        reject(error && error.errMsg ? String(error.errMsg) : '微信登录失败')
+      }
+    })
+  })
+}
+
+/**
+ * 保存微信登录信息
+ */
+export function saveWxAuth(data: any): void {
+  if (data && data.token) {
+    uni.setStorageSync(WX_USER_TOKEN_KEY, data.token)
+  }
+  if (data && data.user) {
+    uni.setStorageSync(WX_USER_INFO_KEY, data.user)
+  }
+  saveAuth(data)
+}
+
+/**
+ * 获取微信用户token
+ */
+export function getWxUserToken(): string {
+  const token = uni.getStorageSync(WX_USER_TOKEN_KEY)
+  return token ? String(token) : ''
+}
+
+/**
+ * 获取微信用户信息
+ */
+export function getWxUserInfo(): any {
+  const userInfo = uni.getStorageSync(WX_USER_INFO_KEY)
+  return userInfo || null
+}
+
+/**
+ * 检查是否已登录
+ */
+export function isWxLoggedIn(): boolean {
+  return getWxUserToken() != ''
+}
+
+/**
+ * 退出登录
+ */
+export function wxLogout(): void {
+  uni.removeStorageSync(WX_USER_TOKEN_KEY)
+  uni.removeStorageSync(WX_USER_INFO_KEY)
+  clearAuth()
+}
+
+/**
+ * 获取用户信息（从服务器）
+ */
+export function fetchWxUserInfo(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const token = getWxUserToken()
+    if (!token) {
+      reject('请先登录')
+      return
+    }
+    
+    uni.request({
+      url: buildApiUrl('/api/user/wx/info'),
+      method: 'GET',
+      header: {
+        Authorization: 'Bearer ' + token
+      },
+      success: (res: any) => {
+        const body = res.data
+        if (body && body.code === 0) {
+          const data = body.data
+          uni.setStorageSync(WX_USER_INFO_KEY, data)
+          resolve(data)
+        } else {
+          reject(body && body.msg ? body.msg : '获取用户信息失败')
+        }
+      },
+      fail: (error) => {
+        reject(error.errMsg || '网络错误')
+      }
+    })
+  })
+}
+
+/**
+ * 更新用户信息
+ */
+export function updateWxUserInfo(data: any): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const token = getWxUserToken()
+    if (!token) {
+      reject('请先登录')
+      return
+    }
+    
+    uni.request({
+      url: buildApiUrl('/api/user/wx/info'),
+      method: 'POST',
+      header: {
+        Authorization: 'Bearer ' + token,
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      data: data,
+      success: (res: any) => {
+        const body = res.data
+        if (body && body.code === 0) {
+          const data = body.data
+          uni.setStorageSync(WX_USER_INFO_KEY, data)
+          resolve(data)
+        } else {
+          reject(body && body.msg ? body.msg : '更新失败')
+        }
+      },
+      fail: (error) => {
+        reject(error.errMsg || '网络错误')
+      }
+    })
+  })
+}

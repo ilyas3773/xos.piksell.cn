@@ -1,0 +1,172 @@
+{
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "Piksell 商城"
+      }
+    },
+    {
+      "path": "pages/games/index",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "游戏"
+      }
+    },
+    {
+      "path": "pages/apps/index",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "应用"
+      }
+    },
+    {
+      "path": "pages/rankings/index",
+      "style": {
+        "navigationBarTitleText": "榜单"
+      }
+    },
+    {
+      "path": "pages/arcade/index",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "街机"
+      }
+    },
+    {
+      "path": "pages/search/index",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "搜索"
+      }
+    },
+    {
+      "path": "pages/category/index",
+      "style": {
+        "navigationBarTitleText": "分类"
+      }
+    },
+    {
+      "path": "pages/mine/index",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationBarBackgroundColor": "#1a1245",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/energy/index",
+      "style": {
+        "navigationBarTitleText": "获取能量"
+      }
+    },
+    {
+      "path": "pages/faq/index",
+      "style": {
+        "navigationBarTitleText": "常见问题"
+      }
+    },
+    {
+      "path": "pages/payment/webview",
+      "style": {
+        "navigationBarTitleText": "支付收银台"
+      }
+    },
+    {
+      "path": "pages/payment/choice",
+      "style": {
+        "navigationBarTitleText": "选择支付方式"
+      }
+    },
+    {
+      "path": "pages/auth/index",
+      "style": {
+        "navigationBarTitleText": "登录 / 注册"
+      }
+    },
+    {
+      "path": "pages/product/list",
+      "style": {
+        "navigationBarTitleText": "商品列表"
+      }
+    },
+    {
+      "path": "pages/product/detail",
+      "style": {
+        "navigationBarTitleText": "商品详情"
+      }
+    },
+    {
+      "path": "pages/order/create",
+      "style": {
+        "navigationBarTitleText": "创建订单"
+      }
+    },
+    {
+      "path": "pages/order/result",
+      "style": {
+        "navigationBarTitleText": "订单详情"
+      }
+    },
+    {
+      "path": "pages/order/list",
+      "style": {
+        "navigationBarTitleText": "我的订单"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "Piksell 商城",
+    "navigationBarBackgroundColor": "#F4F7FB",
+    "backgroundColor": "#F4F7FB"
+  },
+  "app-plus": {
+    "titleNView": {
+      "buttons": []
+    },
+    "tabBar": {
+      "hidden": true
+    }
+  },
+  "tabBar": {
+    "color": "#9AA1AE",
+    "selectedColor": "#1677FF",
+    "backgroundColor": "#000000",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "static/tabbar/home.png",
+        "selectedIconPath": "static/tabbar/home-active.png"
+      },
+      {
+        "pagePath": "pages/games/index",
+        "text": "游戏",
+        "iconPath": "static/tabbar/games.png",
+        "selectedIconPath": "static/tabbar/games-active.png"
+      },
+      {
+        "pagePath": "pages/apps/index",
+        "text": "应用",
+        "iconPath": "static/tabbar/apps.png",
+        "selectedIconPath": "static/tabbar/apps-active.png"
+      },
+      {
+        "pagePath": "pages/rankings/index",
+        "text": "榜单",
+        "iconPath": "static/tabbar/rank.png",
+        "selectedIconPath": "static/tabbar/rank-active.png"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的",
+        "iconPath": "static/tabbar/mine.png",
+        "selectedIconPath": "static/tabbar/mine-active.png"
+      }
+    ]
+  },
+  "uniIdRouter": {}
+}

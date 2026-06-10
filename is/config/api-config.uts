@@ -1,0 +1,5 @@
+// API 域名配置
+// 开发环境改为 http://localhost 或 http://127.0.0.1
+// 上线前改为 http://xos.piksell.cn 或 https://xos.piksell.cn
+export const API_HOST = 'http://xos.piksell.cn'
+export const H5_HOST = 'http://xos.piksell.cn/is'

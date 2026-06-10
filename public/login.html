@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piksell 发卡后台 - 登录</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at 12% 20%, rgba(241, 95, 121, 0.22), transparent 34%),
+                radial-gradient(circle at 86% 18%, rgba(52, 152, 219, 0.24), transparent 34%),
+                linear-gradient(135deg, #1f2a44 0%, #121b2f 100%);
+            color: #1e293b;
+        }
+        .card {
+            width: 440px;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            border-radius: 16px;
+            box-shadow: 0 18px 48px rgba(3, 9, 28, 0.35);
+            padding: 34px 30px 28px;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            text-align: center;
+        }
+        .subtitle {
+            margin-top: 8px;
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+        }
+        .hint {
+            margin-top: 18px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: #ecfeff;
+            border: 1px solid #bae6fd;
+            color: #075985;
+            font-size: 12px;
+        }
+        .group {
+            margin-top: 16px;
+        }
+        .group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #334155;
+            font-weight: 600;
+        }
+        .group input {
+            width: 100%;
+            height: 44px;
+            padding: 0 12px;
+            border: 1px solid #d0d7e2;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+            transition: 0.2s border-color, 0.2s box-shadow;
+            background: #fff;
+        }
+        .group input:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.14);
+        }
+        .group input.error {
+            border-color: #fca5a5;
+            box-shadow: 0 0 0 3px rgba(252, 165, 165, 0.2);
+        }
+        .btn {
+            margin-top: 22px;
+            width: 100%;
+            height: 46px;
+            border: 0;
+            border-radius: 10px;
+            color: #fff;
+            background: linear-gradient(120deg, #0284c7 0%, #2563eb 100%);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s opacity, 0.2s transform;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover { opacity: 0.95; }
+        .btn:active { transform: translateY(1px); }
+        .btn:disabled { opacity: 0.65; cursor: not-allowed; }
+        .btn .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 状态区域 */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: #64748b;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: 0.3s background;
+        }
+        .status-dot.ok { background: #22c55e; box-shadow: 0 0 6px rgba(34, 197, 94, 0.5); }
+        .status-dot.warn { background: #f59e0b; box-shadow: 0 0 6px rgba(245, 158, 11, 0.5); }
+        .status-dot.error { background: #ef4444; box-shadow: 0 0 6px rgba(239, 68, 68, 0.5); }
+
+        /* 错误提示框 */
+        .alert-box {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            display: none;
+            animation: slideIn 0.25s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .alert-box.show { display: block; }
+
+        /* 错误类型样式 */
+        .alert-box.error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+        .alert-box.error .alert-icon { color: #ef4444; }
+        .alert-box.error .alert-title { color: #991b1b; }
+        .alert-box.error .alert-msg { color: #b91c1c; }
+
+        .alert-box.warn {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+        }
+        .alert-box.warn .alert-icon { color: #f59e0b; }
+        .alert-box.warn .alert-title { color: #92400e; }
+        .alert-box.warn .alert-msg { color: #b45309; }
+
+        .alert-box.info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+        }
+        .alert-box.info .alert-icon { color: #3b82f6; }
+        .alert-box.info .alert-title { color: #1e40af; }
+        .alert-box.info .alert-msg { color: #1d4ed8; }
+
+        .alert-box.success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+        .alert-box.success .alert-icon { color: #22c55e; }
+        .alert-box.success .alert-title { color: #166534; }
+        .alert-box.success .alert-msg { color: #15803d; }
+
+        .alert-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .alert-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .alert-title {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .alert-msg {
+            font-size: 12px;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+
+        /* 技术详情折叠 */
+        .alert-detail {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(0,0,0,0.1);
+            display: none;
+        }
+        .alert-detail.show { display: block; }
+        .alert-detail-toggle {
+            font-size: 11px;
+            color: inherit;
+            opacity: 0.7;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .alert-detail-toggle:hover { opacity: 1; }
+        .alert-detail-content {
+            margin-top: 8px;
+            font-size: 11px;
+            font-family: "Consolas", "Monaco", monospace;
+            background: rgba(0,0,0,0.05);
+            padding: 8px 10px;
+            border-radius: 6px;
+            word-break: break-all;
+            line-height: 1.6;
+            color: #374151;
+        }
+        .alert-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+        }
+        .alert-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid;
+            transition: 0.2s opacity;
+        }
+        .alert-btn:hover { opacity: 0.85; }
+        .alert-btn.primary {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: #fff;
+        }
+        .alert-btn.secondary {
+            background: transparent;
+            border-color: currentColor;
+            color: inherit;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                width: calc(100% - 28px);
+                padding: 28px 20px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+<main class="card">
+    <h1 class="title">Piksell 发卡后台</h1>
+    <p class="subtitle">管理员登录</p>
+    <p class="hint">默认账号：<strong>admin</strong>，默认密码：<strong>admin123</strong></p>
+
+    <form id="loginForm" autocomplete="on">
+        <div class="group">
+            <label for="username">账号</label>
+            <input id="username" name="username" type="text" value="admin" autocomplete="username" required>
+        </div>
+        <div class="group">
+            <label for="password">密码</label>
+            <input id="password" name="password" type="password" value="admin123" autocomplete="current-password" required>
+        </div>
+        <button id="btnLogin" class="btn" type="submit">
+            <span class="btn-text">登录后台</span>
+        </button>
+    </form>
+
+    <!-- 状态指示 -->
+    <div class="status-bar">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">正在检测系统状态...</span>
+    </div>
+
+    <!-- 错误提示框 -->
+    <div class="alert-box" id="alertBox">
+        <div class="alert-header">
+            <span class="alert-icon" id="alertIcon">⚠</span>
+            <span class="alert-title" id="alertTitle">错误</span>
+        </div>
+        <p class="alert-msg" id="alertMsg"></p>
+        <div class="alert-actions" id="alertActions"></div>
+        <div class="alert-detail" id="alertDetail">
+            <button class="alert-detail-toggle" id="detailToggle">
+                <span id="detailToggleText">展开技术详情</span>
+            </button>
+            <div class="alert-detail-content" id="detailContent"></div>
+        </div>
+    </div>
+</main>
+
+<script>
+(function () {
+    'use strict';
+
+    // ===== 错误类型定义 =====
+    const ErrorType = {
+        NETWORK: 'network',       // 网络错误（无法连接服务器）
+        TIMEOUT: 'timeout',       // 请求超时
+        DB_ERROR: 'db_error',     // 数据库错误
+        INSTALL: 'install',       // 未安装
+        AUTH_FAIL: 'auth_fail',  // 认证失败（账号密码错误）
+        BANNED: 'banned',       // 账号被禁用
+        VALIDATION: 'validation', // 参数验证失败
+        SERVER: 'server',         // 服务器内部错误
+        UNKNOWN: 'unknown'        // 未知错误
+    };
+
+    // 错误配置
+    const ErrorConfig = {
+        [ErrorType.NETWORK]: {
+            icon: '🌐',
+            title: '无法连接服务器',
+            msg: '无法连接到后台服务器，请检查网络或服务器是否正常运行。',
+            alertClass: 'error',
+        },
+        [ErrorType.TIMEOUT]: {
+            icon: '⏱',
+            title: '请求超时',
+            msg: '服务器响应超时，可能是服务器负载过高或网络不稳定。',
+            alertClass: 'warn',
+        },
+        [ErrorType.DB_ERROR]: {
+            icon: '🗄',
+            title: '数据库连接失败',
+            msg: '数据库连接失败，请确保 MySQL 服务已启动且配置正确。',
+            alertClass: 'error',
+            actions: [{ text: '检查 MySQL 服务', primary: true, action: 'checkMysql' }],
+        },
+        [ErrorType.INSTALL]: {
+            icon: '📦',
+            title: '系统未初始化',
+            msg: '系统尚未完成安装配置，请先完成安装向导。',
+            alertClass: 'warn',
+            actions: [{ text: '前往安装', primary: true, action: 'goInstall' }],
+        },
+        [ErrorType.AUTH_FAIL]: {
+            icon: '🔐',
+            title: '账号或密码错误',
+            msg: '您输入的账号或密码不正确，请检查后重新输入。',
+            alertClass: 'error',
+        },
+        [ErrorType.BANNED]: {
+            icon: '🚫',
+            title: '账号已被禁用',
+            msg: '您的管理员账号已被禁用，请联系超级管理员处理。',
+            alertClass: 'error',
+        },
+        [ErrorType.VALIDATION]: {
+            icon: '📝',
+            title: '输入参数错误',
+            msg: '请检查账号和密码是否为空，长度是否符合要求。',
+            alertClass: 'warn',
+        },
+        [ErrorType.SERVER]: {
+            icon: '💥',
+            title: '服务器错误',
+            msg: '服务器内部发生错误，请稍后重试或联系管理员。',
+            alertClass: 'error',
+            actions: [{ text: '重试登录', primary: true, action: 'retry' }],
+        },
+        [ErrorType.UNKNOWN]: {
+            icon: '❓',
+            title: '登录失败',
+            msg: '发生了未知错误，请稍后重试。',
+            alertClass: 'error',
+            actions: [{ text: '重试登录', primary: true, action: 'retry' }],
+        },
+    };
+
+    // ===== DOM 元素 =====
+    const $ = (id) => document.getElementById(id);
+    const form = $('loginForm');
+    const btn = $('btnLogin');
+    const btnText = btn.querySelector('.btn-text');
+    const usernameInput = $('username');
+    const passwordInput = $('password');
+    const statusDot = $('statusDot');
+    const statusText = $('statusText');
+    const alertBox = $('alertBox');
+    const alertIcon = $('alertIcon');
+    const alertTitle = $('alertTitle');
+    const alertMsg = $('alertMsg');
+    const alertActions = $('alertActions');
+    const alertDetail = $('alertDetail');
+    const detailToggle = $('detailToggle');
+    const detailToggleText = $('detailToggleText');
+    const detailContent = $('detailContent');
+
+    // ===== 状态管理 =====
+    let currentError = null;
+    let systemReady = false;
+
+    // ===== 状态检测 =====
+    async function checkSystem() {
+        setStatus('checking', '正在检测系统状态...');
+
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+            const response = await fetch('/admin/health', {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' },
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            // 非 JSON 响应
+            if (!response.headers.get('content-type')?.includes('application/json')) {
+                setStatus('error', '服务器响应异常');
+                showAlert(ErrorType.SERVER, '服务器返回了非 JSON 格式的响应，可能是服务器配置问题。');
+                return { ready: false };
+            }
+
+            const result = await response.json();
+
+            // 503 表示系统未安装
+            if (response.status === 503 || result.code === 503) {
+                setStatus('warn', '系统未完成安装');
+                showAlert(ErrorType.INSTALL, '系统尚未完成安装配置，请先完成安装向导。');
+                return { ready: false, installUrl: result.data?.install_url || '/elyas' };
+            }
+
+            // 检查返回的状态数据
+            if (result.data) {
+                const checks = result.data.checks || {};
+                const overallStatus = result.data.status;
+
+                // 数据库检查
+                if (checks.database) {
+                    if (checks.database.status === 'error') {
+                        setStatus('error', '数据库连接失败');
+                        const dbMsg = checks.database.message || '';
+                        showAlert(ErrorType.DB_ERROR, '数据库连接失败，请确保 MySQL 服务已启动。', dbMsg);
+                        return { ready: false };
+                    }
+                }
+
+                // 安装检查
+                if (checks.installation && checks.installation.status === 'error') {
+                    setStatus('warn', '系统未完成安装');
+                    showAlert(ErrorType.INSTALL, '系统尚未完成安装配置，请先完成安装向导。');
+                    return { ready: false, installUrl: '/elyas' };
+                }
+
+                // 整体状态
+                if (overallStatus === 'error') {
+                    setStatus('error', '系统检查未通过');
+                    showAlert(ErrorType.SERVER, '系统自检未通过，请查看详情或联系管理员。', JSON.stringify(checks, null, 2));
+                    return { ready: false };
+                }
+            }
+
+            // 健康检查成功
+            setStatus('ok', '系统运行正常');
+            systemReady = true;
+            return { ready: true };
+
+        } catch (err) {
+            if (err.name === 'AbortError') {
+                setStatus('error', '服务器响应超时');
+                showAlert(ErrorType.TIMEOUT, '服务器在8秒内未响应，可能负载过高或正在重启。');
+            } else if (err.message && (err.message.includes('Failed to fetch') || err.message.includes('NetworkError'))) {
+                setStatus('error', '服务器连接失败');
+                showAlert(ErrorType.NETWORK, '无法连接到服务器。请检查服务器是否已启动。');
+            } else {
+                setStatus('error', '系统检测失败');
+                showAlert(ErrorType.UNKNOWN, '系统检测时发生未知错误: ' + (err.message || '未知原因'), err.stack);
+            }
+            return { ready: false };
+        }
+    }
+
+    function setStatus(state, text) {
+        statusDot.className = 'status-dot ' + state;
+        statusText.textContent = text;
+    }
+
+    // ===== 错误显示 =====
+    function showAlert(type, extraMsg, detail) {
+        const config = ErrorConfig[type] || ErrorConfig[ErrorType.UNKNOWN];
+        currentError = { type, config };
+
+        alertBox.className = 'alert-box show ' + config.alertClass;
+        alertIcon.textContent = config.icon;
+        alertTitle.textContent = config.title;
+        alertMsg.textContent = extraMsg || config.msg;
+
+        // 操作按钮
+        alertActions.innerHTML = '';
+        const actions = config.actions || [];
+        if (actions.length === 0 && type !== ErrorType.AUTH_FAIL && type !== ErrorType.BANNED) {
+            // 默认添加重试按钮
+            alertActions.innerHTML = `<button class="alert-btn primary" onclick="retryLogin()">重试登录</button>`;
+        }
+        actions.forEach(a => {
+            if (a.action === 'retry') {
+                alertActions.innerHTML += `<button class="alert-btn ${a.primary ? 'primary' : 'secondary'}" onclick="retryLogin()">${a.text}</button>`;
+            } else if (a.action === 'goInstall') {
+                alertActions.innerHTML += `<button class="alert-btn ${a.primary ? 'primary' : 'secondary'}" onclick="goToInstall()">${a.text}</button>`;
+            } else if (a.action === 'checkMysql') {
+                alertActions.innerHTML += `<button class="alert-btn secondary" onclick="showMysqlHelp()">${a.text}</button>`;
+            }
+        });
+
+        // 技术详情
+        if (detail) {
+            alertDetail.style.display = 'block';
+            alertDetail.classList.add('show');
+            detailContent.textContent = detail;
+        } else {
+            alertDetail.style.display = 'none';
+            alertDetail.classList.remove('show');
+        }
+
+        detailToggleText.textContent = '展开技术详情';
+    }
+
+    function hideAlert() {
+        alertBox.classList.remove('show');
+        currentError = null;
+    }
+
+    function toggleDetail() {
+        const isOpen = alertDetail.classList.contains('show');
+        alertDetail.classList.toggle('show');
+        detailToggleText.textContent = isOpen ? '展开技术详情' : '收起技术详情';
+    }
+
+    detailToggle.addEventListener('click', toggleDetail);
+
+    // ===== 辅助操作 =====
+    window.retryLogin = function () {
+        hideAlert();
+        passwordInput.focus();
+    };
+
+    window.goToInstall = function () {
+        window.location.href = currentError?.config?.msg?.includes('安装') ? '/elyas' : '/elyas';
+    };
+
+    window.showMysqlHelp = function () {
+        showAlert(ErrorType.INFO || ErrorType.UNKNOWN, '', `
+[MySQL 服务启动指南]
+
+Windows 打开命令提示符(CMD)执行:
+
+1. 查看服务状态:
+   net start | findstr mysql
+
+2. 启动 MySQL:
+   net start mysql
+   或
+   net start mysql80
+   或
+   net start MySQL
+
+3. 如果服务不存在，手动启动:
+   sc start mysql80
+
+4. 验证连接:
+   mysql -u xospiksell -p -h 127.0.0.1
+
+5. 或使用 phpMyAdmin/XAMPP/WAMP 等工具管理
+        `.trim());
+        alertBox.className = 'alert-box show info';
+        alertIcon.textContent = '💡';
+        alertTitle.textContent = 'MySQL 排查指南';
+        alertMsg.textContent = '请确保 MySQL 服务正在运行，然后重启 phpStudy/WAMP/XAMPP 或相关服务。';
+    };
+
+    // ===== 登录处理 =====
+    async function handleLogin() {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        // 基础验证
+        if (!username) {
+            usernameInput.classList.add('error');
+            showAlert(ErrorType.VALIDATION, '请输入管理员账号。');
+            usernameInput.focus();
+            return;
+        }
+        usernameInput.classList.remove('error');
+
+        if (!password) {
+            passwordInput.classList.add('error');
+            showAlert(ErrorType.VALIDATION, '请输入管理员密码。');
+            passwordInput.focus();
+            return;
+        }
+        passwordInput.classList.remove('error');
+
+        hideAlert();
+        setLoading(true);
+
+        try {
+            const body = new URLSearchParams();
+            body.append('username', username);
+            body.append('password', password);
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+            const response = await fetch('/admin/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: body.toString(),
+                signal: controller.signal,
+            });
+            clearTimeout(timeoutId);
+
+            const result = await response.json();
+            const status = response.status;
+
+            // 解析错误类型
+            const errorType = classifyError(status, result);
+
+            if (status === 503 || result.code === 503) {
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_user');
+                showAlert(ErrorType.INSTALL, '系统尚未完成安装配置，请先完成安装。', `状态码: ${status}\n响应: ${JSON.stringify(result, null, 2)}`);
+                setTimeout(() => goToInstall(), 2000);
+                return;
+            }
+
+            if (status === 422 || result.code === 422) {
+                showAlert(ErrorType.VALIDATION, result.msg || '输入参数验证失败，请检查账号密码格式。');
+                return;
+            }
+
+            if (status === 401 || result.code === 401) {
+                if (result.msg && result.msg.includes('禁用')) {
+                    showAlert(ErrorType.BANNED, result.msg);
+                } else {
+                    showAlert(ErrorType.AUTH_FAIL, result.msg || '账号或密码错误，请重新输入。');
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+                return;
+            }
+
+            if (status >= 500) {
+                showAlert(ErrorType.SERVER, result.msg || '服务器内部错误，请稍后重试。', `HTTP ${status}\n${result.msg || '无详细信息'}`);
+                return;
+            }
+
+            // 登录成功
+            if (result.code === 0 && result.data && result.data.token) {
+                localStorage.setItem('admin_token', result.data.token);
+                localStorage.setItem('admin_user', JSON.stringify(result.data.admin || {}));
+
+                // 成功提示
+                alertBox.className = 'alert-box show success';
+                alertIcon.textContent = '✅';
+                alertTitle.textContent = '登录成功';
+                alertMsg.textContent = '正在跳转到管理后台...';
+                alertActions.innerHTML = '';
+                alertDetail.style.display = 'none';
+
+                setTimeout(() => {
+                    window.location.href = '/admin.html';
+                }, 500);
+                return;
+            }
+
+            // 其他错误
+            showAlert(errorType, result.msg || '登录失败，请重试。', `HTTP ${status}\n响应: ${JSON.stringify(result, null, 2)}`);
+
+        } catch (err) {
+            if (err.name === 'AbortError') {
+                showAlert(ErrorType.TIMEOUT, '登录请求超时，服务器响应超过15秒，请稍后重试。');
+            } else if (err.message && err.message.includes('Failed to fetch')) {
+                showAlert(ErrorType.NETWORK, '网络连接失败，无法访问服务器。请检查网络或服务器状态。', err.message);
+            } else {
+                showAlert(ErrorType.UNKNOWN, '发生未知错误: ' + (err.message || '未知原因'), err.stack || err.message);
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    function classifyError(status, result) {
+        const msg = result.msg || '';
+        const code = result.code || status;
+
+        // 账号被禁用（优先判断）
+        if (msg.includes('禁用') || msg.includes('停用') || msg.includes('ban') || msg.includes('disabled') || msg.includes('封禁')) {
+            return ErrorType.BANNED;
+        }
+
+        // 数据库错误
+        if (msg.includes('mysql') || msg.includes('database') || msg.includes('连接') || msg.includes('连接') ||
+            msg.includes('connection') || msg.includes('sql') || msg.includes('sqlstate')) {
+            return ErrorType.DB_ERROR;
+        }
+
+        // 账号密码错误
+        if (msg.includes('密码') || msg.includes('password') || msg.includes('错误') ||
+            msg.includes('incorrect') || msg.includes('invalid') || msg.includes('不存在')) {
+            return ErrorType.AUTH_FAIL;
+        }
+
+        // 500+ 服务器错误
+        if (status >= 500) {
+            return ErrorType.SERVER;
+        }
+
+        // 422 参数验证错误
+        if (status === 422 || code === 422) {
+            return ErrorType.VALIDATION;
+        }
+
+        return ErrorType.UNKNOWN;
+    }
+
+    function setLoading(loading) {
+        btn.disabled = loading;
+        if (loading) {
+            btnText.innerHTML = '<div class="spinner"></div><span>登录中...</span>';
+        } else {
+            btnText.textContent = '登录后台';
+        }
+    }
+
+    // ===== 事件绑定 =====
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        handleLogin();
+    });
+
+    // 移除输入框错误样式
+    usernameInput.addEventListener('input', () => usernameInput.classList.remove('error'));
+    passwordInput.addEventListener('input', () => {
+        passwordInput.classList.remove('error');
+        hideAlert();
+    });
+
+    // 已登录则跳转
+    if (localStorage.getItem('admin_token')) {
+        window.location.href = '/admin.html';
+        return;
+    }
+
+    // 启动时检测系统状态
+    checkSystem();
+
+})();
+</script>
+</body>
+</html>

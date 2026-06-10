@@ -1,0 +1,581 @@
+<template>
+  <view class="games-wrapper">
+    <scroll-view class="page-shell" scroll-y="true">
+      <view class="page-container">
+
+        <view class="carousel-style">
+          <!-- 杂志风头部 -->
+          <view class="cs-hero">
+            <text class="cs-hero-tag">GAMES · 游戏专区</text>
+            <text class="cs-hero-title">每天发现一款好游戏</text>
+            <text class="cs-hero-sub">精选最热门、最新潮、最值得一玩的内容</text>
+          </view>
+
+          <!-- 横向跑马灯：每次切1个，一次显示4个 -->
+          <swiper
+            class="cs-swiper"
+            v-if="loopedProducts().length > 0"
+            :indicator-dots="false"
+            :autoplay="true"
+            :interval="2500"
+            :duration="1200"
+            :circular="true"
+            :display-multiple-items="4"
+            previous-margin="0rpx"
+            next-margin="0rpx"
+          >
+            <swiper-item v-for="(item, idx) in loopedProducts()" :key="'cs-' + idx + '-' + item.id">
+              <view class="cs-cell" @click="goDetail(item.id)">
+                <view class="cs-cell-image-wrap">
+                  <image class="cs-cell-image" :src="cover(item.display_image)" mode="aspectFill"></image>
+                </view>
+                <text class="cs-cell-name">{{ item.name }}</text>
+                <text class="cs-cell-en">{{ item.name_en || '' }}</text>
+              </view>
+            </swiper-item>
+          </swiper>
+
+          <!-- 搜索框 -->
+          <view class="cs-search">
+            <text class="cs-search-icon">🔍</text>
+            <input
+              class="cs-search-input"
+              v-model="searchKeyword"
+              placeholder="搜索游戏名称"
+              placeholder-class="cs-search-placeholder"
+              confirm-type="search"
+              @confirm="performSearch"
+            />
+            <view class="cs-search-btn" @click="performSearch">
+              <text class="cs-search-btn-text">搜索</text>
+            </view>
+          </view>
+
+          <!-- 排序栏 + 视图切换 -->
+          <view class="cs-tabs-bar">
+            <text class="cs-tabs-title">{{ currentSortTitle() }}</text>
+            <view class="cs-sort-row">
+              <text
+                v-for="sort in csSortOptions"
+                :key="sort.key"
+                class="cs-sort-item"
+                :class="{ active: csSort == sort.key }"
+                @click="csSort = sort.key"
+              >{{ sort.label }}</text>
+            </view>
+            <view class="cs-tabs-actions">
+              <view class="cs-view-btn" :class="{ active: csView == 'grid' }" @click="csView = 'grid'">
+                <text class="cs-view-icon">▦</text>
+              </view>
+              <view class="cs-view-btn" :class="{ active: csView == 'list' }" @click="csView = 'list'">
+                <text class="cs-view-icon">☰</text>
+              </view>
+            </view>
+          </view>
+
+          <!-- 暗黑电竞风格商品卡片（宫格） -->
+          <view v-if="csView == 'grid'" class="cs-game-grid">
+            <view class="cs-game-card" v-for="item in products" :key="'cs-game-' + item.id" @click="goDetail(item.id)">
+              <image class="cs-game-image" :src="cover(item.display_image)" mode="aspectFill"></image>
+              <view class="cs-game-info">
+                <text class="cs-game-name">{{ item.name }}</text>
+              </view>
+            </view>
+          </view>
+
+          <!-- 列表视图 -->
+          <view v-else class="cs-game-list">
+            <view class="cs-game-row" v-for="item in products" :key="'cs-row-' + item.id" @click="goDetail(item.id)">
+              <image class="cs-game-row-image" :src="cover(item.display_image)" mode="aspectFill"></image>
+              <view class="cs-game-row-info">
+                <text class="cs-game-row-name">{{ item.name }}</text>
+                <text class="cs-game-row-en">{{ item.name_en || '游戏' }}</text>
+                <text class="cs-game-row-cat" v-if="item.category && item.category.name">{{ item.category.name }}</text>
+              </view>
+              <view class="cs-game-row-arrow">›</view>
+            </view>
+          </view>
+        </view>
+
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script setup lang="uts">
+import {
+  imageUrl,
+  fetchFeaturedProducts,
+  openProductDetail,
+  openProductList,
+} from '../../utils/shop.uts'
+import {
+  loadTabShowcase,
+} from '../../utils/discovery.uts'
+
+const products = ref([])
+const featuredProducts = ref([])
+const categoryId = ref(0)
+const categoryName = ref('')
+const searchKeyword = ref('')
+
+// 排序 + 视图
+const csSort = ref('hot')
+const csView = ref('grid')
+const csSortOptions = [
+  { key: 'hot', label: '热门' },
+  { key: 'click', label: '点击量' },
+  { key: 'exchange', label: '兑换量' },
+  { key: 'latest', label: '最新发布' },
+]
+
+function currentSortTitle(): string {
+  if (csSort.value == 'hot') return '热门游戏'
+  if (csSort.value == 'click') return '点击量最多'
+  if (csSort.value == 'exchange') return '兑换量最多'
+  if (csSort.value == 'latest') return '最新发布'
+  return '热门游戏'
+}
+
+function cover(path: string): string {
+  return imageUrl(path)
+}
+
+function goDetail(id: any) {
+  openProductDetail(id)
+}
+
+function openCollection() {
+  const params: any = { title: categoryName.value != '' ? categoryName.value : '游戏专区' }
+  if (categoryId.value > 0) {
+    params.category_id = categoryId.value
+  } else {
+    params.keyword = '游戏'
+  }
+  openProductList(params)
+}
+
+function openGameSearch() {
+  const params: any = { title: '游戏搜索', focus_search: 1 }
+  if (categoryId.value > 0) {
+    params.category_id = categoryId.value
+  } else {
+    params.keyword = '游戏'
+  }
+  openProductList(params)
+}
+
+function performSearch() {
+  const keyword = String(searchKeyword.value || '').trim()
+  if (keyword == '') {
+    uni.showToast({ title: '请输入搜索关键词', icon: 'none' })
+    return
+  }
+  const params: any = {
+    keyword: keyword,
+    title: '搜索：' + keyword,
+    match_fields: 'name,name_en',
+  }
+  if (categoryId.value > 0) {
+    params.category_id = categoryId.value
+  }
+  openProductList(params)
+}
+
+function loadPage() {
+  uni.showLoading({ title: '加载中' })
+  loadTabShowcase(['游戏', '游戏列表', 'games'], '游戏', 8).then((result) => {
+    products.value = result && result.products ? result.products : []
+    categoryId.value = result && result.matchedType && result.matchedType.id
+      ? Number(result.matchedType.id)
+      : 0
+    categoryName.value = result && result.matchedType && result.matchedType.name
+      ? String(result.matchedType.name)
+      : ''
+  }).finally(() => {
+    uni.hideLoading()
+    uni.stopPullDownRefresh()
+  })
+
+  // 加载精选商品（用于轮播图）
+  fetchFeaturedProducts('游戏', 30).then((data) => {
+    if (Array.isArray(data)) {
+      featuredProducts.value = data
+    } else {
+      featuredProducts.value = []
+    }
+  }).catch(() => {
+    featuredProducts.value = []
+  })
+}
+
+// 循环商品列表：商品数量太少时复制几遍，确保有足够数据循环
+function loopedProducts(): any[] {
+  const list = featuredProducts.value.length > 0 ? featuredProducts.value : products.value
+  if (!list || list.length == 0) {
+    return []
+  }
+  if (list.length >= 8) {
+    return list
+  }
+  const result: any[] = []
+  while (result.length < 8) {
+    for (let i = 0; i < list.length; i++) {
+      result.push(list[i])
+    }
+  }
+  return result
+}
+
+onLoad(() => {
+  loadPage()
+})
+
+onPullDownRefresh(() => {
+  loadPage()
+})
+</script>
+
+<style>
+.games-wrapper {
+  min-height: 100vh;
+  background: #faf7f2;
+}
+
+.page-container {
+  padding: 24rpx 24rpx 200rpx;
+}
+
+.carousel-style {
+  background: #faf7f2;
+}
+
+/* 杂志风头部 */
+.cs-hero {
+  padding: 80rpx 16rpx 36rpx;
+}
+
+.cs-hero-tag {
+  display: block;
+  font-size: 26rpx;
+  letter-spacing: 5rpx;
+  color: #b08c5f;
+  font-weight: 700;
+}
+
+.cs-hero-title {
+  display: block;
+  margin-top: 20rpx;
+  font-size: 64rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: 2rpx;
+  line-height: 1.25;
+}
+
+.cs-hero-sub {
+  display: block;
+  margin-top: 18rpx;
+  font-size: 28rpx;
+  color: #6b6358;
+  line-height: 1.6;
+}
+
+/* 轮播图 */
+.cs-swiper {
+  width: 100%;
+  height: 280rpx;
+  margin-top: 20rpx;
+}
+
+.cs-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 8rpx;
+  box-sizing: border-box;
+}
+
+.cs-cell-image-wrap {
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 22rpx;
+  overflow: hidden;
+  background: #ebe3d5;
+  box-shadow: 0 6rpx 16rpx rgba(176, 140, 95, 0.18);
+  flex-shrink: 0;
+}
+
+.cs-cell-image {
+  width: 100%;
+  height: 100%;
+}
+
+.cs-cell-name {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cs-cell-en {
+  display: block;
+  margin-top: 4rpx;
+  font-size: 18rpx;
+  color: #94896f;
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 搜索框 */
+.cs-search {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 28rpx 0 0;
+  padding: 14rpx 14rpx 14rpx 26rpx;
+  border-radius: 999rpx;
+  background: #ffffff;
+  box-shadow: 0 6rpx 22rpx rgba(176, 140, 95, 0.12);
+  border: 2rpx solid rgba(235, 227, 213, 0.8);
+}
+
+.cs-search-icon {
+  font-size: 30rpx;
+  margin-right: 14rpx;
+}
+
+.cs-search-input {
+  flex: 1;
+  font-size: 26rpx;
+  color: #1a1a1a;
+  height: 60rpx;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.cs-search-placeholder {
+  color: #94896f;
+}
+
+.cs-search-btn {
+  padding: 12rpx 36rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #ff8a3d 0%, #ff5778 100%);
+  box-shadow: 0 6rpx 16rpx rgba(255, 138, 61, 0.4);
+}
+
+.cs-search-btn-text {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1rpx;
+}
+
+/* 排序栏 + 视图切换 */
+.cs-tabs-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 28rpx 0 18rpx;
+  padding: 14rpx 8rpx;
+  border-bottom: 2rpx solid #ebe3d5;
+  gap: 14rpx;
+}
+
+.cs-tabs-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #ff8a3d;
+  flex-shrink: 0;
+}
+
+.cs-sort-row {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18rpx;
+  overflow: hidden;
+}
+
+.cs-sort-item {
+  font-size: 24rpx;
+  color: #94896f;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.cs-sort-item.active {
+  color: #ff8a3d;
+  font-weight: 700;
+}
+
+.cs-tabs-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 8rpx;
+  flex-shrink: 0;
+}
+
+.cs-view-btn {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 12rpx;
+  background: rgba(176, 140, 95, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cs-view-btn.active {
+  background: rgba(255, 138, 61, 0.18);
+  border: 2rpx solid rgba(255, 138, 61, 0.6);
+}
+
+.cs-view-icon {
+  font-size: 24rpx;
+  color: #ff8a3d;
+  font-weight: 700;
+}
+
+/* 暗黑电竞商品卡片 */
+.cs-game-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.cs-game-card {
+  width: 128rpx;
+  flex-shrink: 0;
+  border-radius: 22rpx;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cs-game-image {
+  flex-shrink: 0;
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 20rpx;
+  background: #e2e8f0;
+  box-shadow: inset 0 0 0 2rpx rgba(226, 232, 240, 0.9);
+}
+
+.cs-game-info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.cs-game-name {
+  display: block;
+  width: 100%;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #6b7280;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cs-game-en {
+  display: block;
+  width: 100%;
+  margin-top: 4rpx;
+  font-size: 18rpx;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 列表视图 - 跟首页一致的浅色风格 */
+.cs-game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.cs-game-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18rpx;
+  padding: 18rpx;
+  border-radius: 24rpx;
+  background: #ffffff;
+  box-shadow: 0 6rpx 20rpx rgba(176, 140, 95, 0.1);
+  border: 2rpx solid rgba(235, 227, 213, 0.8);
+}
+
+.cs-game-row-image {
+  width: 128rpx;
+  height: 128rpx;
+  flex-shrink: 0;
+  border-radius: 20rpx;
+  background: #f5efe2;
+}
+
+.cs-game-row-info {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.cs-game-row-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cs-game-row-en {
+  display: block;
+  font-size: 22rpx;
+  color: #94896f;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cs-game-row-cat {
+  display: inline-flex;
+  margin-top: 4rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 138, 61, 0.12);
+  font-size: 20rpx;
+  color: #ff8a3d;
+  align-self: flex-start;
+}
+
+.cs-game-row-arrow {
+  font-size: 36rpx;
+  color: #cbb89a;
+  flex-shrink: 0;
+}
+</style>

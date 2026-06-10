@@ -1,0 +1,724 @@
+<template>
+  <scroll-view class="page-shell" scroll-y="true">
+    <view class="page-container result-page">
+      <!-- 兑换成功内容框 -->
+      <view class="success-hero" v-if="order.id">
+        <view class="success-icon-wrap">
+          <image v-if="productImage() != ''" class="success-product-image" :src="productImage()" mode="aspectFill"></image>
+          <text v-else class="success-icon-text">✓</text>
+        </view>
+        <text class="success-title">兑换成功</text>
+        <text class="success-subtitle">{{ order.product && order.product.name ? order.product.name : '' }}</text>
+        <text class="success-subtitle-en">{{ order.product && order.product.name_en ? order.product.name_en : '' }}</text>
+        <text class="success-expire">兑换有效期24小时</text>
+
+        <!-- 未确认时显示查看按钮 -->
+        <button class="primary-button view-btn" v-if="!unlocked && order.deliver_content && order.deliver_content != ''" @click="showStep1">
+          {{ hasAccountPassword() ? '查看账号' : '查看兑换内容' }}
+        </button>
+
+        <!-- 已确认后显示账号密码和复制按钮 -->
+        <view class="unlocked-box" v-if="unlocked && hasAccountPassword()">
+          <view class="account-info-box">
+            <view class="account-field">
+              <text class="account-label">账号</text>
+              <view class="account-value-row">
+                <text class="account-value">{{ showAccount ? getAccountInfo().account : maskText(getAccountInfo().account) }}</text>
+                <text class="eye-toggle" @click="toggleAccount">{{ showAccount ? '🙈 隐藏' : '👁 查看' }}</text>
+              </view>
+            </view>
+            <view class="account-field">
+              <text class="account-label">密码</text>
+              <view class="account-value-row">
+                <text class="account-value">{{ showPassword ? getAccountInfo().password : maskText(getAccountInfo().password) }}</text>
+                <text class="eye-toggle" @click="togglePassword">{{ showPassword ? '🙈 隐藏' : '👁 查看' }}</text>
+              </view>
+            </view>
+          </view>
+
+          <button class="primary-button copy-btn" @click="copyAccount">一键复制账号</button>
+          <button class="secondary-button copy-btn" @click="copyPassword">一键复制密码</button>
+        </view>
+
+        <!-- 单行内容（非账号密码类） -->
+        <view class="unlocked-box" v-if="unlocked && !hasAccountPassword() && order.deliver_content && order.deliver_content != ''">
+          <view class="content-value-row">
+            <text class="content-text">{{ showContent ? order.deliver_content : maskText(order.deliver_content) }}</text>
+            <text class="eye-toggle dark-eye" @click="toggleContent">{{ showContent ? '🙈' : '👁' }}</text>
+          </view>
+          <button class="primary-button copy-btn" @click="copyContent">一键复制内容</button>
+        </view>
+      </view>
+
+      <!-- 返回首页 -->
+      <view class="home-btn-wrap">
+        <button class="home-btn" @click="goHome">返回首页</button>
+      </view>
+
+      <!-- 加载中 -->
+      <view class="empty-box" v-if="!order.id">
+        正在加载订单信息...
+      </view>
+    </view>
+
+    <!-- 步骤1弹窗 -->
+    <view class="modal-overlay" v-if="step1Visible" @click="closeStep1">
+      <view class="modal-container" @click.stop>
+        <view class="modal-header">
+          <text class="modal-title">温馨提示</text>
+        </view>
+        <view class="modal-body">
+          <text class="modal-message">遇到弹窗点其他选项</text>
+        </view>
+        <view class="modal-footer">
+          <button class="modal-button cancel-button" @click="step1Reject">不要</button>
+          <button class="modal-button confirm-button" @click="step1Confirm">好的</button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 步骤2弹窗 -->
+    <view class="modal-overlay" v-if="step2Visible" @click="closeStep2">
+      <view class="modal-container" @click.stop>
+        <view class="modal-header">
+          <text class="modal-title">温馨提示</text>
+        </view>
+        <view class="modal-body">
+          <text class="modal-message">再选择不升级</text>
+        </view>
+        <view class="modal-footer">
+          <button class="modal-button cancel-button" @click="step2Reject">不要</button>
+          <button class="modal-button confirm-button" @click="step2Confirm">好的</button>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</template>
+
+<script setup lang="uts">
+import {
+  copyText,
+  fetchOrderById,
+  fetchOrderByNo,
+  imageUrl,
+} from '../../utils/shop.uts'
+import {
+  openOrderListPage,
+  switchToHomeTab,
+} from '../../utils/navigation.uts'
+
+const currentOrderId = ref(0)
+const currentOrderNo = ref('')
+const unlocked = ref(false)
+const showAccount = ref(false)
+const showPassword = ref(false)
+const showContent = ref(false)
+const step1Visible = ref(false)
+const step2Visible = ref(false)
+const order = reactive({
+  id: 0,
+  order_no: '',
+  status: '',
+  status_text: '',
+  quantity: 0,
+  total_amount: 0,
+  created_at: '',
+  deliver_content: '',
+  product: null,
+})
+
+function energyText(value: any): string {
+  return String(Math.max(0, Math.round(Number(value || 0))))
+}
+
+function productImage(): string {
+  const product = order.product
+  if (!product) {
+    return ''
+  }
+  const path = String(
+    (product.display_image || product.cover_image || '') as string
+  )
+  if (path == '') {
+    return ''
+  }
+  return imageUrl(path)
+}
+
+function showStep1() {
+  step1Visible.value = true
+}
+
+function closeStep1() {
+  step1Visible.value = false
+}
+
+function step1Reject() {
+  step1Visible.value = false
+  uni.showToast({
+    title: '登录时必须要点其他选项',
+    icon: 'none',
+    duration: 2500,
+  })
+}
+
+function step1Confirm() {
+  step1Visible.value = false
+  setTimeout(() => {
+    step2Visible.value = true
+  }, 200)
+}
+
+function closeStep2() {
+  step2Visible.value = false
+}
+
+function step2Reject() {
+  step2Visible.value = false
+  uni.showToast({
+    title: '登录时必须选择不升级',
+    icon: 'none',
+    duration: 2500,
+  })
+}
+
+function step2Confirm() {
+  step2Visible.value = false
+  unlocked.value = true
+}
+
+function hasAccountPassword(): boolean {
+  const content = String(order.deliver_content || '').trim()
+  if (content == '') {
+    return false
+  }
+  
+  const separators = ['----', '｜', '|', '\t']
+  for (const separator of separators) {
+    if (content.indexOf(separator) > 0) {
+      return true
+    }
+  }
+  
+  const commaIndex = content.indexOf(',')
+  if (commaIndex > 0 && content.indexOf(',', commaIndex + 1) < 0) {
+    return true
+  }
+  
+  return false
+}
+
+function getAccountInfo(): any {
+  const content = String(order.deliver_content || '').trim()
+  if (content == '') {
+    return { account: '', password: '' }
+  }
+  
+  const separators = ['----', '｜', '|', '\t']
+  for (const separator of separators) {
+    const separatorIndex = content.indexOf(separator)
+    if (separatorIndex > 0) {
+      const account = content.slice(0, separatorIndex).trim()
+      const password = content.slice(separatorIndex + separator.length).trim()
+      if (account != '' && password != '') {
+        return { account: account, password: password }
+      }
+    }
+  }
+  
+  const commaIndex = content.indexOf(',')
+  if (commaIndex > 0 && content.indexOf(',', commaIndex + 1) < 0) {
+    const account = content.slice(0, commaIndex).trim()
+    const password = content.slice(commaIndex + 1).trim()
+    if (account != '' && password != '') {
+      return { account: account, password: password }
+    }
+  }
+  
+  return { account: content, password: '' }
+}
+
+function copyAccount() {
+  const info = getAccountInfo()
+  copyText(info.account, '账号已复制')
+}
+
+function copyPassword() {
+  const info = getAccountInfo()
+  copyText(info.password, '密码已复制')
+}
+
+function copyContent() {
+  copyText(order.deliver_content, '内容已复制')
+}
+
+function maskText(text: string): string {
+  const value = String(text || '')
+  if (value.length == 0) {
+    return '****'
+  }
+  if (value.length <= 2) {
+    return '****'
+  }
+  const first = value.slice(0, 1)
+  const last = value.slice(value.length - 1)
+  const middleLen = Math.min(value.length - 2, 6)
+  let mask = ''
+  for (let i = 0; i < middleLen; i++) {
+    mask += '*'
+  }
+  return first + mask + last
+}
+
+function toggleAccount() {
+  showAccount.value = !showAccount.value
+}
+
+function togglePassword() {
+  showPassword.value = !showPassword.value
+}
+
+function toggleContent() {
+  showContent.value = !showContent.value
+}
+
+function applyOrder(data: any) {
+  order.id = Number(data.id || 0)
+  order.order_no = String(data.order_no || '')
+  order.status = String(data.status || '')
+  order.status_text = String(data.status_text || '')
+  order.quantity = Number(data.quantity || 0)
+  order.total_amount = Number(data.total_amount || 0)
+  order.created_at = String(data.created_at || '')
+  order.deliver_content = String(data.deliver_content || '')
+  order.product = data && data.product ? data.product : null
+
+  currentOrderId.value = order.id
+  currentOrderNo.value = order.order_no
+  if (order.order_no != '') {
+    uni.setStorageSync('last_order_no', order.order_no)
+  }
+}
+
+function goHome() {
+  switchToHomeTab()
+}
+
+function openOrderList() {
+  openOrderListPage()
+}
+
+function loadById(id: number) {
+  uni.showLoading({
+    title: '加载中...',
+  })
+  fetchOrderById(id).then((data) => {
+    applyOrder(data)
+  }).catch((message) => {
+    uni.showToast({
+      title: String(message || '加载订单失败'),
+      icon: 'none',
+    })
+  }).finally(() => {
+    uni.hideLoading()
+  })
+}
+
+function loadByOrderNo(orderNo: string) {
+  uni.showLoading({
+    title: '加载中...',
+  })
+  fetchOrderByNo(orderNo).then((data) => {
+    applyOrder(data)
+  }).catch((message) => {
+    uni.showToast({
+      title: String(message || '加载订单失败'),
+      icon: 'none',
+    })
+  }).finally(() => {
+    uni.hideLoading()
+  })
+}
+
+onLoad((query) => {
+  const id = query && query.id ? Number(query.id) : 0
+  const orderNo = query && query.order_no ? String(query.order_no) : ''
+  if (id > 0) {
+    loadById(id)
+    return
+  }
+  if (orderNo != '') {
+    loadByOrderNo(orderNo)
+    return
+  }
+  uni.showToast({
+    title: '缺少订单参数',
+    icon: 'none',
+  })
+})
+</script>
+
+<style>
+.result-page {
+  padding: 32rpx 24rpx 80rpx;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(89, 178, 255, 0.18) 0%, transparent 45%),
+    radial-gradient(circle at 80% 80%, rgba(180, 130, 255, 0.18) 0%, transparent 45%),
+    #f3f6fb;
+}
+
+.success-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 40rpx 48rpx;
+  background:
+    radial-gradient(ellipse at top right, rgba(255, 255, 255, 0.18) 0%, transparent 60%),
+    linear-gradient(135deg, #0f4dff 0%, #2f7dff 50%, #59b2ff 100%);
+  border-radius: 40rpx;
+  margin: 0;
+  box-shadow:
+    0 24rpx 60rpx rgba(20, 88, 245, 0.28),
+    0 12rpx 30rpx rgba(89, 178, 255, 0.18);
+  overflow: hidden;
+}
+
+.success-icon-wrap {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 40rpx;
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 36rpx;
+  overflow: hidden;
+  box-shadow:
+    0 16rpx 40rpx rgba(0, 0, 0, 0.18),
+    inset 0 0 0 4rpx rgba(255, 255, 255, 0.6);
+  border: 4rpx solid rgba(255, 255, 255, 0.5);
+}
+
+.success-product-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 36rpx;
+}
+
+.success-icon-text {
+  font-size: 72rpx;
+  color: #1f6bff;
+  font-weight: 700;
+}
+
+.success-title {
+  font-size: 50rpx;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 18rpx;
+  letter-spacing: 4rpx;
+  text-shadow: 0 4rpx 14rpx rgba(0, 0, 0, 0.16);
+}
+
+.success-subtitle {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 6rpx;
+  text-align: center;
+}
+
+.success-subtitle-en {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.78);
+  text-align: center;
+  letter-spacing: 1rpx;
+}
+
+.success-expire {
+  margin-top: 26rpx;
+  padding: 12rpx 32rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.22);
+  border: 2rpx solid rgba(255, 255, 255, 0.35);
+  font-size: 24rpx;
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+}
+
+.view-btn {
+  margin-top: 44rpx;
+  width: 100%;
+  height: 96rpx;
+  line-height: 96rpx;
+  border-radius: 24rpx;
+  background: linear-gradient(135deg, #ffffff 0%, #e6efff 100%);
+  color: #1458f5;
+  font-size: 30rpx;
+  font-weight: 700;
+  box-shadow:
+    0 12rpx 28rpx rgba(0, 0, 0, 0.18),
+    inset 0 0 0 2rpx rgba(255, 255, 255, 0.6);
+  letter-spacing: 2rpx;
+}
+
+.unlocked-box {
+  width: 100%;
+  margin-top: 36rpx;
+}
+
+.account-info-box {
+  padding: 32rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    inset 0 0 0 2rpx rgba(255, 255, 255, 0.95),
+    0 12rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.account-field {
+  margin-bottom: 24rpx;
+  padding-bottom: 22rpx;
+  border-bottom: 2rpx solid #ebf0f9;
+}
+
+.account-field:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.account-label {
+  display: block;
+  font-size: 24rpx;
+  color: #7d869b;
+  margin-bottom: 10rpx;
+  letter-spacing: 1rpx;
+}
+
+.account-value-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14rpx;
+}
+
+.account-value {
+  flex: 1;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #16213a;
+  word-break: break-all;
+  letter-spacing: 1rpx;
+}
+
+.eye-toggle {
+  flex-shrink: 0;
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(31, 107, 255, 0.1);
+  font-size: 22rpx;
+  color: #1f6bff;
+  font-weight: 600;
+}
+
+.eye-toggle.dark-eye {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border: 2rpx solid rgba(255, 255, 255, 0.4);
+}
+
+.copy-btn {
+  margin-top: 18rpx;
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 22rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+.copy-btn.primary-button {
+  background: linear-gradient(135deg, #ffffff 0%, #e6efff 100%);
+  color: #1458f5;
+  box-shadow: 0 8rpx 22rpx rgba(0, 0, 0, 0.16);
+}
+
+.copy-btn.secondary-button {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border: 2rpx solid rgba(255, 255, 255, 0.45);
+}
+
+.content-value-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14rpx;
+  padding: 32rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    inset 0 0 0 2rpx rgba(255, 255, 255, 0.95),
+    0 12rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+.content-text {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #16213a;
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+.order-info-card {
+  margin: 0 32rpx 24rpx;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-bottom: 2rpx solid #f0f3f8;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-size: 28rpx;
+  color: #7d869b;
+}
+
+.info-value {
+  font-size: 28rpx;
+  color: #16213a;
+  font-weight: 500;
+}
+
+.info-value.accent {
+  color: #1f6bff;
+  font-weight: 700;
+}
+
+.bottom-actions {
+  display: flex;
+  gap: 16rpx;
+  margin: 32rpx 32rpx 0;
+}
+
+.bottom-actions button {
+  flex: 1;
+}
+
+.home-btn-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 28rpx;
+}
+
+.home-btn {
+  padding: 20rpx 60rpx;
+  height: auto;
+  line-height: 1;
+  border-radius: 999rpx;
+  background: rgba(31, 107, 255, 0.1);
+  border: 2rpx solid rgba(31, 107, 255, 0.4);
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f6bff;
+  letter-spacing: 2rpx;
+}
+
+.home-btn::after {
+  border: none;
+}
+
+.home-btn:active {
+  background: rgba(31, 107, 255, 0.2);
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-container {
+  width: 600rpx;
+  background: #ffffff;
+  border-radius: 32rpx;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 40rpx 40rpx 20rpx;
+  text-align: center;
+}
+
+.modal-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #16213a;
+}
+
+.modal-body {
+  padding: 0 40rpx 40rpx;
+}
+
+.modal-message {
+  display: block;
+  font-size: 30rpx;
+  color: #4d5d79;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.modal-footer {
+  display: flex;
+  border-top: 2rpx solid #f0f3f8;
+}
+
+.modal-button {
+  flex: 1;
+  height: 100rpx;
+  line-height: 100rpx;
+  border-radius: 0;
+  background: #ffffff;
+  font-size: 32rpx;
+  border: none;
+  margin: 0;
+}
+
+.modal-button::after {
+  border: none;
+}
+
+.cancel-button {
+  color: #7d869b;
+  border-right: 2rpx solid #f0f3f8;
+}
+
+.confirm-button {
+  color: #1f6bff;
+  font-weight: 600;
+}
+</style>

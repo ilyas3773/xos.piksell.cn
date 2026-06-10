@@ -1,0 +1,244 @@
+import {
+  buildApiUrl,
+  getApiOrigin,
+  resolveAssetUrl,
+} from './api.uts'
+import {
+  getUserToken,
+} from './user.uts'
+
+function buildQuery(params: any): string {
+  if (!params) {
+    return ''
+  }
+
+  const parts: string[] = []
+  for (const key in params) {
+    const value = params[key]
+    if (value === '' || value === null || value === undefined) {
+      continue
+    }
+    parts.push(encodeURIComponent(String(key)) + '=' + encodeURIComponent(String(value)))
+  }
+
+  return parts.join('&')
+}
+
+function handleResponse(resolve: Function, reject: Function, res: any) {
+  const body = res && res.data ? res.data : res
+  const statusCode = res && res.statusCode ? Number(res.statusCode) : 200
+
+  if (statusCode === 401 || (body && Number(body.code) === 401)) {
+    reject(body && body.msg ? String(body.msg) : 'Please sign in')
+    return
+  }
+
+  if (body && Number(body.code) === 0) {
+    resolve(body.data || {})
+    return
+  }
+
+  reject(body && body.msg ? String(body.msg) : 'Request failed')
+}
+
+function getVisitorId(): string {
+  let visitorId = String(uni.getStorageSync('visitor_id') || '')
+  if (visitorId == '') {
+    visitorId = 'v_' + String(Date.now()) + '_' + String(Math.floor(Math.random() * 1000000))
+    uni.setStorageSync('visitor_id', visitorId)
+  }
+  return visitorId
+}
+
+export function imageUrl(path: string): string {
+  return resolveAssetUrl(path)
+}
+
+export function externalUrl(path: string): string {
+  const value = String(path || '').trim()
+  if (value == '') {
+    return ''
+  }
+  if (value.indexOf('http://') == 0 || value.indexOf('https://') == 0) {
+    return value
+  }
+  return 'https://' + value
+}
+
+export function formatPrice(value: any): string {
+  const amount = Number(value || 0)
+  if (amount % 1 == 0) {
+    return amount.toFixed(0)
+  }
+  return amount.toFixed(2)
+}
+
+export function request(path: string, method: string = 'GET', data: any = null, needAuth: boolean = false): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const token = getUserToken()
+    if (needAuth && token == '') {
+      reject('Please sign in')
+      return
+    }
+
+    let url = buildApiUrl('/api/shop' + path)
+    const upperMethod = String(method || 'GET').toUpperCase()
+    const headers: any = {}
+
+    if (upperMethod == 'GET') {
+      const query = buildQuery(data)
+      if (query != '') {
+        url += '?' + query
+      }
+    } else {
+      headers['content-type'] = 'application/x-www-form-urlencoded'
+    }
+    headers['X-Visitor-Id'] = getVisitorId()
+
+    if (token != '') {
+      headers.Authorization = 'Bearer ' + token
+    }
+
+    uni.request({
+      url: url,
+      method: upperMethod,
+      timeout: 15000,
+      data: upperMethod == 'GET' ? {} : data,
+      header: headers,
+      success: (res) => {
+        handleResponse(resolve, reject, res)
+      },
+      fail: (error) => {
+        reject(error && error.errMsg ? String(error.errMsg) : 'Network error, please try again later')
+      },
+    })
+  })
+}
+
+export function apiOrigin(): string {
+  return getApiOrigin()
+}
+
+export function fetchHome(): Promise<any> {
+  return request('/home')
+}
+
+export function fetchCategories(group: string = 'all'): Promise<any> {
+  return request('/categories', 'GET', {
+    group: group,
+  })
+}
+
+export function fetchProducts(params: any): Promise<any> {
+  return request('/products', 'GET', params)
+}
+
+export function fetchFeaturedProducts(group: string = '', limit: number = 20): Promise<any> {
+  return request('/products/featured', 'GET', {
+    group: group,
+    limit: limit,
+  })
+}
+
+export function fetchFaqs(): Promise<any> {
+  return request('/faqs')
+}
+
+export function fetchProduct(id: number): Promise<any> {
+  return request('/product', 'GET', {
+    id: id,
+  })
+}
+
+export function recordProductClick(productId: any): void {
+  const id = Number(productId || 0)
+  if (id <= 0) {
+    return
+  }
+
+  request('/product-click', 'POST', {
+    id: id,
+  }).catch(() => {})
+}
+
+export function createOrder(data: any): Promise<any> {
+  return request('/orders', 'POST', data, true)
+}
+
+export function fetchOrderById(id: number): Promise<any> {
+  return request('/order', 'GET', {
+    id: id,
+  })
+}
+
+export function fetchOrderByNo(orderNo: string): Promise<any> {
+  return request('/orders/lookup', 'GET', {
+    order_no: orderNo,
+  })
+}
+
+export function checkActiveOrder(productId: number): Promise<any> {
+  return request('/orders/active', 'GET', {
+    product_id: productId,
+  }, true)
+}
+
+export function openProductList(params: any = null) {
+  const query = buildQuery(params)
+  const url = query == '' ? '/pages/product/list' : '/pages/product/list?' + query
+  uni.navigateTo({
+    url: url,
+  })
+}
+
+export function openProductDetail(productId: any) {
+  recordProductClick(productId)
+  uni.navigateTo({
+    url: '/pages/product/detail?id=' + encodeURIComponent(String(productId)),
+  })
+}
+
+export function openFaqPage() {
+  uni.navigateTo({
+    url: '/pages/faq/index',
+  })
+}
+
+export function openOrderCreate(productId: any) {
+  uni.navigateTo({
+    url: '/pages/order/create?id=' + encodeURIComponent(String(productId)),
+  })
+}
+
+export function openOrderResultById(orderId: any) {
+  uni.navigateTo({
+    url: '/pages/order/result?id=' + encodeURIComponent(String(orderId)),
+  })
+}
+
+export function openOrderResultByNo(orderNo: string) {
+  uni.navigateTo({
+    url: '/pages/order/result?order_no=' + encodeURIComponent(String(orderNo)),
+  })
+}
+
+export function copyText(text: string, message: string = 'Copied'): void {
+  const content = String(text || '')
+  if (content == '') {
+    uni.showToast({
+      title: 'No content',
+      icon: 'none',
+    })
+    return
+  }
+
+  uni.setClipboardData({
+    data: content,
+    success: () => {
+      uni.showToast({
+        title: message,
+        icon: 'none',
+      })
+    },
+  })
+}

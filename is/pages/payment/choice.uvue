@@ -1,0 +1,271 @@
+<template>
+  <view class="choice-page">
+    <view class="choice-card">
+      <text class="choice-title">二维码支付</text>
+      <text class="choice-desc">请打开二维码支付页完成付款，付款完成后返回能量页面查询到账状态。</text>
+
+      <view class="pay-option" @click="openQrPay" @tap="openQrPay">
+        <view class="option-icon blue"><text class="option-icon-text">码</text></view>
+        <view class="option-main">
+          <text class="option-title">二维码付款</text>
+          <text class="option-desc">打开二维码页面扫码付款，付款后返回这里点击支付查询。</text>
+        </view>
+        <text class="option-arrow">›</text>
+      </view>
+
+      <view class="action-row">
+        <view class="plain-button" @click="goBack" @tap="goBack">
+          <text class="plain-button-text">返回</text>
+        </view>
+        <view class="primary-button" @click="queryPayment" @tap="queryPayment">
+          <text class="primary-button-text">支付查询</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup lang="uts">
+import { fetchRechargeOrderStatus } from '../../utils/user.uts'
+
+const payUrl = ref('')
+const orderNo = ref('')
+const checkingPayment = ref(false)
+
+function decodeQueryValue(value: string): string {
+  if (value == '') {
+    return ''
+  }
+  return decodeURIComponent(value)
+}
+
+function openUrlOnH5(url: string): boolean {
+  // #ifdef H5
+  window.location.href = url
+  return true
+  // #endif
+  // #ifndef H5
+  return false
+  // #endif
+}
+
+function copyPayUrl(url: string, title: string, content: string) {
+  if (url == '') {
+    uni.showToast({ title: '支付链接不存在', icon: 'none' })
+    return
+  }
+  uni.setClipboardData({
+    data: url,
+    success: () => {
+      uni.showModal({
+        title: title,
+        content: content,
+        showCancel: false,
+      })
+    },
+    fail: () => {
+      uni.showToast({ title: '复制失败，请重试', icon: 'none' })
+    },
+  })
+}
+
+function openQrPay() {
+  if (payUrl.value == '') {
+    uni.showToast({ title: '二维码链接不存在', icon: 'none' })
+    return
+  }
+  if (openUrlOnH5(payUrl.value)) {
+    return
+  }
+  copyPayUrl(payUrl.value, '二维码链接已复制', '请到手机浏览器粘贴打开二维码支付页，完成付款后返回这里点击支付查询。')
+}
+
+function queryPayment() {
+  if (orderNo.value == '') {
+    uni.showToast({ title: '订单号不存在', icon: 'none' })
+    return
+  }
+  if (checkingPayment.value) {
+    return
+  }
+  checkingPayment.value = true
+  uni.showLoading({ title: '查询支付...' })
+  fetchRechargeOrderStatus(orderNo.value).then((data) => {
+    uni.hideLoading()
+    const paid = !!(data && data.paid)
+    if (paid) {
+      uni.removeStorageSync('pending_recharge_order_no')
+      uni.removeStorageSync('pending_recharge_pay_url')
+      uni.showModal({
+        title: '已支付',
+        content: '支付成功，能量到账后可返回能量页面查看。',
+        showCancel: false,
+        success: () => {
+          uni.navigateBack()
+        },
+      })
+      return
+    }
+    uni.showModal({
+      title: '你还未付款',
+      content: '当前还没有查询到支付成功订单，请先完成付款后再查询。',
+      showCancel: false,
+    })
+  }).catch((message) => {
+    uni.hideLoading()
+    uni.showToast({ title: String(message || '查询失败，请稍后重试'), icon: 'none' })
+  }).finally(() => {
+    checkingPayment.value = false
+  })
+}
+
+function goBack() {
+  uni.navigateBack()
+}
+
+onLoad((options) => {
+  const url = options && options['url'] ? String(options['url']) : ''
+  const no = options && options['order_no'] ? String(options['order_no']) : ''
+  payUrl.value = decodeQueryValue(url)
+  orderNo.value = decodeQueryValue(no)
+})
+</script>
+
+<style>
+.choice-page {
+  min-height: 100vh;
+  padding: 36rpx 28rpx;
+  background: linear-gradient(180deg, #f3f7ff 0%, #ffffff 100%);
+  box-sizing: border-box;
+}
+
+.choice-card {
+  padding: 34rpx 28rpx;
+  border-radius: 32rpx;
+  background: #ffffff;
+  box-shadow: 0 18rpx 48rpx rgba(34, 65, 122, 0.1);
+}
+
+.choice-title {
+  display: block;
+  color: #17233d;
+  font-size: 38rpx;
+  font-weight: 900;
+  text-align: center;
+}
+
+.choice-desc {
+  display: block;
+  margin-top: 16rpx;
+  color: #7b8798;
+  font-size: 26rpx;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.pay-option {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 28rpx;
+  padding: 28rpx 24rpx;
+  border: 2rpx solid #edf2f8;
+  border-radius: 26rpx;
+  background: #fbfdff;
+}
+
+.pay-option.disabled {
+  opacity: 0.48;
+}
+
+.option-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 78rpx;
+  height: 78rpx;
+  border-radius: 22rpx;
+}
+
+.option-icon.blue {
+  background: #eaf4ff;
+}
+
+.option-icon.green {
+  background: #e9fbf2;
+}
+
+.option-icon-text {
+  color: #1677ff;
+  font-size: 28rpx;
+  font-weight: 900;
+}
+
+.option-icon.green .option-icon-text {
+  color: #12a66a;
+}
+
+.option-main {
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.option-title {
+  display: block;
+  color: #17233d;
+  font-size: 30rpx;
+  font-weight: 900;
+}
+
+.option-desc {
+  display: block;
+  margin-top: 8rpx;
+  color: #8a95a8;
+  font-size: 24rpx;
+  line-height: 1.45;
+}
+
+.option-arrow {
+  color: #98a2b3;
+  font-size: 48rpx;
+  font-weight: 300;
+}
+
+.action-row {
+  display: flex;
+  flex-direction: row;
+  gap: 18rpx;
+  margin-top: 34rpx;
+}
+
+.plain-button,
+.primary-button {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 999rpx;
+  text-align: center;
+}
+
+.plain-button {
+  background: #f2f5f8;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, #1677ff 0%, #55b6ff 100%);
+}
+
+.plain-button-text,
+.primary-button-text {
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.plain-button-text {
+  color: #475467;
+}
+
+.primary-button-text {
+  color: #ffffff;
+}
+</style>

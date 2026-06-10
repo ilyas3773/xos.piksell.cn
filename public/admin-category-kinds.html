@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piksell 发卡系统 - 类别分类</title>
+    <link rel="stylesheet" href="/static/admin/css/card-admin.css">
+</head>
+<body data-view="categories" data-nav-key="categories-kind" data-category-group="kind">
+<header class="header">
+    <div class="brand">
+        <span class="brand-dot"></span>
+        <span>Piksell 发卡系统管理后台</span>
+    </div>
+    <div class="header-right">
+        <span class="pill" id="adminName">admin</span>
+        <button class="btn btn-light" id="refreshStatsBtn">刷新当前页</button>
+        <button class="btn btn-light" id="logoutBtn">退出登录</button>
+    </div>
+</header>
+
+<aside class="sidebar">
+    <button class="menu-item menu-link" type="button" data-view="dashboard" data-nav-url="/admin.html">仪表盘</button>
+    <div class="menu-group" data-menu-group="categories">
+        <button class="menu-item menu-parent" type="button" data-menu-toggle="categories">
+            <span>分类管理</span>
+            <span class="menu-arrow"></span>
+        </button>
+        <div class="menu-submenu">
+            <button class="menu-subitem menu-link" type="button" data-view="categories" data-nav-key="categories-type" data-nav-url="/admin-categories.html">类型分类</button>
+            <button class="menu-subitem menu-link" type="button" data-view="categories" data-nav-key="categories-kind" data-nav-url="/admin-category-kinds.html">类别分类</button>
+        </div>
+    </div>
+    <button class="menu-item menu-link" type="button" data-view="products" data-nav-url="/admin-products.html">商品管理</button>
+    <div class="menu-group" data-menu-group="cards">
+        <button class="menu-item menu-parent" type="button" data-menu-toggle="cards">
+            <span>卡密管理</span>
+            <span class="menu-arrow"></span>
+        </button>
+        <div class="menu-submenu">
+            <button class="menu-subitem menu-link" type="button" data-view="cards" data-nav-key="cards-account" data-nav-url="/admin-cards.html">账号密码类</button>
+            <button class="menu-subitem menu-link" type="button" data-view="cards" data-nav-key="cards-download" data-nav-url="/admin-card-downloads.html">下载连接类</button>
+            <button class="menu-subitem menu-link" type="button" data-view="cards" data-nav-key="cards-tutorial" data-nav-url="/admin-card-tutorials.html">教程类</button>
+        </div>
+    </div>
+    <button class="menu-item menu-link" type="button" data-view="orders" data-nav-url="/admin-orders.html">订单管理</button>
+</aside>
+
+<main class="main">
+    <div id="app"></div>
+</main>
+
+<div class="modal-mask" id="modalMask">
+    <div class="modal">
+        <div class="modal-head">
+            <span id="modalTitle">标题</span>
+            <button class="link-btn" id="modalCloseBtn">关闭</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-foot" id="modalFoot"></div>
+    </div>
+</div>
+
+<script src="/static/admin/js/card-admin.js?v=2026052310"></script>
+</body>
+</html>

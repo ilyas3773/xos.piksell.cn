@@ -1,0 +1,214 @@
+<template>
+  <scroll-view class="page-shell" scroll-y="true">
+    <view class="page-container order-page">
+      <view class="section-card order-confirm-card" v-if="product.id">
+        <image class="order-product-image" :src="cover(product.display_image)" mode="aspectFill"></image>
+        <text class="order-product-name">{{ product.name }}</text>
+        <text class="order-product-en">{{ product.name_en || '数字商品' }}</text>
+        <text class="price-text">{{ energyText(product.exchange_energy) }} 能量</text>
+      </view>
+
+      <button class="primary-button submit-button" @click="submitOrder">提交订单</button>
+    </view>
+  </scroll-view>
+</template>
+
+<script setup lang="uts">
+import {
+  createOrder,
+  fetchProduct,
+  imageUrl,
+} from '../../utils/shop.uts'
+import {
+  fetchProfile,
+  getStoredUser,
+  requireUserLogin,
+} from '../../utils/user.uts'
+
+const productId = ref(0)
+const quantity = ref(1)
+const currentEnergy = ref(0)
+const product = reactive({
+  id: 0,
+  name: '',
+  name_en: '',
+  exchange_energy: 0,
+  display_image: '',
+  category: null,
+  kindCategory: null,
+})
+
+function cover(path: string): string {
+  return imageUrl(path)
+}
+
+function energyText(value: any): string {
+  return String(Math.max(0, Math.round(Number(value || 0))))
+}
+
+function totalEnergyValue(): number {
+  return Math.max(0, Math.round(Number(product.exchange_energy || 0) * Number(quantity.value || 1)))
+}
+
+function totalEnergy(): string {
+  return String(totalEnergyValue())
+}
+
+function energyInsufficient(): boolean {
+  return currentEnergy.value < totalEnergyValue()
+}
+
+function applyStoredProfile() {
+  const user = getStoredUser()
+  currentEnergy.value = Number(user && user.energy ? user.energy : 0)
+}
+
+function loadProfile() {
+  applyStoredProfile()
+  fetchProfile().then((data) => {
+    currentEnergy.value = Number(data && data.energy ? data.energy : 0)
+  }).catch(() => {
+    applyStoredProfile()
+  })
+}
+
+function loadProduct() {
+  if (productId.value <= 0) {
+    uni.showToast({
+      title: '缺少商品参数',
+      icon: 'none',
+    })
+    return
+  }
+
+  uni.showLoading({
+    title: '加载中...',
+  })
+  fetchProduct(productId.value).then((data) => {
+    product.id = Number(data.id || 0)
+    product.name = String(data.name || '')
+    product.name_en = String(data.name_en || '')
+    product.exchange_energy = Number(data.exchange_energy || 0)
+    product.display_image = String(data.display_image || '')
+    product.category = data && data.category ? data.category : null
+    product.kindCategory = data && data.kindCategory ? data.kindCategory : null
+  }).catch((message) => {
+    uni.showToast({
+      title: String(message || '加载商品失败'),
+      icon: 'none',
+    })
+  }).finally(() => {
+    uni.hideLoading()
+  })
+}
+
+function submitOrder() {
+  if (!requireUserLogin()) {
+    return
+  }
+
+  if (productId.value <= 0) {
+    uni.showToast({
+      title: '缺少商品参数',
+      icon: 'none',
+    })
+    return
+  }
+
+  if (energyInsufficient()) {
+    uni.showToast({
+      title: '能量不足',
+      icon: 'none',
+    })
+    return
+  }
+
+  uni.showLoading({
+    title: '提交中...',
+  })
+  createOrder({
+    product_id: productId.value,
+    quantity: quantity.value,
+    buyer_contact: '',
+    buyer_email: '',
+    remark: '',
+  }).then((data) => {
+    uni.hideLoading()
+    const orderNo = data && data.order_no ? String(data.order_no) : ''
+    if (orderNo != '') {
+      uni.setStorageSync('last_order_no', orderNo)
+    }
+    currentEnergy.value = Math.max(0, currentEnergy.value - totalEnergyValue())
+    uni.redirectTo({
+      url: '/pages/order/result?id=' + encodeURIComponent(String(data.id || 0)),
+    })
+  }).catch((message) => {
+    uni.hideLoading()
+    uni.showToast({
+      title: String(message || '提交订单失败'),
+      icon: 'none',
+    })
+    loadProfile()
+  })
+}
+
+onLoad((query) => {
+  if (!requireUserLogin()) {
+    return
+  }
+  productId.value = query && query.id ? Number(query.id) : 0
+  loadProfile()
+  loadProduct()
+})
+</script>
+
+<style>
+.order-page {
+  padding-bottom: 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.order-confirm-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 60rpx 40rpx;
+}
+
+.order-product-image {
+  width: 280rpx;
+  height: 280rpx;
+  border-radius: 32rpx;
+  margin-bottom: 40rpx;
+}
+
+.order-product-name {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #16213a;
+  line-height: 1.4;
+  margin-bottom: 16rpx;
+}
+
+.order-product-en {
+  font-size: 28rpx;
+  color: #7d869b;
+  margin-bottom: 32rpx;
+}
+
+.price-text {
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #1f6bff;
+}
+
+.submit-button {
+  margin-top: 40rpx;
+  width: calc(100% - 64rpx);
+}
+</style>

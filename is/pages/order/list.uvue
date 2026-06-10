@@ -1,0 +1,387 @@
+<template>
+  <scroll-view class="page-shell" scroll-y="true" @scrolltolower="loadMore">
+    <view class="page-container order-list-page">
+      <view class="order-list-hero">
+        <text class="hero-title">我的订单</text>
+        <text class="hero-desc">查看所有兑换记录，点击订单可查看详情</text>
+      </view>
+
+      <view class="section-card guest-card" v-if="!loggedIn">
+        <text class="section-title">需要登录</text>
+        <text class="section-subtitle">请先登录后查看订单记录</text>
+        <button class="primary-button guest-button" @click="toLogin">去登录</button>
+      </view>
+
+      <view class="section-card" v-if="loggedIn">
+        <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="false">
+          <view class="filter-row">
+            <view
+              class="filter-chip"
+              :class="{ active: activeStatus == item.value }"
+              v-for="item in statusOptions"
+              :key="'filter-' + item.value"
+              @click="changeStatus(item.value)"
+            >
+              <text class="filter-chip-text" :class="{ active: activeStatus == item.value }">{{ item.label }}</text>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <view class="section-card" v-if="loggedIn">
+        <view class="order-card-list" v-if="orderItems.length > 0">
+          <view class="order-card" v-for="item in orderItems" :key="'order-' + item.id" @click="openOrder(item)">
+            <view class="order-card-head">
+              <text class="order-card-title">{{ item.product && item.product.name ? item.product.name : '商品订单' }}</text>
+              <text class="order-status-chip" :class="statusChipClass(item.status)">{{ item.status_text }}</text>
+            </view>
+            <view class="order-card-meta">
+              <text class="order-meta-line">{{ item.order_no }}</text>
+              <text class="order-meta-line">{{ item.created_at || '-' }}</text>
+            </view>
+            <view class="order-card-foot">
+              <text class="order-energy">{{ item.total_amount }} 能量</text>
+              <text class="order-quantity">x{{ item.quantity }}</text>
+            </view>
+          </view>
+        </view>
+        <view class="empty-box" v-else-if="!loading">
+          暂无订单记录
+        </view>
+
+        <view class="load-more-wrap" v-if="orderItems.length > 0">
+          <button class="outline-button load-more-button" v-if="pagination.hasMore && !loading" @click="loadMore">加载更多</button>
+          <text class="load-more-text" v-if="loading">加载中...</text>
+          <text class="load-more-text" v-if="!pagination.hasMore && !loading">已加载全部订单</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</template>
+
+<script setup lang="uts">
+import {
+  openOrderResultByNo,
+} from '../../utils/shop.uts'
+import {
+  fetchUserOrders,
+  hasUserSession,
+  openAuthPage,
+} from '../../utils/user.uts'
+
+const statusOptions = [
+  { value: '', label: '全部' },
+  { value: 'pending', label: '待处理' },
+  { value: 'paid', label: '已支付' },
+  { value: 'delivered', label: '已发货' },
+  { value: 'cancelled', label: '已取消' },
+  { value: 'refunded', label: '已退款' },
+]
+
+const loggedIn = ref(false)
+const loading = ref(false)
+const activeStatus = ref('')
+const orderItems = ref([])
+const pagination = reactive({
+  page: 1,
+  limit: 10,
+  total: 0,
+  hasMore: false,
+})
+
+function normalizeStatus(status: string): string {
+  for (const item of statusOptions) {
+    if (item.value == status) {
+      return item.value
+    }
+  }
+  return ''
+}
+
+function statusChipClass(status: string): string {
+  if (status == 'delivered') {
+    return 'is-delivered'
+  }
+  if (status == 'refunded' || status == 'cancelled') {
+    return 'is-muted'
+  }
+  if (status == 'paid') {
+    return 'is-paid'
+  }
+  return 'is-pending'
+}
+
+function applyPageResult(data: any, reset: boolean) {
+  const list = data && data.list ? data.list : []
+  orderItems.value = reset ? list : orderItems.value.concat(list)
+
+  const pager = data && data.pagination ? data.pagination : {}
+  pagination.page = Number(pager.page || 1)
+  pagination.limit = Number(pager.limit || 10)
+  pagination.total = Number(pager.total || 0)
+  pagination.hasMore = !!(pager && pager.has_more)
+}
+
+function loadOrders(page: number, reset: boolean) {
+  if (loading.value || !loggedIn.value) {
+    return
+  }
+
+  loading.value = true
+  if (reset) {
+    uni.showLoading({
+      title: '加载中...',
+    })
+  }
+
+  fetchUserOrders(page, pagination.limit, activeStatus.value).then((data) => {
+    applyPageResult(data, reset)
+  }).catch((message) => {
+    uni.showToast({
+      title: String(message || '加载订单失败'),
+      icon: 'none',
+    })
+  }).finally(() => {
+    loading.value = false
+    uni.stopPullDownRefresh()
+    if (reset) {
+      uni.hideLoading()
+    }
+  })
+}
+
+function refreshList() {
+  if (!loggedIn.value) {
+    toLogin()
+    return
+  }
+  loadOrders(1, true)
+}
+
+function changeStatus(status: string) {
+  if (!loggedIn.value || loading.value || activeStatus.value == status) {
+    return
+  }
+  activeStatus.value = status
+  loadOrders(1, true)
+}
+
+function loadMore() {
+  if (!loggedIn.value || loading.value || !pagination.hasMore) {
+    return
+  }
+  loadOrders(pagination.page + 1, false)
+}
+
+function openOrder(item: any) {
+  const orderNo = item && item.order_no ? String(item.order_no) : ''
+  if (orderNo == '') {
+    return
+  }
+  uni.setStorageSync('last_order_no', orderNo)
+  openOrderResultByNo(orderNo)
+}
+
+function toLogin() {
+  openAuthPage('login')
+}
+
+function initPage() {
+  loggedIn.value = hasUserSession()
+  if (loggedIn.value) {
+    loadOrders(1, true)
+  }
+}
+
+onLoad((query) => {
+  const status = query && query.status ? String(query.status) : ''
+  activeStatus.value = normalizeStatus(status)
+  initPage()
+})
+
+onShow(() => {
+  const hadSession = loggedIn.value
+  loggedIn.value = hasUserSession()
+  if (loggedIn.value && !hadSession) {
+    loadOrders(1, true)
+  }
+})
+
+onPullDownRefresh(() => {
+  if (!loggedIn.value) {
+    uni.stopPullDownRefresh()
+    return
+  }
+  loadOrders(1, true)
+})
+</script>
+
+<style>
+.order-list-page {
+  padding-bottom: 32rpx;
+}
+
+.order-list-hero {
+  padding: 40rpx 34rpx;
+  border-radius: 30rpx;
+  background: linear-gradient(135deg, #0f5de8 0%, #4ab0ff 100%);
+  color: #ffffff;
+}
+
+.hero-title {
+  display: block;
+  font-size: 44rpx;
+  font-weight: 700;
+}
+
+.hero-desc {
+  display: block;
+  margin-top: 14rpx;
+  font-size: 26rpx;
+  line-height: 1.7;
+  opacity: 0.92;
+}
+
+.guest-card {
+  text-align: center;
+}
+
+.guest-button {
+  margin-top: 24rpx;
+}
+
+.filter-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.filter-row {
+  display: inline-flex;
+  gap: 14rpx;
+  padding-right: 12rpx;
+}
+
+.filter-chip {
+  min-width: 120rpx;
+  height: 72rpx;
+  padding: 0 24rpx;
+  border-radius: 999rpx;
+  background: #eef3fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-chip.active {
+  background: linear-gradient(135deg, #1f6bff 0%, #54a2ff 100%);
+}
+
+.filter-chip-text {
+  font-size: 26rpx;
+  color: #4a5d7f;
+  font-weight: 600;
+}
+
+.filter-chip-text.active {
+  color: #ffffff;
+}
+
+.order-card-list {
+  margin-top: 12rpx;
+}
+
+.order-card {
+  margin-top: 16rpx;
+  padding: 24rpx;
+  border-radius: 24rpx;
+  background: #f7f9fd;
+}
+
+.order-card:first-child {
+  margin-top: 0;
+}
+
+.order-card-head,
+.order-card-meta,
+.order-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.order-card-title {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #203252;
+}
+
+.order-status-chip {
+  flex-shrink: 0;
+  padding: 8rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+}
+
+.order-status-chip.is-pending {
+  background: rgba(250, 173, 20, 0.14);
+  color: #c88100;
+}
+
+.order-status-chip.is-paid {
+  background: rgba(31, 107, 255, 0.1);
+  color: #1f6bff;
+}
+
+.order-status-chip.is-delivered {
+  background: rgba(22, 193, 124, 0.14);
+  color: #0f9d63;
+}
+
+.order-status-chip.is-muted {
+  background: rgba(120, 133, 158, 0.12);
+  color: #66758f;
+}
+
+.order-card-meta {
+  margin-top: 14rpx;
+}
+
+.order-meta-line {
+  font-size: 24rpx;
+  color: #70809c;
+}
+
+.order-card-foot {
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 2rpx solid #ebf0f7;
+}
+
+.order-energy {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1f6bff;
+}
+
+.order-quantity {
+  font-size: 24rpx;
+  color: #70809c;
+}
+
+.load-more-wrap {
+  margin-top: 22rpx;
+  text-align: center;
+}
+
+.load-more-button {
+  width: 100%;
+}
+
+.load-more-text {
+  display: block;
+  font-size: 24rpx;
+  color: #7d869b;
+}
+</style>

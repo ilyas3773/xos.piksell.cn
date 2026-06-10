@@ -1,0 +1,1111 @@
+<template>
+  <scroll-view class="page-shell" scroll-y="true">
+    <view class="detail-page" v-if="detail.id">
+      <view class="detail-swiper-box" v-if="loopedImages().length > 0">
+        <swiper
+          class="detail-swiper"
+          circular="true"
+          indicator-dots="false"
+          autoplay="true"
+          interval="2500"
+          duration="1200"
+          :display-multiple-items="2"
+          previous-margin="0rpx"
+          next-margin="0rpx"
+        >
+          <swiper-item v-for="(item, idx) in loopedImages()" :key="'detail-img-' + idx">
+            <view class="detail-cell">
+              <view class="detail-cell-wrap">
+                <image class="detail-cell-image" :src="cover(item)" mode="aspectFill"></image>
+              </view>
+            </view>
+          </swiper-item>
+        </swiper>
+      </view>
+      <view class="detail-swiper-empty" v-else>
+        <view class="detail-swiper-placeholder">暂无轮播图</view>
+      </view>
+
+      <view class="page-container detail-container">
+        <view class="detail-hero-card">
+          <view class="detail-hero-layout">
+            <view class="detail-identity">
+              <view class="detail-avatar-wrap">
+                <image v-if="detailIcon() != ''" class="detail-avatar" :src="cover(detailIcon())" mode="aspectFill"></image>
+                <view v-else class="detail-avatar-placeholder">图标</view>
+              </view>
+
+              <text class="detail-name">{{ detail.name }}</text>
+              <text class="detail-en">{{ detail.name_en || 'Digital Product' }}</text>
+            </view>
+
+            <view class="detail-hero-info">
+              <view class="detail-tags">
+                <text class="pill-tag" v-if="detail.category && detail.category.name">{{ detail.category.name }}</text>
+                <text class="pill-tag warm-tag" v-if="detail.kindCategory && detail.kindCategory.name">{{ detail.kindCategory.name }}</text>
+                <text class="pill-tag">{{ detail.compatibility || '兼容信息待补充' }}</text>
+              </view>
+
+              <view class="detail-info-list">
+                <view class="detail-info-row">
+                  <text class="detail-info-label">游戏大小</text>
+                  <text class="detail-info-value">{{ detail.game_size || '未填写' }}</text>
+                </view>
+                <view class="detail-info-row">
+                  <text class="detail-info-label">游戏语言</text>
+                  <text class="detail-info-value">{{ detail.supported_languages || '未填写' }}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <!-- 兑换按钮 / 已兑换状态 -->
+          <view v-if="activeOrderId > 0" class="exchanged-wrap">
+            <button class="primary-button exchange-button exchanged-button" @click="goToActiveOrder">
+              查看兑换内容
+            </button>
+            <view class="countdown-bar">
+              <text class="countdown-label">兑换内容有效期剩余</text>
+              <text class="countdown-time">{{ countdownText }}</text>
+            </view>
+          </view>
+          <button v-else class="primary-button exchange-button" @click="showExchangeConfirm">
+            使用 {{ detail.exchange_energy || 0 }} 能量立即兑换
+          </button>
+        </view>
+
+        <view class="section-card" v-if="detail.description">
+          <text class="section-title">游戏介绍</text>
+          <text class="detail-description">{{ detail.description }}</text>
+        </view>
+
+        <view class="section-card" v-if="detail.recommend_products && detail.recommend_products.length > 0">
+          <view class="title-row">
+            <text class="section-title">相关推荐</text>
+            <text class="section-link" @click="goAllProducts">查看更多</text>
+          </view>
+          <scroll-view class="recommend-scroll" scroll-x="true">
+            <view class="recommend-row">
+              <view class="recommend-card" v-for="item in detail.recommend_products" :key="'recommend-' + item.id" @click="goDetail(item.id)">
+                <image class="recommend-image" :src="cover(item.display_image)" mode="aspectFill"></image>
+                <text class="recommend-name">{{ item.name }}</text>
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+
+        <view class="safe-bottom-space"></view>
+      </view>
+    </view>
+
+    <view class="empty-box" v-else>
+      商品加载中...
+    </view>
+
+    <!-- 兑换确认弹窗 -->
+    <view class="modal-overlay" v-if="showConfirmModal" @click="hideExchangeConfirm">
+      <view class="modal-container" @click.stop>
+        <view class="modal-header">
+          <text class="modal-title">确认兑换</text>
+        </view>
+        <view class="modal-body">
+          <text class="modal-message">确定兑换该资源吗？</text>
+          <view class="modal-product-info">
+            <image v-if="detailIcon() != ''" class="modal-product-image" :src="cover(detailIcon())" mode="aspectFill"></image>
+            <view class="modal-product-details">
+              <text class="modal-product-name">{{ detail.name }}</text>
+            </view>
+          </view>
+        </view>
+        <view class="modal-footer">
+          <button class="modal-button cancel-button" @click="hideExchangeConfirm">取消</button>
+          <button class="modal-button confirm-button" @click="confirmExchange">确定兑换</button>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</template>
+
+<script setup lang="uts">
+import {
+  copyText,
+  checkActiveOrder,
+  createOrder,
+  externalUrl,
+  fetchProduct,
+  imageUrl,
+  openProductDetail,
+  openProductList,
+} from '../../utils/shop.uts'
+import {
+  hasUserSession,
+  openAuthPage,
+} from '../../utils/user.uts'
+
+const productId = ref(0)
+const detailSwiperIndex = ref(0)
+const detailSwiperHeight = ref(320)
+const detailSwiperWidth = ref(0)
+const detailImageRatios = ref<number[]>([])
+const showConfirmModal = ref(false)
+const activeOrderId = ref(0)
+const activeOrderExpiresAt = ref('')
+const countdownText = ref('00:00:00')
+let countdownTimer: any = null
+const detail = reactive({
+  id: 0,
+  name: '',
+  name_en: '',
+  exchange_energy: 0,
+  description: '',
+  game_size: '',
+  supported_languages: '',
+  compatibility: '',
+  cover_image: '',
+  images: [],
+  category: null,
+  kindCategory: null,
+  resources: {
+    downloads: [],
+    tutorials: [],
+  },
+  recommend_products: [],
+})
+
+function systemWindowWidth(): number {
+  const info = uni.getSystemInfoSync()
+  const width = Number(info && info.windowWidth ? info.windowWidth : 0)
+  if (width > 0) {
+    return width
+  }
+  return 375
+}
+
+function clampSwiperHeight(height: number): number {
+  if (height < 220) {
+    return 220
+  }
+  if (height > 720) {
+    return 720
+  }
+  return Math.round(height)
+}
+
+function syncSwiperHeightByRatio(ratio: number) {
+  const safeRatio = Number(ratio || 0)
+  if (safeRatio <= 0) {
+    return
+  }
+
+  const width = detailSwiperWidth.value > 0 ? detailSwiperWidth.value : systemWindowWidth()
+  detailSwiperHeight.value = clampSwiperHeight(width * safeRatio)
+}
+
+function resetDetailSwiperState() {
+  detailSwiperIndex.value = 0
+  detailSwiperWidth.value = systemWindowWidth()
+  detailImageRatios.value = []
+  detailSwiperHeight.value = clampSwiperHeight(detailSwiperWidth.value * 0.72)
+}
+
+function detailSwiperStyle(): string {
+  return 'height:' + String(detailSwiperHeight.value) + 'px;'
+}
+
+// 循环图片：图片不足 6 张时复制几遍以保证循环顺畅
+function loopedImages(): any[] {
+  const list = detail.images
+  if (!list || list.length == 0) {
+    return []
+  }
+  if (list.length >= 6) {
+    return list
+  }
+  const result: any[] = []
+  while (result.length < 6) {
+    for (let i = 0; i < list.length; i++) {
+      result.push(list[i])
+    }
+  }
+  return result
+}
+
+function cover(path: string): string {
+  return imageUrl(path)
+}
+
+function detailIcon(): string {
+  if (detail.cover_image != '') {
+    return String(detail.cover_image || '')
+  }
+
+  if (detail.images && detail.images.length > 0) {
+    return String(detail.images[0] || '')
+  }
+
+  return ''
+}
+
+function external(path: string): string {
+  return externalUrl(path)
+}
+
+function onDetailImageLoad(index: number, event: any) {
+  const width = event && event.detail && event.detail.width !== undefined
+    ? Number(event.detail.width)
+    : 0
+  const height = event && event.detail && event.detail.height !== undefined
+    ? Number(event.detail.height)
+    : 0
+
+  if (width <= 0 || height <= 0) {
+    return
+  }
+
+  const ratio = height / width
+  const nextRatios = detailImageRatios.value
+  nextRatios[index] = ratio
+  detailImageRatios.value = nextRatios
+
+  if (index == detailSwiperIndex.value) {
+    syncSwiperHeightByRatio(ratio)
+  }
+}
+
+function onDetailSwiperChange(event: any) {
+  const nextIndex = event && event.detail && event.detail.current !== undefined
+    ? Number(event.detail.current)
+    : 0
+  detailSwiperIndex.value = nextIndex
+
+  const ratios = detailImageRatios.value
+  if (ratios && ratios.length > nextIndex) {
+    const ratio = Number(ratios[nextIndex] || 0)
+    if (ratio > 0) {
+      syncSwiperHeightByRatio(ratio)
+    }
+  }
+}
+
+function copyLink(path: string) {
+  copyText(externalUrl(path), '链接已复制')
+}
+
+function goAllProducts() {
+  openProductList()
+}
+
+function goDetail(id: any) {
+  openProductDetail(id)
+}
+
+function showExchangeConfirm() {
+  // 已知有有效订单，直接跳转
+  if (activeOrderId.value > 0) {
+    uni.navigateTo({
+      url: '/pages/order/result?id=' + encodeURIComponent(String(activeOrderId.value)),
+    })
+    return
+  }
+
+  // 未登录，先弹出登录提示再走兑换确认
+  if (!hasUserSession()) {
+    showConfirmModal.value = true
+    return
+  }
+
+  // 已登录但 activeOrderId 还未加载完，实时检查一次
+  uni.showLoading({
+    title: '检查中...',
+  })
+  checkActiveOrder(productId.value).then((data) => {
+    uni.hideLoading()
+    if (data && data.has_active && data.order && data.order.id) {
+      activeOrderId.value = Number(data.order.id)
+      activeOrderExpiresAt.value = String(data.order.expires_at || '')
+      startCountdown()
+      uni.navigateTo({
+        url: '/pages/order/result?id=' + encodeURIComponent(String(activeOrderId.value)),
+      })
+      return
+    }
+    showConfirmModal.value = true
+  }).catch(() => {
+    uni.hideLoading()
+    showConfirmModal.value = true
+  })
+}
+
+function hideExchangeConfirm() {
+  showConfirmModal.value = false
+}
+
+function confirmExchange() {
+  hideExchangeConfirm()
+  
+  // 检查用户登录状态
+  if (!hasUserSession()) {
+    uni.showModal({
+      title: '需要登录',
+      content: '请先登录后再进行兑换',
+      confirmText: '去登录',
+      cancelText: '取消',
+      success: (res) => {
+        if (res.confirm) {
+          openAuthPage('login')
+        }
+      }
+    })
+    return
+  }
+  
+  // 先检查是否有24小时内的有效订单
+  uni.showLoading({
+    title: '处理中...',
+  })
+  checkActiveOrder(productId.value).then((data) => {
+    if (data && data.has_active && data.order && data.order.id) {
+      // 有有效订单，直接跳转
+      activeOrderId.value = Number(data.order.id || 0)
+      activeOrderExpiresAt.value = String(data.order.expires_at || '')
+      startCountdown()
+      uni.hideLoading()
+      uni.showToast({
+        title: '已为您打开有效订单',
+        icon: 'none',
+      })
+      uni.redirectTo({
+        url: '/pages/order/result?id=' + encodeURIComponent(String(data.order.id)),
+      })
+      return
+    }
+    // 没有有效订单，正常下单
+    submitOrder()
+  }).catch(() => {
+    // 检查失败也走正常下单
+    submitOrder()
+  })
+}
+
+function submitOrder() {
+  createOrder({
+    product_id: productId.value,
+    quantity: 1,
+    buyer_contact: '',
+    buyer_email: '',
+    remark: '',
+  }).then((data) => {
+    uni.hideLoading()
+    uni.redirectTo({
+      url: '/pages/order/result?id=' + encodeURIComponent(String(data.id || 0)),
+    })
+  }).catch((message) => {
+    uni.hideLoading()
+    uni.showToast({
+      title: String(message || '兑换失败'),
+      icon: 'none',
+    })
+  })
+}
+
+function goOrder() {
+  uni.navigateTo({
+    url: '/pages/order/create?id=' + encodeURIComponent(String(productId.value)),
+  })
+}
+
+function loadDetail() {
+  if (productId.value <= 0) {
+    uni.showToast({
+      title: '商品参数缺失',
+      icon: 'none',
+    })
+    return
+  }
+  uni.showLoading({
+    title: '加载中',
+  })
+  resetDetailSwiperState()
+  fetchProduct(productId.value).then((data) => {
+    detail.id = Number(data.id || 0)
+    detail.name = String(data.name || '')
+    detail.name_en = String(data.name_en || '')
+    detail.exchange_energy = Number(data.exchange_energy || 0)
+    detail.description = String(data.description || '')
+    detail.game_size = String(data.game_size || '')
+    detail.supported_languages = String(data.supported_languages || '')
+    detail.compatibility = String(data.compatibility || '')
+    detail.cover_image = data && data.cover_image
+      ? String(data.cover_image)
+      : (data && data.display_image ? String(data.display_image) : '')
+    detail.images = data && data.gallery_images ? data.gallery_images : []
+    detail.category = data && data.category ? data.category : null
+    detail.kindCategory = data && data.kindCategory ? data.kindCategory : null
+    detail.resources = data && data.resources ? data.resources : {
+      downloads: [],
+      tutorials: [],
+    }
+    detail.recommend_products = data && data.recommend_products ? data.recommend_products : []
+
+    if (!detail.images || detail.images.length == 0) {
+      detailSwiperHeight.value = clampSwiperHeight(detailSwiperWidth.value * 0.72)
+    }
+  }).catch((message) => {
+    uni.showToast({
+      title: String(message || '商品加载失败'),
+      icon: 'none',
+    })
+  }).finally(() => {
+    uni.hideLoading()
+  })
+}
+
+function parseDateTime(value: string): number {
+  const text = String(value || '').trim()
+  if (text == '') {
+    return 0
+  }
+  // 兼容 'YYYY-MM-DD HH:mm:ss' 格式（小程序部分平台不识别空格分隔）
+  const normalized = text.indexOf('T') >= 0 ? text : text.replace(' ', 'T')
+  const stamp = Date.parse(normalized)
+  if (isNaN(stamp)) {
+    return 0
+  }
+  return stamp
+}
+
+function pad2(value: number): string {
+  return value < 10 ? '0' + String(value) : String(value)
+}
+
+function updateCountdown() {
+  const expireAt = parseDateTime(activeOrderExpiresAt.value)
+  if (expireAt <= 0) {
+    countdownText.value = '00:00:00'
+    return
+  }
+  const remain = expireAt - Date.now()
+  if (remain <= 0) {
+    countdownText.value = '00:00:00'
+    activeOrderId.value = 0
+    activeOrderExpiresAt.value = ''
+    stopCountdown()
+    return
+  }
+  const totalSec = Math.floor(remain / 1000)
+  const h = Math.floor(totalSec / 3600)
+  const m = Math.floor((totalSec % 3600) / 60)
+  const s = totalSec % 60
+  countdownText.value = pad2(h) + ':' + pad2(m) + ':' + pad2(s)
+}
+
+function startCountdown() {
+  stopCountdown()
+  updateCountdown()
+  countdownTimer = setInterval(() => {
+    updateCountdown()
+  }, 1000)
+}
+
+function stopCountdown() {
+  if (countdownTimer != null) {
+    clearInterval(countdownTimer)
+    countdownTimer = null
+  }
+}
+
+function goToActiveOrder() {
+  if (activeOrderId.value <= 0) {
+    return
+  }
+  uni.navigateTo({
+    url: '/pages/order/result?id=' + encodeURIComponent(String(activeOrderId.value)),
+  })
+}
+
+function checkExistingOrder() {
+  if (!hasUserSession() || productId.value <= 0) {
+    activeOrderId.value = 0
+    activeOrderExpiresAt.value = ''
+    stopCountdown()
+    return
+  }
+  checkActiveOrder(productId.value).then((data) => {
+    if (data && data.has_active && data.order && data.order.id) {
+      activeOrderId.value = Number(data.order.id || 0)
+      activeOrderExpiresAt.value = String(data.order.expires_at || '')
+      startCountdown()
+    } else {
+      activeOrderId.value = 0
+      activeOrderExpiresAt.value = ''
+      stopCountdown()
+    }
+  }).catch(() => {
+    activeOrderId.value = 0
+    activeOrderExpiresAt.value = ''
+    stopCountdown()
+  })
+}
+
+onLoad((query) => {
+  productId.value = query && query.id ? Number(query.id) : 0
+  loadDetail()
+  checkExistingOrder()
+})
+
+onShow(() => {
+  checkExistingOrder()
+})
+
+onHide(() => {
+  stopCountdown()
+})
+
+onUnload(() => {
+  stopCountdown()
+})
+</script>
+
+<style>
+.detail-page {
+  min-height: 100vh;
+}
+
+.detail-swiper-box {
+  width: 100%;
+  padding: 24rpx 24rpx 8rpx;
+  box-sizing: border-box;
+}
+
+.detail-swiper {
+  width: 100%;
+  height: 460rpx;
+}
+
+.detail-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8rpx 10rpx;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+}
+
+.detail-cell-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 24rpx;
+  overflow: hidden;
+  background: #edf2fa;
+  box-shadow: 0 8rpx 22rpx rgba(36, 53, 86, 0.12);
+}
+
+.detail-cell-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.detail-swiper-empty {
+  margin: 24rpx;
+  height: 460rpx;
+  border-radius: 24rpx;
+  background: #edf2fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-image {
+  width: 100%;
+  height: 100%;
+}
+
+.detail-swiper-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #eef3fb 0%, #dde7f7 100%);
+}
+
+.detail-swiper-placeholder {
+  padding: 20rpx 28rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.82);
+  font-size: 26rpx;
+  color: #6e7d97;
+}
+
+.detail-container {
+  margin-top: 24rpx;
+  position: relative;
+  z-index: 2;
+}
+
+.detail-hero-card {
+  padding: 26rpx;
+  border-radius: 34rpx;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 18rpx 48rpx rgba(25, 49, 91, 0.1);
+}
+
+.detail-hero-layout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20rpx;
+  width: 100%;
+}
+
+.detail-identity {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 220rpx;
+  width: 220rpx;
+  min-width: 220rpx;
+}
+
+.detail-avatar-wrap {
+  width: 150rpx;
+  height: 150rpx;
+  margin: 0 auto;
+  padding: 10rpx;
+  border-radius: 34rpx;
+  background: linear-gradient(145deg, #f5f8ff 0%, #e8eefb 100%);
+  box-shadow: inset 0 0 0 2rpx rgba(255, 255, 255, 0.72);
+}
+
+.detail-avatar,
+.detail-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 26rpx;
+}
+
+.detail-avatar {
+  background: #edf2fa;
+}
+
+.detail-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf2fa;
+  font-size: 24rpx;
+  color: #7c879c;
+}
+
+.detail-hero-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 0;
+  min-width: 0;
+}
+
+.detail-name {
+  display: block;
+  margin-top: 18rpx;
+  font-size: 42rpx;
+  font-weight: 700;
+  color: #16213a;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.detail-en {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #7c879c;
+  text-align: center;
+}
+
+.detail-tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12rpx;
+  margin-top: 4rpx;
+}
+
+.warm-tag {
+  background: #fff2ea;
+  color: #ff7b3f;
+}
+
+.stock-tip {
+  font-size: 24rpx;
+  color: #7d869b;
+}
+
+.detail-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-top: 24rpx;
+}
+
+.detail-info-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+  padding: 18rpx 20rpx;
+  border-radius: 20rpx;
+  background: #f7f9fd;
+}
+
+.detail-info-label {
+  flex-shrink: 0;
+  font-size: 22rpx;
+  color: #7d869b;
+}
+
+.detail-info-value {
+  flex: 1;
+  min-width: 0;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #203252;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.detail-hero-foot {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+  margin-top: 24rpx;
+  padding-top: 22rpx;
+  border-top: 2rpx solid #edf2f8;
+}
+
+.detail-price-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-energy-inline {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #ff7b3f;
+}
+
+.detail-energy-block {
+  flex-shrink: 0;
+  min-width: 180rpx;
+  padding: 18rpx 20rpx;
+  border-radius: 24rpx;
+  background: #fff4ea;
+  text-align: center;
+}
+
+.detail-energy-value {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #ff7b3f;
+}
+
+.detail-energy-label {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  color: #ad6c41;
+}
+
+.exchange-button {
+  display: block;
+  width: 100%;
+  margin-top: 24rpx;
+  height: 96rpx;
+  line-height: 96rpx;
+  border-radius: 22rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.exchanged-wrap {
+  margin-top: 24rpx;
+}
+
+.exchanged-button {
+  margin-top: 0 !important;
+  background: linear-gradient(135deg, #16c17c 0%, #0f9d63 100%) !important;
+  color: #ffffff !important;
+}
+
+.countdown-bar {
+  margin-top: 16rpx;
+  padding: 18rpx 24rpx;
+  border-radius: 18rpx;
+  background: rgba(255, 122, 68, 0.08);
+  border: 2rpx solid rgba(255, 122, 68, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.countdown-label {
+  font-size: 26rpx;
+  color: #b85a26;
+  font-weight: 500;
+}
+
+.countdown-time {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #ff6b1a;
+  letter-spacing: 2rpx;
+}
+
+.section-card {
+  margin-top: 22rpx;
+}
+
+.detail-description {
+  display: block;
+  margin-top: 18rpx;
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #445168;
+}
+
+.resource-card {
+  margin-top: 20rpx;
+  padding: 22rpx;
+  border-radius: 22rpx;
+  background: #f7f9fd;
+}
+
+.resource-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #203252;
+}
+
+.resource-desc {
+  display: block;
+  margin-top: 14rpx;
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #64738f;
+}
+
+.resource-actions {
+  margin-top: 18rpx;
+}
+
+.small-button {
+  width: 220rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+  font-size: 26rpx;
+}
+
+.rich-content {
+  margin-top: 18rpx;
+  font-size: 26rpx;
+  line-height: 1.7;
+}
+
+.title-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  width: 100%;
+}
+
+.section-link {
+  flex-shrink: 0;
+  font-size: 26rpx;
+  color: #2f67f6;
+}
+
+.recommend-scroll {
+  width: 100%;
+  margin-top: 20rpx;
+  white-space: nowrap;
+}
+
+.recommend-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 18rpx;
+  width: max-content;
+  min-width: 100%;
+  padding-right: 12rpx;
+}
+
+.recommend-card {
+  display: flex;
+  flex: 0 0 240rpx;
+  flex-direction: column;
+  width: 240rpx;
+}
+
+.recommend-image {
+  width: 240rpx;
+  height: 240rpx;
+  border-radius: 22rpx;
+}
+
+.recommend-name {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #16213a;
+  line-height: 1.5;
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-container {
+  width: 600rpx;
+  max-width: 90%;
+  background: #ffffff;
+  border-radius: 32rpx;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 32rpx 28rpx 24rpx;
+  border-bottom: 1rpx solid #eef2f7;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #16213a;
+  text-align: center;
+  display: block;
+}
+
+.modal-body {
+  padding: 32rpx 28rpx;
+}
+
+.modal-message {
+  display: block;
+  font-size: 28rpx;
+  line-height: 1.7;
+  color: #445168;
+  text-align: center;
+  margin-bottom: 24rpx;
+}
+
+.modal-product-info {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx;
+  background: #f7f9fd;
+  border-radius: 20rpx;
+}
+
+.modal-product-image {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 16rpx;
+  flex-shrink: 0;
+}
+
+.modal-product-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.modal-product-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #16213a;
+  line-height: 1.5;
+}
+
+.modal-product-energy {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #ff7b3f;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 16rpx;
+  padding: 20rpx 28rpx 32rpx;
+}
+
+.modal-button {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 22rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  border: 0;
+}
+
+.cancel-button {
+  background: #f3f6fb;
+  color: #64738f;
+}
+
+.confirm-button {
+  background: linear-gradient(135deg, #ff6b3f 0%, #ff8f3f 100%);
+  color: #ffffff;
+}
+
+@media screen and (min-width: 960px) {
+  .detail-swiper {
+    height: 620rpx;
+  }
+
+  .detail-hero-layout {
+    align-items: flex-start;
+  }
+
+  .detail-identity {
+    flex-basis: 260rpx;
+    width: 260rpx;
+    min-width: 260rpx;
+  }
+
+  .detail-avatar-wrap {
+    width: 180rpx;
+    height: 180rpx;
+  }
+}
+</style>

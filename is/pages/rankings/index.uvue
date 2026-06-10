@@ -1,0 +1,304 @@
+<template>
+  <view class="rank-page-shell">
+    <view class="rank-page">
+      <view class="rank-main-tabs">
+        <view class="rank-main-tab" @click="selectMode('game')">
+          <text class="rank-main-tab-text" :class="{ active: activeMode == 'game' }">游戏</text>
+          <view class="rank-main-tab-line" v-if="activeMode == 'game'"></view>
+        </view>
+        <view class="rank-main-tab" @click="selectMode('app')">
+          <text class="rank-main-tab-text" :class="{ active: activeMode == 'app' }">软件</text>
+          <view class="rank-main-tab-line" v-if="activeMode == 'app'"></view>
+        </view>
+      </view>
+
+      <scroll-view class="rank-filter-scroll" scroll-x="true">
+        <view class="rank-filter-row">
+          <view class="rank-filter-chip" v-for="item in activeFilters()" :key="'rank-filter-' + item.key" :class="{ active: activeFilterKey() == item.key }" @click="selectFilter(item.key)">
+            <text class="rank-filter-text" :class="{ active: activeFilterKey() == item.key }">{{ item.label }}</text>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="rank-list-card">
+        <view class="rank-list-head">
+          <view>
+            <text class="rank-list-title">{{ activeTitle() }}</text>
+            <text class="rank-list-subtitle">{{ activeSubtitle() }}</text>
+          </view>
+          <text class="rank-list-more" @click="openMore">查看更多</text>
+        </view>
+
+        <view class="rank-list" v-if="activeProducts().length > 0">
+          <view class="rank-product" v-for="(item, index) in activeProducts()" :key="'rank-product-' + item.id" @click="goDetail(item.id)">
+            <text class="rank-number">{{ index + 1 }}</text>
+            <image class="rank-cover" :src="cover(item.display_image)" mode="aspectFill"></image>
+            <view class="rank-info">
+              <text class="rank-name">{{ item.name }}</text>
+              <text class="rank-meta">点击 {{ item.click_count || 0 }} · 兑换 {{ item.exchange_count || 0 }}</text>
+            </view>
+            <text class="rank-action">查看</text>
+          </view>
+        </view>
+        <view class="rank-empty" v-else>当前还没有榜单数据</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script setup lang="uts">
+import {
+  fetchCategories,
+  fetchProducts,
+  imageUrl,
+  openProductDetail,
+  openProductList,
+} from '../../utils/shop.uts'
+
+const typeTree = ref([])
+const gameRoot = ref(null)
+const appRoot = ref(null)
+const activeMode = ref('game')
+const keyword = ref('')
+const gameFilterKey = ref('hot')
+const appFilterKey = ref('hot')
+const gameProducts = ref([])
+const appProducts = ref([])
+
+function textValue(value: any): string {
+  return String(value || '').trim()
+}
+
+function normalizeKey(value: string): string {
+  return textValue(value).toLowerCase().replace(/\s+/g, '').replace(/\//g, '')
+}
+
+function cover(path: string): string {
+  return imageUrl(path)
+}
+
+function goDetail(id: any) {
+  openProductDetail(id)
+}
+
+function findTreeNodeByAliases(nodes: any[], aliases: string[]): any {
+  if (!nodes || aliases.length == 0) {
+    return null
+  }
+
+  for (let i = 0; i < nodes.length; i = i + 1) {
+    const item = nodes[i]
+    const nodeName = normalizeKey(item && item.name ? String(item.name) : '')
+    for (let j = 0; j < aliases.length; j = j + 1) {
+      if (nodeName == normalizeKey(aliases[j])) {
+        return item
+      }
+    }
+
+    if (item && item.children && item.children.length > 0) {
+      const found = findTreeNodeByAliases(item.children, aliases)
+      if (found) {
+        return found
+      }
+    }
+  }
+
+  return null
+}
+
+function childCategories(root: any): any[] {
+  if (root && root.children && root.children.length > 0) {
+    return root.children
+  }
+  return []
+}
+
+function buildFilters(root: any, mode: string): any[] {
+  const rootId = root && root.id ? Number(root.id) : 0
+  const rows: any[] = [
+    { key: 'hot', label: '热门榜', sort: 'hot', category_id: rootId },
+    { key: 'latest', label: mode == 'game' ? '新游榜' : '新应用榜', sort: 'latest', category_id: rootId },
+    { key: 'exchange', label: '兑换榜', sort: 'exchange', category_id: rootId },
+  ]
+  const children = childCategories(root)
+  for (let i = 0; i < children.length; i = i + 1) {
+    const item = children[i]
+    if (item && item.id) {
+      rows.push({ key: 'cat-' + String(item.id), label: textValue(item.name), sort: 'hot', category_id: Number(item.id) })
+    }
+  }
+  return rows
+}
+
+function gameFilters(): any[] {
+  return buildFilters(gameRoot.value, 'game')
+}
+
+function appFilters(): any[] {
+  return buildFilters(appRoot.value, 'app')
+}
+
+function activeFilters(): any[] {
+  return activeMode.value == 'app' ? appFilters() : gameFilters()
+}
+
+function activeFilterKey(): string {
+  return activeMode.value == 'app' ? appFilterKey.value : gameFilterKey.value
+}
+
+function activeProducts(): any[] {
+  return activeMode.value == 'app' ? appProducts.value : gameProducts.value
+}
+
+function selectedFilter(filters: any[], key: string): any {
+  for (let i = 0; i < filters.length; i = i + 1) {
+    if (filters[i] && filters[i].key == key) {
+      return filters[i]
+    }
+  }
+  return filters.length > 0 ? filters[0] : null
+}
+
+function currentFilter(): any {
+  return selectedFilter(activeFilters(), activeFilterKey())
+}
+
+function activeTitle(): string {
+  const filter = currentFilter()
+  const label = filter && filter.label ? textValue(filter.label) : '热门榜'
+  return activeMode.value == 'app' ? '软件' + label : '游戏' + label
+}
+
+function activeSubtitle(): string {
+  if (activeFilterKey() == 'hot') {
+    return '按点击量和兑换量综合排序'
+  }
+  if (activeFilterKey() == 'latest') {
+    return '按发布时间排序'
+  }
+  if (activeFilterKey() == 'exchange') {
+    return '按兑换量排序'
+  }
+  return '按当前子分类热门商品排序'
+}
+
+function loadRankProducts(mode: string) {
+  const filters = mode == 'app' ? appFilters() : gameFilters()
+  const filter = selectedFilter(filters, mode == 'app' ? appFilterKey.value : gameFilterKey.value)
+  const params: any = { page: 1, limit: 10, sort: filter && filter.sort ? filter.sort : 'hot' }
+  const searchKeyword = textValue(keyword.value)
+  if (searchKeyword != '') {
+    params.keyword = searchKeyword
+  }
+  if (filter && filter.category_id && Number(filter.category_id) > 0) {
+    params.category_id = Number(filter.category_id)
+  }
+
+  fetchProducts(params).then((data) => {
+    const rows = data && data.list ? data.list : []
+    if (mode == 'app') {
+      appProducts.value = rows
+    } else {
+      gameProducts.value = rows
+    }
+  }).catch(() => {
+    if (mode == 'app') {
+      appProducts.value = []
+    } else {
+      gameProducts.value = []
+    }
+  })
+}
+
+function selectMode(mode: string) {
+  activeMode.value = mode == 'app' ? 'app' : 'game'
+  loadRankProducts(activeMode.value)
+}
+
+function selectFilter(key: string) {
+  if (activeMode.value == 'app') {
+    appFilterKey.value = textValue(key)
+    loadRankProducts('app')
+    return
+  }
+  gameFilterKey.value = textValue(key)
+  loadRankProducts('game')
+}
+
+function openMore() {
+  const filter = currentFilter()
+  const params: any = {
+    title: filter && filter.label ? filter.label : '榜单',
+    sort: filter && filter.sort ? filter.sort : 'hot',
+    quick_key: activeMode.value == 'app' ? 'software' : 'games',
+  }
+  if (filter && filter.category_id && Number(filter.category_id) > 0) {
+    params.category_id = Number(filter.category_id)
+  }
+  openProductList(params)
+}
+
+function submitSearch() {
+  loadRankProducts(activeMode.value)
+}
+
+function loadPage() {
+  uni.showLoading({ title: '加载中' })
+  fetchCategories().then((data) => {
+    typeTree.value = data && data.type_tree ? data.type_tree : []
+    gameRoot.value = findTreeNodeByAliases(typeTree.value, ['Game游戏', 'Game', '游戏', '游戏列表', 'games'])
+    appRoot.value = findTreeNodeByAliases(typeTree.value, ['APP应用', 'APP', 'App', '应用', '软件', '软件列表'])
+    loadRankProducts('game')
+    loadRankProducts('app')
+  }).catch((message) => {
+    uni.showToast({ title: String(message || '榜单加载失败'), icon: 'none' })
+  }).finally(() => {
+    uni.hideLoading()
+    uni.stopPullDownRefresh()
+  })
+}
+
+onLoad(() => {
+  loadPage()
+})
+
+onPullDownRefresh(() => {
+  loadPage()
+})
+</script>
+
+<style>
+.rank-page-shell { min-height: 100vh; background: #f4f7fb; }
+.rank-page { padding: 24rpx 24rpx 140rpx; }
+.rank-search-box { display: flex; flex-direction: row; align-items: center; gap: 16rpx; padding: 12rpx; border-radius: 24rpx; background: #f5f7fb; }
+.rank-search-icon { display: none; }
+.rank-search-input { flex: 1; min-width: 0; height: 68rpx; padding: 0 24rpx; border-radius: 16rpx; background: #ffffff; font-size: 28rpx; color: #333333; }
+.rank-search-button { width: 128rpx; height: 68rpx; line-height: 68rpx; padding: 0; border-radius: 16rpx; background: linear-gradient(135deg, #ffb123 0%, #ff8a00 100%); color: #ffffff; font-size: 28rpx; font-weight: 600; border: none; }
+.rank-search-button::after { border: 0; }
+.rank-main-tabs { margin-top: 32rpx; height: 88rpx; display: flex; flex-direction: row; align-items: flex-end; justify-content: center; gap: 130rpx; }
+.rank-main-tab { position: relative; min-width: 120rpx; height: 88rpx; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+.rank-main-tab-text { font-size: 44rpx; font-weight: 600; color: #8a8f99; letter-spacing: 2rpx; }
+.rank-main-tab-text.active { color: #111827; font-weight: 800; }
+.rank-main-tab-line { margin-top: 14rpx; width: 72rpx; height: 6rpx; border-radius: 999rpx; background: #111827; }
+.rank-filter-scroll { margin-top: 16rpx; white-space: nowrap; }
+.rank-filter-row { display: flex; flex-direction: row; gap: 16rpx; }
+.rank-filter-chip { flex-shrink: 0; padding: 14rpx 26rpx; border-radius: 999rpx; background: #e5e7eb; }
+.rank-filter-chip.active { background: #13c83f; }
+.rank-filter-text { font-size: 28rpx; font-weight: 700; color: #374151; }
+.rank-filter-text.active { color: #ffffff; }
+.rank-list-card { margin-top: 22rpx; padding: 24rpx; border-radius: 28rpx; background: #ffffff; box-shadow: 0 18rpx 46rpx rgba(28, 45, 84, 0.08); }
+.rank-list-head { display: flex; flex-direction: row; align-items: flex-start; justify-content: space-between; gap: 20rpx; }
+.rank-list-title { display: block; font-size: 34rpx; font-weight: 800; color: #16213a; }
+.rank-list-subtitle { display: block; margin-top: 6rpx; font-size: 22rpx; color: #7c8798; }
+.rank-list-more { flex-shrink: 0; font-size: 24rpx; font-weight: 700; color: #ff7a1a; }
+.rank-list { margin-top: 18rpx; }
+.rank-product { display: flex; flex-direction: row; align-items: center; padding: 18rpx 0; border-bottom: 2rpx solid #f1f4f8; }
+.rank-product:last-child { border-bottom: 0; }
+.rank-number { width: 44rpx; font-size: 30rpx; font-weight: 900; color: #13c83f; text-align: center; }
+.rank-cover { width: 88rpx; height: 88rpx; margin-left: 14rpx; border-radius: 22rpx; background: #f5f7fb; }
+.rank-info { flex: 1; min-width: 0; margin-left: 18rpx; }
+.rank-name { display: block; font-size: 27rpx; font-weight: 800; color: #1f2937; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.rank-meta { display: block; margin-top: 8rpx; font-size: 22rpx; color: #8a95a6; }
+.rank-action { flex-shrink: 0; padding: 8rpx 14rpx; border-radius: 999rpx; background: #ecfdf3; font-size: 22rpx; font-weight: 700; color: #13a638; }
+.rank-empty { margin-top: 22rpx; padding: 34rpx; border-radius: 24rpx; background: #f6f8fc; font-size: 24rpx; color: #8a95a6; text-align: center; }
+</style>

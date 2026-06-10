@@ -1,0 +1,2 @@
+ALTER TABLE `faqs`
+  ADD COLUMN `image` varchar(500) DEFAULT NULL AFTER `answer`;
