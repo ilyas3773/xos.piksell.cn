@@ -84,6 +84,7 @@ CREATE TABLE `product_metric_daily` (
   `product_id` bigint unsigned NOT NULL,
   `click_count` int unsigned NOT NULL DEFAULT 0,
   `exchange_count` int unsigned NOT NULL DEFAULT 0,
+  `search_count` int unsigned NOT NULL DEFAULT 0,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -204,6 +205,23 @@ CREATE TABLE `card_resources` (
   KEY `idx_product_id` (`product_id`),
   KEY `idx_status` (`status`),
   KEY `idx_common_sort` (`is_common`,`sort`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `product_wishes`;
+CREATE TABLE `product_wishes` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL DEFAULT 0,
+  `name` varchar(100) NOT NULL DEFAULT '',
+  `description` varchar(500) NOT NULL DEFAULT '',
+  `contact` varchar(100) NOT NULL DEFAULT '',
+  `status` tinyint NOT NULL DEFAULT 0 COMMENT '0:待处理 1:处理中 2:已完成 3:已拒绝',
+  `admin_remark` varchar(500) NOT NULL DEFAULT '',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_user_id` (`user_id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;
