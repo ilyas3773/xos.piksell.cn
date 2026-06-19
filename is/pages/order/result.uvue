@@ -1,5 +1,5 @@
 <template>
-  <scroll-view class="page-shell" scroll-y="true">
+  <view :class="themeClass"><scroll-view class="page-shell" scroll-y="true">
     <view class="page-container result-page">
       <!-- 兑换成功内容框 -->
       <view class="success-hero" v-if="order.id">
@@ -93,6 +93,7 @@
       </view>
     </view>
   </scroll-view>
+  </view>
 </template>
 
 <script setup lang="uts">
@@ -106,6 +107,10 @@ import {
   openOrderListPage,
   switchToHomeTab,
 } from '../../utils/navigation.uts'
+import {
+  getThemeMode,
+  syncThemeChrome,
+} from '../../utils/theme.uts'
 
 const currentOrderId = ref(0)
 const currentOrderNo = ref('')
@@ -132,7 +137,7 @@ function energyText(value: any): string {
 }
 
 function productImage(): string {
-  const product = order.product
+  const product: any = order.product
   if (!product) {
     return ''
   }
@@ -341,6 +346,7 @@ function loadByOrderNo(orderNo: string) {
 }
 
 onLoad((query) => {
+  syncThemeChrome()
   const id = query && query.id ? Number(query.id) : 0
   const orderNo = query && query.order_no ? String(query.order_no) : ''
   if (id > 0) {
@@ -355,6 +361,10 @@ onLoad((query) => {
     title: '缺少订单参数',
     icon: 'none',
   })
+})
+
+onShow(() => {
+  syncThemeChrome()
 })
 </script>
 
@@ -721,4 +731,7 @@ onLoad((query) => {
   color: #1f6bff;
   font-weight: 600;
 }
+
+.theme-dark { background: #050505; }
+.theme-dark .page-shell { background: #050505; }
 </style>

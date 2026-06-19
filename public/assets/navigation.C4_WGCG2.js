@@ -1,0 +1,1 @@
+import{Q as e,$ as n}from"./index-DUcBvDmh.js";function s(){e({url:"/pages/home/index"})}function a(){e({url:"/pages/search/index"})}function i(){n({url:"/pages/category/index"})}function r(){n({url:"/pages/mine/index"})}function o(){n({url:"/pages/order/list"})}function u(){n({url:"/pages/energy/index"})}export{u as a,i as b,o as c,s as d,r as o,a as s};

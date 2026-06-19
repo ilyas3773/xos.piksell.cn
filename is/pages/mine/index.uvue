@@ -1,112 +1,117 @@
 <template>
   <view class="page-wrapper" :class="themeClass()">
-    <view class="mine-topbar" @click="toggleTheme">
-      <text class="mine-topbar-icon">{{ themeMode == 'dark' ? '☀️' : '🌕' }}</text>
-    </view>
     <scroll-view class="page-shell mine-shell" scroll-y="true" :style="scrollViewStyle">
-      <view class="page-container mine-page">
-        <view class="tech-card user-header" @click="handleUserHeaderClick">
-          <view class="user-avatar-wrap">
-            <image v-if="avatarUrl() != ''" class="user-avatar-image" :src="avatarUrl()" mode="aspectFill"></image>
-            <text v-else class="user-avatar-text">{{ avatarText() }}</text>
+    <view class="page-container mine-page">
+      <!-- 用户头部 -->
+      <view class="tech-card user-header" @click="handleUserHeaderClick">
+        <view class="user-avatar-wrap">
+          <image v-if="avatarUrl() != ''" class="user-avatar-image" :src="avatarUrl()" mode="aspectFill"></image>
+          <text v-else class="user-avatar-text">{{ avatarText() }}</text>
+        </view>
+        <view class="user-info-main">
+          <text class="user-name">{{ loggedIn ? (userInfo.nickname || userInfo.username || '发卡小程序') : '点击登录' }}</text>
+          <text class="user-account" v-if="loggedIn">登录名：{{ userInfo.username || '-' }}</text>
+          <text class="user-edit-tip">{{ loggedIn ? '点击编辑资料' : '点击登录' }}</text>
+        </view>
+      </view>
+
+      <!-- 功能网格 -->
+      <view class="grid-wrap">
+        <!-- 第一行：签到 + 充值能量 -->
+        <view class="grid-row">
+          <view class="tech-card grid-card" @click="signInToday">
+            <view class="card-icon-wrap blue-icon">
+              <text class="card-icon">📅</text>
+            </view>
+            <text class="card-title">{{ userInfo.today_signed_in ? '今日已签到' : '每日签到' }}</text>
           </view>
-          <view class="user-info-main">
-            <text class="user-name">{{ loggedIn ? (userInfo.nickname || userInfo.username || '发卡小程序') : '点击登录' }}</text>
-            <text class="user-account" v-if="loggedIn">登录名：{{ userInfo.username || '-' }}</text>
-            <text class="user-edit-tip">{{ loggedIn ? '点击编辑资料' : '点击登录' }}</text>
+          <view class="tech-card grid-card" @click="rechargeEnergy">
+            <view class="card-icon-wrap purple-icon">
+              <text class="card-icon">👤</text>
+            </view>
+            <text class="card-title">充值能量</text>
           </view>
         </view>
 
-        <view class="grid-wrap">
-          <view class="grid-row">
-            <view class="tech-card grid-card" @click="signInToday">
-              <view class="card-icon-wrap blue-icon">
-                <text class="card-icon">📅</text>
+        <!-- 第二行：能量大卡 + 联系客服+投诉叠两个 -->
+        <view class="grid-row mixed-row">
+          <view class="tech-card energy-big-card">
+            <view class="energy-gauge">
+              <!-- 半圆仪表盘 -->
+              <view class="gauge-bg"></view>
+              <view class="gauge-fill"></view>
+              <view class="gauge-ticks">
+                <view class="tick" v-for="i in 11" :key="'tick-' + i" :class="'tick-' + i"></view>
               </view>
-              <text class="card-title">{{ userInfo.today_signed_in ? '今日已签到' : '每日签到' }}</text>
+              <text class="energy-value">{{ userInfo.energy }}</text>
             </view>
-            <view class="tech-card grid-card" @click="rechargeEnergy">
-              <view class="card-icon-wrap purple-icon">
-                <text class="card-icon">👤</text>
-              </view>
-              <text class="card-title">充值能量</text>
-            </view>
-          </view>
-
-          <view class="grid-row mixed-row">
-            <view class="tech-card energy-big-card">
-              <view class="energy-gauge">
-                <view class="gauge-bg"></view>
-                <view class="gauge-fill"></view>
-                <view class="gauge-ticks">
-                  <view class="tick" v-for="i in 11" :key="'tick-' + i" :class="'tick-' + i"></view>
-                </view>
-                <text class="energy-value">{{ userInfo.energy }}</text>
-              </view>
-              <text class="energy-label">剩余能量: {{ userInfo.energy }}</text>
-              <view class="recharge-btn" @click="rechargeEnergy">
-                <text class="recharge-btn-text">充值能量</text>
-              </view>
-            </view>
-
-            <view class="grid-card-col">
-              <view class="tech-card grid-card sm-card" @click="openContactCustomer">
-                <view class="card-icon-wrap purple-icon">
-                  <text class="card-icon">💬</text>
-                </view>
-                <text class="card-title">联系客服</text>
-              </view>
-              <view class="tech-card grid-card sm-card" @click="openWishModal">
-                <view class="card-icon-wrap purple-icon">
-                  <text class="card-icon">✨</text>
-                </view>
-                <text class="card-title">我要许愿</text>
-              </view>
+            <text class="energy-label">剩余能量: {{ userInfo.energy }}</text>
+            <view class="recharge-btn" @click="rechargeEnergy">
+              <text class="recharge-btn-text">充值能量</text>
             </view>
           </view>
 
-          <view class="grid-row">
-            <view class="tech-card grid-card" @click="openHelp">
+          <view class="grid-card-col">
+            <view class="tech-card grid-card sm-card" @click="openContactCustomer">
               <view class="card-icon-wrap purple-icon">
-                <text class="card-icon">🎯</text>
+                <text class="card-icon">💬</text>
               </view>
-              <text class="card-title">帮助</text>
+              <text class="card-title">联系客服</text>
             </view>
-            <view class="tech-card grid-card" @click="openAbout">
-              <view class="card-icon-wrap blue-icon">
-                <text class="card-icon">🛡️</text>
+            <view class="tech-card grid-card sm-card" @click="openWishModal">
+              <view class="card-icon-wrap purple-icon">
+                <text class="card-icon">✨</text>
               </view>
-              <text class="card-title">关于我们</text>
+              <text class="card-title">我要许愿</text>
             </view>
           </view>
+        </view>
 
-          <view class="grid-row">
-            <view class="tech-card grid-card" @click="openInvite">
-              <view class="card-icon-wrap blue-icon">
-                <text class="card-icon">📥</text>
-              </view>
-              <text class="card-title">邀请好友</text>
+        <!-- 第三行 -->
+        <view class="grid-row">
+          <view class="tech-card grid-card" @click="openHelp">
+            <view class="card-icon-wrap purple-icon">
+              <text class="card-icon">🎯</text>
             </view>
-            <view class="tech-card grid-card" @click="openAllOrders">
-              <view class="card-icon-wrap purple-icon">
-                <text class="card-icon">📋</text>
-              </view>
-              <text class="card-title">我的订单</text>
-            </view>
+            <text class="card-title">帮助</text>
           </view>
-
-          <view class="grid-row" v-if="loggedIn">
-            <view class="tech-card grid-card full-card" @click="logout">
-              <view class="card-icon-wrap purple-icon">
-                <text class="card-icon">🚪</text>
-              </view>
-              <text class="card-title">退出登录</text>
+          <view class="tech-card grid-card" @click="openAbout">
+            <view class="card-icon-wrap blue-icon">
+              <text class="card-icon">🛡️</text>
             </view>
+            <text class="card-title">关于我们</text>
+          </view>
+        </view>
+
+        <!-- 第四行 -->
+        <view class="grid-row">
+          <view class="tech-card grid-card" @click="openInvite">
+            <view class="card-icon-wrap blue-icon">
+              <text class="card-icon">📥</text>
+            </view>
+            <text class="card-title">邀请好友</text>
+          </view>
+          <view class="tech-card grid-card" @click="openAllOrders">
+            <view class="card-icon-wrap purple-icon">
+              <text class="card-icon">📋</text>
+            </view>
+            <text class="card-title">我的订单</text>
+          </view>
+        </view>
+
+        <!-- 退出登录 -->
+        <view class="grid-row" v-if="loggedIn">
+          <view class="tech-card grid-card full-card" @click="logout">
+            <view class="card-icon-wrap purple-icon">
+              <text class="card-icon">🚪</text>
+            </view>
+            <text class="card-title">退出登录</text>
           </view>
         </view>
       </view>
-    </scroll-view>
+    </view>
 
+    <!-- 联系客服弹窗 -->
     <view class="wish-modal-mask" v-if="contactModalVisible" @click="closeContactCustomer">
       <view class="wish-modal" @click.stop>
         <view class="wish-modal-head">
@@ -184,6 +189,7 @@
       </view>
     </view>
 
+    <!-- 许愿弹窗 -->
     <view class="wish-modal-mask" v-if="wishModalVisible" @click="closeWishModal">
       <view class="wish-modal" @click.stop>
         <view class="wish-modal-head">
@@ -252,6 +258,7 @@
         </view>
       </view>
     </view>
+    </scroll-view>
   </view>
 </template>
 
@@ -277,8 +284,14 @@ import {
 import {
   apiOrigin,
 } from '../../utils/shop.uts'
+import {
+  getThemeMode,
+  setThemeMode,
+  syncThemeChrome,
+  themeClass,
+} from '../../utils/theme.uts'
 
-const themeMode = ref('light')
+const themeMode = ref(getThemeMode())
 
 const scrollViewStyle = computed(() => {
   if (themeMode.value == 'dark') {
@@ -685,8 +698,10 @@ function logout() {
 }
 
 onLoad(() => {
-  loadTheme()
-  syncChrome()
+  const systemInfo = uni.getSystemInfoSync()
+  statusBarHeight.value = systemInfo.statusBarHeight || 0
+  themeMode.value = getThemeMode()
+  syncThemeChrome()
   if (hasUserSession()) {
     const stored = getStoredUser()
     if (stored) { applyUser(stored) }
@@ -694,56 +709,19 @@ onLoad(() => {
   }
 })
 
-const MINE_THEME_KEY = 'mine_ui_theme_mode'
-
-function normalizedThemeMode(value: string): string {
-  return String(value || '').trim() == 'dark' ? 'dark' : 'light'
-}
-
-function themeClass(): string {
-  return themeMode.value == 'dark' ? 'theme-dark' : 'theme-light'
-}
-
-function applyTheme(mode: string) {
-  themeMode.value = normalizedThemeMode(mode)
-  uni.setStorageSync(MINE_THEME_KEY, themeMode.value)
-  syncChrome()
-}
-
-function loadTheme() {
-  const saved = String(uni.getStorageSync(MINE_THEME_KEY) || '')
-  themeMode.value = normalizedThemeMode(saved)
-}
-
-function syncChrome() {
-  if (themeMode.value == 'dark') {
-    uni.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: '#050505' })
-    uni.setTabBarStyle({
-      color: '#9ca3af',
-      selectedColor: '#1677ff',
-      backgroundColor: '#000000',
-      borderStyle: 'black',
-    })
-    return
-  }
-  uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#ffffff' })
-  uni.setTabBarStyle({
-    color: '#6b7280',
-    selectedColor: '#1677ff',
-    backgroundColor: '#ffffff',
-    borderStyle: 'white',
-  })
-}
-
 function toggleTheme() {
-  applyTheme(themeMode.value == 'dark' ? 'light' : 'dark')
+  const newMode = themeMode.value == 'dark' ? 'light' : 'dark'
+  setThemeMode(newMode)
+  themeMode.value = newMode
   uni.showToast({
-    title: themeMode.value == 'dark' ? '已切换至黑色UI' : '已切换至白色UI',
+    title: newMode == 'dark' ? '已切换至黑色UI' : '已切换至白色UI',
     icon: 'none',
   })
 }
 
 onShow(() => {
+  themeMode.value = getThemeMode()
+  syncThemeChrome()
   if (hasUserSession()) {
     const stored = getStoredUser()
     if (stored) { applyUser(stored) }
@@ -766,22 +744,6 @@ onPullDownRefresh(() => {
 .mine-shell {
   background: linear-gradient(180deg, #f3f5f9 0%, #eef1f6 100%);
   min-height: 100vh;
-}
-
-.mine-topbar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 999;
-  padding: calc(env(safe-area-inset-top) + 8px) 24rpx 8px;
-}
-
-.mine-topbar-icon {
-  font-size: 30rpx;
-}
-
-.theme-dark .mine-topbar-icon {
-  opacity: 0.9;
 }
 
 .mine-page {
@@ -1549,148 +1511,6 @@ onPullDownRefresh(() => {
   z-index: 999;
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fb 100%);
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.06);
-}
-
-.navbar-status-bar {
-  width: 100%;
-}
-
-.navbar-content {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12rpx 24rpx;
-  height: 88rpx;
-}
-
-.navbar-left {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 20rpx;
-  flex: 1;
-  min-width: 0;
-}
-
-.navbar-brand-logo {
-  width: 72rpx;
-  height: 72rpx;
-  flex-shrink: 0;
-}
-
-.navbar-logo-image {
-  width: 72rpx;
-  height: 72rpx;
-  border-radius: 18rpx;
-  background: #f0f4ff;
-  box-shadow: 0 6rpx 16rpx rgba(22, 119, 255, 0.16);
-}
-
-.navbar-logo-fallback {
-  width: 72rpx;
-  height: 72rpx;
-  border-radius: 18rpx;
-  background: linear-gradient(135deg, #1677ff 0%, #69b1ff 100%);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 6rpx 16rpx rgba(22, 119, 255, 0.28);
-}
-
-.navbar-logo-leaf {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 28rpx;
-  height: 28rpx;
-  background: #ffffff;
-  border-radius: 50%;
-}
-
-.navbar-logo-bite {
-  position: absolute;
-  right: 10rpx;
-  bottom: 10rpx;
-  width: 16rpx;
-  height: 16rpx;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fb 100%);
-  border-radius: 50%;
-}
-
-.navbar-brand-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2rpx;
-  min-width: 0;
-}
-
-.navbar-site-name {
-  font-size: 30rpx;
-  font-weight: 800;
-  color: #16213a;
-  letter-spacing: 1rpx;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.navbar-site-tagline {
-  font-size: 20rpx;
-  color: #7d869b;
-  letter-spacing: 0.5rpx;
-  white-space: nowrap;
-}
-
-.navbar-right {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 16rpx;
-  flex-shrink: 0;
-}
-
-.theme-float-button {
-  width: 64rpx;
-  height: 64rpx;
-  border-radius: 18rpx;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8rpx 20rpx rgba(22, 119, 255, 0.14), 0 0 0 3rpx rgba(22, 119, 255, 0.1);
-}
-
-.theme-float-icon {
-  font-size: 30rpx;
-}
-
-/* ========== 深色主题 ========== */
-.theme-dark .custom-navbar {
-  background: #050505;
-  box-shadow: 0 4rpx 22rpx rgba(255, 255, 255, 0.06);
-}
-
-.theme-dark .navbar-logo-image {
-  background: #111111;
-  box-shadow: 0 6rpx 16rpx rgba(255, 255, 255, 0.08);
-}
-
-.theme-dark .navbar-logo-bite {
-  background: #050505;
-}
-
-.theme-dark .navbar-site-name {
-  color: #f8fafc;
-}
-
-.theme-dark .navbar-site-tagline {
-  color: #a1a1aa;
-}
-
-.theme-dark .theme-float-button {
-  background: linear-gradient(135deg, #2a2a2a 0%, #4a4a4a 100%);
-  box-shadow: 0 12rpx 28rpx rgba(0, 0, 0, 0.6), 0 0 0 4rpx rgba(255, 255, 255, 0.15);
 }
 
 .theme-dark .mine-page {

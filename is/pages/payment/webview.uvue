@@ -1,16 +1,18 @@
 <template>
-  <view class="payment-page">
+  <view class="payment-page" :class="themeClass">
     <web-view v-if="payUrl != ''" :src="payUrl"></web-view>
     <view v-else class="empty-box">支付链接无效</view>
   </view>
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 const payUrl = ref('')
 
 onLoad((options) => {
+  syncThemeChrome()
   const url = options && options['url'] ? String(options['url']) : ''
-  payUrl.value = decodeURIComponent(url)
+  payUrl.value = url != '' ? String(decodeURIComponent(url)) : ''
 })
 </script>
 
@@ -27,4 +29,6 @@ onLoad((options) => {
   font-size: 28rpx;
   text-align: center;
 }
+
+.theme-dark { background: #050505; }
 </style>

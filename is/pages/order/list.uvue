@@ -1,5 +1,5 @@
 <template>
-  <scroll-view class="page-shell" scroll-y="true" @scrolltolower="loadMore">
+  <view :class="themeClass"><scroll-view class="page-shell" scroll-y="true" @scrolltolower="loadMore">
     <view class="page-container order-list-page">
       <view class="order-list-hero">
         <text class="hero-title">我的订单</text>
@@ -57,9 +57,11 @@
       </view>
     </view>
   </scroll-view>
+  </view>
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 import {
   openOrderResultByNo,
 } from '../../utils/shop.uts'
@@ -81,7 +83,7 @@ const statusOptions = [
 const loggedIn = ref(false)
 const loading = ref(false)
 const activeStatus = ref('')
-const orderItems = ref([])
+const orderItems = ref<any[]>([])
 const pagination = reactive({
   page: 1,
   limit: 10,
@@ -194,12 +196,14 @@ function initPage() {
 }
 
 onLoad((query) => {
+  syncThemeChrome()
   const status = query && query.status ? String(query.status) : ''
   activeStatus.value = normalizeStatus(status)
   initPage()
 })
 
 onShow(() => {
+  syncThemeChrome()
   const hadSession = loggedIn.value
   loggedIn.value = hasUserSession()
   if (loggedIn.value && !hadSession) {
@@ -384,4 +388,7 @@ onPullDownRefresh(() => {
   font-size: 24rpx;
   color: #7d869b;
 }
+
+.theme-dark { background: #050505; }
+.theme-dark .page-shell { background: #050505; }
 </style>

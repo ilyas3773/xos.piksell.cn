@@ -1,5 +1,5 @@
 <template>
-  <scroll-view class="page-shell" scroll-y="true">
+  <view :class="themeClass"><scroll-view class="page-shell" scroll-y="true">
     <view class="page-container category-page">
       <view class="section-card intro-card">
         <text class="section-title">分类导航</text>
@@ -58,16 +58,18 @@
       </view>
     </view>
   </scroll-view>
+  </view>
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 import {
   fetchCategories,
   openProductList,
 } from '../../utils/shop.uts'
 
-const typeTree = ref([])
-const kindTree = ref([])
+const typeTree = ref<any[]>([])
+const kindTree = ref<any[]>([])
 
 function grandChildren(node: any): any[] {
   let rows: any[] = []
@@ -115,7 +117,12 @@ function loadCategories() {
 }
 
 onLoad(() => {
+  syncThemeChrome()
   loadCategories()
+})
+
+onShow(() => {
+  syncThemeChrome()
 })
 
 onPullDownRefresh(() => {
@@ -214,4 +221,7 @@ onPullDownRefresh(() => {
 .tree-chip-row-small {
   margin-top: 12rpx;
 }
+
+.theme-dark { background: #050505; }
+.theme-dark .page-shell { background: #050505; }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <view class="games-wrapper">
+  <view :class="themeClass"><view class="games-wrapper">
     <scroll-view class="page-shell" scroll-y="true">
       <view class="page-container">
 
@@ -100,9 +100,11 @@
       </view>
     </scroll-view>
   </view>
+  </view>
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 import {
   imageUrl,
   fetchFeaturedProducts,
@@ -113,8 +115,8 @@ import {
   loadTabShowcase,
 } from '../../utils/discovery.uts'
 
-const products = ref([])
-const featuredProducts = ref([])
+const products = ref<any[]>([])
+const featuredProducts = ref<any[]>([])
 const categoryId = ref(0)
 const categoryName = ref('')
 const searchKeyword = ref('')
@@ -228,7 +230,12 @@ function loopedProducts(): any[] {
 }
 
 onLoad(() => {
+  syncThemeChrome()
   loadPage()
+})
+
+onShow(() => {
+  syncThemeChrome()
 })
 
 onPullDownRefresh(() => {
@@ -578,4 +585,7 @@ onPullDownRefresh(() => {
   color: #cbb89a;
   flex-shrink: 0;
 }
+
+.theme-dark { background: #050505; }
+.theme-dark .apps-wrapper, .theme-dark .games-wrapper { background: #050505; }
 </style>

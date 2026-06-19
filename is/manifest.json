@@ -82,7 +82,13 @@
 	},
 	"web": {
 		"router": {
-			"mode": ""
+			"mode": "hash",
+			"base": "./"
+		},
+		"title": "piksell",
+		"devServer": {
+			"https": false,
+			"port": 5173
 		}
 	}
 }

@@ -1,6 +1,7 @@
 <template>
-  <scroll-view class="page-shell" scroll-y="true">
-    <view class="detail-page" v-if="detail.id">
+  <view :class="themeClass">
+    <scroll-view class="page-shell" scroll-y="true">
+      <view class="detail-page" v-if="detail.id">
       <view class="detail-swiper-box" v-if="loopedImages().length > 0">
         <swiper
           class="detail-swiper"
@@ -124,9 +125,14 @@
       </view>
     </view>
   </scroll-view>
+  </view>
 </template>
 
 <script setup lang="uts">
+import {
+  getThemeMode,
+  syncThemeChrome,
+} from '../../utils/theme.uts'
 import {
   copyText,
   checkActiveOrder,
@@ -163,13 +169,13 @@ const detail = reactive({
   compatibility: '',
   cover_image: '',
   images: [],
-  category: null,
-  kindCategory: null,
+  category: null as any,
+  kindCategory: null as any,
   resources: {
-    downloads: [],
-    tutorials: [],
+    downloads: [] as any[],
+    tutorials: [] as any[],
   },
-  recommend_products: [],
+  recommend_products: [] as any[],
 })
 
 function systemWindowWidth(): number {
@@ -548,12 +554,14 @@ function checkExistingOrder() {
 }
 
 onLoad((query) => {
+  syncThemeChrome()
   productId.value = query && query.id ? Number(query.id) : 0
   loadDetail()
   checkExistingOrder()
 })
 
 onShow(() => {
+  syncThemeChrome()
   checkExistingOrder()
 })
 

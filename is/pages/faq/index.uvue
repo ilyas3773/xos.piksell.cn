@@ -1,5 +1,5 @@
 <template>
-  <scroll-view class="page-shell" scroll-y="true">
+  <view :class="themeClass"><scroll-view class="page-shell" scroll-y="true">
     <view class="faq-page">
       <view class="faq-hero">
         <text class="faq-eyebrow">HELP CENTER</text>
@@ -26,15 +26,17 @@
       </view>
     </view>
   </scroll-view>
+  </view>
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 import {
   fetchFaqs,
   imageUrl,
 } from '../../utils/shop.uts'
 
-const faqs = ref([])
+const faqs = ref<any[]>([])
 const activeId = ref(0)
 
 function textValue(value: any): string {
@@ -77,6 +79,7 @@ function loadFaqs() {
 }
 
 onLoad(() => {
+  syncThemeChrome()
   uni.setNavigationBarTitle({
     title: '常见问题',
   })
@@ -85,6 +88,10 @@ onLoad(() => {
 
 onPullDownRefresh(() => {
   loadFaqs()
+})
+
+onShow(() => {
+  syncThemeChrome()
 })
 </script>
 
@@ -187,4 +194,7 @@ onPullDownRefresh(() => {
   text-align: center;
   font-size: 26rpx;
 }
+
+.theme-dark { background: #050505; }
+.theme-dark .page-shell { background: #050505; }
 </style>

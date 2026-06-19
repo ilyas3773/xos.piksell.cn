@@ -1,5 +1,5 @@
 <template>
-  <view class="choice-page">
+  <view class="choice-page" :class="themeClass">
     <view class="choice-card">
       <text class="choice-title">二维码支付</text>
       <text class="choice-desc">请打开二维码支付页完成付款，付款完成后返回能量页面查询到账状态。</text>
@@ -26,6 +26,7 @@
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 import { fetchRechargeOrderStatus } from '../../utils/user.uts'
 
 const payUrl = ref('')
@@ -36,7 +37,7 @@ function decodeQueryValue(value: string): string {
   if (value == '') {
     return ''
   }
-  return decodeURIComponent(value)
+  return String(decodeURIComponent(value))
 }
 
 function openUrlOnH5(url: string): boolean {
@@ -124,10 +125,15 @@ function goBack() {
 }
 
 onLoad((options) => {
+  syncThemeChrome()
   const url = options && options['url'] ? String(options['url']) : ''
   const no = options && options['order_no'] ? String(options['order_no']) : ''
-  payUrl.value = decodeQueryValue(url)
-  orderNo.value = decodeQueryValue(no)
+  payUrl.value = url != '' ? decodeQueryValue(url) : ''
+  orderNo.value = no != '' ? decodeQueryValue(no) : ''
+})
+
+onShow(() => {
+  syncThemeChrome()
 })
 </script>
 
@@ -268,4 +274,6 @@ onLoad((options) => {
 .primary-button-text {
   color: #ffffff;
 }
+
+.theme-dark { background: #050505; }
 </style>

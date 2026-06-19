@@ -1,4 +1,5 @@
 <template>
+  <view :class="themeClass">
   <scroll-view class="page-shell" scroll-y="true">
     <view class="page-container discovery-page">
       <view class="hero-card hero-arcade">
@@ -65,11 +66,13 @@
       </view>
     </view>
   </scroll-view>
+  </view>
 
   <TabBar></TabBar>
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 import TabBar from '../../components/tabbar/TabBar.uvue'
 import {
   imageUrl,
@@ -86,9 +89,9 @@ import {
   switchToSearchTab,
 } from '../../utils/navigation.uts'
 
-const products = ref([])
+const products = ref<any[]>([])
 const categoryId = ref(0)
-const categoryName = ref('')
+const categoryName = ref<string>('')
 
 const quickKeywords = [
   'Arcade',
@@ -158,7 +161,12 @@ function loadPage() {
 }
 
 onLoad(() => {
+  syncThemeChrome()
   loadPage()
+})
+
+onShow(() => {
+  syncThemeChrome()
 })
 
 onPullDownRefresh(() => {
@@ -371,4 +379,7 @@ onPullDownRefresh(() => {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+.theme-dark { background: #050505; }
+.theme-dark .page-shell { background: #050505; }
 </style>

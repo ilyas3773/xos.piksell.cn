@@ -1,4 +1,5 @@
 <template>
+  <view :class="themeClass">
   <scroll-view class="page-shell" scroll-y="true">
     <view class="page-container search-page">
       <view class="search-hero">
@@ -106,11 +107,13 @@
       </view>
     </view>
   </scroll-view>
+  </view>
 
   <TabBar></TabBar>
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 import TabBar from '../../components/tabbar/TabBar.uvue'
 import {
   fetchCategories,
@@ -126,14 +129,14 @@ import {
 } from '../../utils/discovery.uts'
 const SEARCH_HISTORY_KEY = 'search_history_keywords'
 
-const keyword = ref('')
-const hotKeywords = ref([])
-const featuredProducts = ref([])
-const searchHistory = ref([])
-const searchResults = ref([])
+const keyword = ref<string>('')
+const hotKeywords = ref<string[]>([])
+const featuredProducts = ref<any[]>([])
+const searchHistory = ref<string[]>([])
+const searchResults = ref<any[]>([])
 const hasSearched = ref(false)
-const gameCategoryIds = ref([])
-const appCategoryIds = ref([])
+const gameCategoryIds = ref<number[]>([])
+const appCategoryIds = ref<number[]>([])
 
 function cover(path: string): string {
   return imageUrl(path)
@@ -163,7 +166,7 @@ function saveHistory(nextKeyword: string) {
     return
   }
 
-  const rows = searchHistory.value.filter((item) => {
+  const rows: string[] = searchHistory.value.filter((item) => {
     return item != value
   })
   rows.unshift(value)
@@ -224,14 +227,14 @@ function normalizeName(value: any): string {
   return textValue(value).toLowerCase().replace(/\s+/g, '').replace(/\//g, '')
 }
 
-function collectCategoryIds(node: any, rows: any[]) {
+function collectCategoryIds(node: any, ids: number[]) {
   if (!node || !node.id) {
     return
   }
-  rows.push(Number(node.id))
+  ids.push(Number(node.id))
   if (node.children && node.children.length > 0) {
     for (let i = 0; i < node.children.length; i = i + 1) {
-      collectCategoryIds(node.children[i], rows)
+      collectCategoryIds(node.children[i], ids)
     }
   }
 }
@@ -305,10 +308,12 @@ function loadPage() {
 }
 
 onLoad(() => {
+  syncThemeChrome()
   loadPage()
 })
 
 onShow(() => {
+  syncThemeChrome()
   readHistory()
 })
 
@@ -652,4 +657,7 @@ onPullDownRefresh(() => {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+.theme-dark { background: #050505; }
+.theme-dark .page-shell { background: #050505; }
 </style>

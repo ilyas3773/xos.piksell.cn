@@ -1,5 +1,5 @@
 <template>
-  <view class="energy-page">
+  <view :class="themeClass"><view class="energy-page">
     <view class="hero-card">
       <view>
         <text class="hero-title">当前剩余能量</text>
@@ -101,9 +101,11 @@
       </view>
     </view>
   </view>
+  </view>
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 import {
   createRechargeOrder,
   fetchEnergySources,
@@ -115,15 +117,15 @@ import {
 import { getH5Host } from '../../utils/api.uts'
 
 const loading = ref(false)
-const errorMessage = ref('')
+const errorMessage = ref<string>('')
 const userEnergy = ref(0)
-const packages = ref([])
+const packages = ref<any[]>([])
 const selectedPackageId = ref(0)
 const selectedChannel = ref('wechat')
 const checkingRechargePayment = ref(false)
 const miniPayModalVisible = ref(false)
-const currentMiniPayUrl = ref('')
-const currentMiniPayOrderNo = ref('')
+const currentMiniPayUrl = ref<string>('')
+const currentMiniPayOrderNo = ref<string>('')
 const currentMiniPayIsQrcode = ref(false)
 const copyMiniPayUrlLoading = ref(false)
 const payChannels = reactive({
@@ -549,10 +551,12 @@ function copyEpayUrlForMiniProgram(payUrl: string) {
 }
 
 onLoad(() => {
+  syncThemeChrome()
   applyStoredUser()
 })
 
 onShow(() => {
+  syncThemeChrome()
   applyStoredUser()
   reload()
   checkPendingRechargePayment()
@@ -1015,4 +1019,7 @@ onShow(() => {
   color: #b45309;
   line-height: 1.5;
 }
+
+.theme-dark { background: #050505; }
+.theme-dark .energy-page { background: #050505; }
 </style>

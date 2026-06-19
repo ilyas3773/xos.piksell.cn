@@ -1,5 +1,5 @@
 <template>
-  <scroll-view class="page-shell" scroll-y="true">
+  <view :class="themeClass"><scroll-view class="page-shell" scroll-y="true">
     <view class="page-container list-page">
       <view class="hero-card">
         <view class="hero-top">
@@ -102,9 +102,11 @@
       <button class="secondary-button more-button" v-if="hasMore" @click="loadMore">加载更多</button>
     </view>
   </scroll-view>
+  </view>
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 import {
   fetchCategories,
   fetchProducts,
@@ -112,9 +114,9 @@ import {
   openProductDetail,
 } from '../../utils/shop.uts'
 
-const products = ref([])
-const typeTree = ref([])
-const flatTypeCategories = ref([])
+const products = ref<any[]>([])
+const typeTree = ref<any[]>([])
+const flatTypeCategories = ref<any[]>([])
 const keyword = ref('')
 const selectedTypeId = ref(0)
 const baseTypeId = ref(0)
@@ -142,7 +144,7 @@ function textValue(value: any): string {
 
 function queryTextValue(value: any): string {
   const raw = textValue(value)
-  if (raw == '') {
+  if (raw == null || raw == '') {
     return ''
   }
 
@@ -576,6 +578,7 @@ function loadMore() {
 }
 
 onLoad((query) => {
+  syncThemeChrome()
   const queryTypeId = query && query.category_id ? Number(query.category_id) : 0
   keyword.value = query && query.keyword ? queryTextValue(query.keyword) : ''
   quickKey.value = query && query.quick_key ? textValue(query.quick_key) : ''
@@ -836,6 +839,9 @@ onPullDownRefresh(() => {
   gap: 18rpx;
   margin-top: 24rpx;
 }
+
+.theme-dark { background: #050505; }
+.theme-dark .page-shell { background: #050505; }
 
 .game-card {
   width: 128rpx;

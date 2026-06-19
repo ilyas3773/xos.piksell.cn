@@ -1,5 +1,5 @@
 <template>
-  <scroll-view class="page-shell" scroll-y="true">
+  <view :class="themeClass"><scroll-view class="page-shell" scroll-y="true">
     <view class="auth-page">
       <!-- 深色背景 -->
       <view class="bg-dark"></view>
@@ -147,13 +147,14 @@
       <view class="cyber-footer">
         <text class="footer-tips">登录即表示您同意我们的</text>
         <view class="footer-links">
-          <text class="footer-link" @click="goTerms">服务条款</text>
+          <text class="footer-link">服务条款</text>
           <text class="footer-sep">&</text>
-          <text class="footer-link" @click="goPrivacy">隐私政策</text>
+          <text class="footer-link">隐私政策</text>
         </view>
       </view>
     </view>
   </scroll-view>
+  </view>
 </template>
 
 <script setup lang="uts">
@@ -164,6 +165,11 @@ import {
 import {
   wxLogin as performWxLogin,
 } from '../../utils/wx-auth.uts'
+import {
+  getThemeMode,
+  syncThemeChrome,
+  themeClass,
+} from '../../utils/theme.uts'
 
 const mode = ref('login')
 const submitting = ref(false)
@@ -236,7 +242,7 @@ function submitAuth() {
 
 function wxLogin() {
   if (submitting.value) return
-
+  
   submitting.value = true
   uni.showLoading({ title: '微信登录中...' })
 
@@ -251,16 +257,13 @@ function wxLogin() {
   })
 }
 
-function goTerms() {
-  uni.navigateTo({ url: '/pages/faq/index?type=terms' })
-}
-
-function goPrivacy() {
-  uni.navigateTo({ url: '/pages/faq/index?type=privacy' })
-}
-
 onLoad((query) => {
+  syncThemeChrome()
   switchMode(query && query.mode ? String(query.mode) : 'login')
+})
+
+onShow(() => {
+  syncThemeChrome()
 })
 </script>
 
@@ -567,14 +570,13 @@ onLoad((query) => {
   line-height: 96rpx;
   background: linear-gradient(135deg, #ff0080 0%, #ff4da6 50%, #ff0080 100%);
   border-radius: 12rpx;
-  border: 2rpx solid rgba(255, 0, 128, 0.7);
+  border: none;
   padding: 0;
   margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow:
-    0 0 20rpx rgba(255, 0, 128, 0.4),
+  box-shadow: 
     0 4rpx 20rpx rgba(255, 0, 128, 0.5),
     inset 0 1rpx 0 rgba(255, 255, 255, 0.2);
 }
@@ -694,14 +696,15 @@ onLoad((query) => {
 
 .footer-link {
   font-size: 20rpx;
-  color: rgba(0, 255, 255, 0.75);
+  color: rgba(0, 255, 255, 0.5);
   letter-spacing: 2rpx;
-  text-decoration: underline;
-  text-underline-offset: 4rpx;
 }
 
 .footer-sep {
   font-size: 20rpx;
   color: rgba(255, 255, 255, 0.2);
 }
+
+.theme-dark { background: #050505; }
+.theme-dark .page-shell { background: #050505; }
 </style>

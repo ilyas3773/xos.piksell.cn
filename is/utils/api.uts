@@ -21,7 +21,7 @@ function normalizeOrigin(value: string): string {
 }
 
 function getStoredApiOrigin(): string {
-  const value = uni.getStorageSync(API_ORIGIN_STORAGE_KEY)
+  const value: any = uni.getStorageSync(API_ORIGIN_STORAGE_KEY)
   return normalizeOrigin(value)
 }
 

@@ -1,5 +1,5 @@
 <script setup lang="uts">
-import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
+// onLaunch, onShow, onHide 在 uni-app x 的 <script setup> 中自动注册，无需 import
 
 onLaunch(() => {
   console.log('App Launch')

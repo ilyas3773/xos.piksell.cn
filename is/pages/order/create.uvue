@@ -1,5 +1,5 @@
 <template>
-  <scroll-view class="page-shell" scroll-y="true">
+  <view :class="themeClass"><scroll-view class="page-shell" scroll-y="true">
     <view class="page-container order-page">
       <view class="section-card order-confirm-card" v-if="product.id">
         <image class="order-product-image" :src="cover(product.display_image)" mode="aspectFill"></image>
@@ -11,9 +11,11 @@
       <button class="primary-button submit-button" @click="submitOrder">提交订单</button>
     </view>
   </scroll-view>
+  </view>
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 import {
   createOrder,
   fetchProduct,
@@ -153,12 +155,17 @@ function submitOrder() {
 }
 
 onLoad((query) => {
+  syncThemeChrome()
   if (!requireUserLogin()) {
     return
   }
   productId.value = query && query.id ? Number(query.id) : 0
   loadProfile()
   loadProduct()
+})
+
+onShow(() => {
+  syncThemeChrome()
 })
 </script>
 
@@ -211,4 +218,7 @@ onLoad((query) => {
   margin-top: 40rpx;
   width: calc(100% - 64rpx);
 }
+
+.theme-dark { background: #050505; }
+.theme-dark .page-shell { background: #050505; }
 </style>

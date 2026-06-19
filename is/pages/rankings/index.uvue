@@ -1,5 +1,5 @@
 <template>
-  <view class="rank-page-shell">
+  <view :class="themeClass"><view class="rank-page-shell">
     <view class="rank-page">
       <view class="rank-main-tabs">
         <view class="rank-main-tab" @click="selectMode('game')">
@@ -44,9 +44,11 @@
       </view>
     </view>
   </view>
+  </view>
 </template>
 
 <script setup lang="uts">
+import { getThemeMode, syncThemeChrome } from '../../utils/theme.uts'
 import {
   fetchCategories,
   fetchProducts,
@@ -259,7 +261,12 @@ function loadPage() {
 }
 
 onLoad(() => {
+  syncThemeChrome()
   loadPage()
+})
+
+onShow(() => {
+  syncThemeChrome()
 })
 
 onPullDownRefresh(() => {
@@ -301,4 +308,7 @@ onPullDownRefresh(() => {
 .rank-meta { display: block; margin-top: 8rpx; font-size: 22rpx; color: #8a95a6; }
 .rank-action { flex-shrink: 0; padding: 8rpx 14rpx; border-radius: 999rpx; background: #ecfdf3; font-size: 22rpx; font-weight: 700; color: #13a638; }
 .rank-empty { margin-top: 22rpx; padding: 34rpx; border-radius: 24rpx; background: #f6f8fc; font-size: 24rpx; color: #8a95a6; text-align: center; }
+
+.theme-dark { background: #050505; }
+.theme-dark .rank-page-shell { background: #050505; }
 </style>

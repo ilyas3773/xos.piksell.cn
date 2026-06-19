@@ -21,42 +21,66 @@ export function wxProfileLogin(): Promise<any> {
       provider: 'weixin',
       success: (loginRes) => {
         const code = loginRes.code
-        
+
         // 获取用户信息
-        uni.getUserProfile({
-          desc: '用于完善用户资料',
-          success: (infoRes) => {
-            const { encryptedData, iv, rawData, signature } = infoRes
-            
-            // 发送到后端
-            uni.request({
-              url: buildApiUrl('/api/user/wx/login'),
-              method: 'POST',
-              data: {
-                code: code,
-                encryptedData: encryptedData,
-                iv: iv,
-                rawData: rawData,
-                signature: signature
-              },
-              success: (res: any) => {
-                const body = res.data
-                if (body && Number(body.code) === 0) {
-                  const data = body.data
-                  // 保存token和用户信息
-                  saveWxAuth(data)
-                  resolve(data)
-                } else {
-                  reject(body && body.msg ? String(body.msg) : '登录失败')
+        const profileApi: any = (uni as any)
+        if (typeof profileApi.getUserProfile === 'function') {
+          profileApi.getUserProfile({
+            desc: '用于完善用户资料',
+            success: (infoRes: any) => {
+              const { encryptedData, iv, rawData, signature } = infoRes
+
+              // 发送到后端
+              uni.request({
+                url: buildApiUrl('/api/user/wx/login'),
+                method: 'POST',
+                data: {
+                  code: code,
+                  encryptedData: encryptedData,
+                  iv: iv,
+                  rawData: rawData,
+                  signature: signature
+                },
+                success: (res: any) => {
+                  const body = res.data
+                  if (body && Number(body.code) === 0) {
+                    const data = body.data
+                    // 保存token和用户信息
+                    saveWxAuth(data)
+                    resolve(data)
+                  } else {
+                    reject(body && body.msg ? String(body.msg) : '登录失败')
+                  }
+                },
+                fail: (error) => {
+                  reject(error && error.errMsg ? String(error.errMsg) : '网络错误')
                 }
-              },
-              fail: (error) => {
-                reject(error && error.errMsg ? String(error.errMsg) : '网络错误')
-              }
-            })
+              })
+            },
+            fail: (error) => {
+              reject(error && error.errMsg ? String(error.errMsg) : '获取用户信息失败')
+            }
+          })
+          return
+        }
+
+        // 退化：直接用 code 登录，不带用户信息
+        uni.request({
+          url: buildApiUrl('/api/user/wx/login'),
+          method: 'POST',
+          data: { code: code },
+          success: (res: any) => {
+            const body = res.data
+            if (body && Number(body.code) === 0) {
+              const data = body.data
+              saveWxAuth(data)
+              resolve(data)
+            } else {
+              reject(body && body.msg ? String(body.msg) : '登录失败')
+            }
           },
           fail: (error) => {
-            reject(error && error.errMsg ? String(error.errMsg) : '获取用户信息失败')
+            reject(error && error.errMsg ? String(error.errMsg) : '网络错误')
           }
         })
       },

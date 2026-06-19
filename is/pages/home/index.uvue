@@ -1,5 +1,5 @@
 <template>
-  <view class="page-wrapper" :class="themeClass()">
+  <view class="page-wrapper" :class="themeClass">
     <!-- 自定义导航栏 -->
     <view class="custom-navbar" :style="navbarStyle">
       <view class="navbar-status-bar" :style="statusBarStyle"></view>
@@ -413,22 +413,22 @@ import {
   getWxUserInfo,
 } from '../../utils/wx-auth.uts'
 
-const searchKeyword = ref('')
-const loggedIn = ref(false)
-const homeDataStatus = ref('loading')
-const typeCategories = ref([])
-const kindCategories = ref([])
-const featuredProducts = ref([])
-const latestProducts = ref([])
-const bottomProducts = ref([])
-const bottomPage = ref(1)
-const bottomHasMore = ref(false)
-const bottomLoading = ref(false)
-const wishModalVisible = ref(false)
-const contactModalVisible = ref(false)
-const wishName = ref('')
-const wishDescription = ref('')
-const wishContact = ref('')
+const searchKeyword = ref<string>('')
+const loggedIn = ref<boolean>(false)
+const homeDataStatus = ref<string>('loading')
+const typeCategories = ref<any[]>([])
+const kindCategories = ref<any[]>([])
+const featuredProducts = ref<any[]>([])
+const latestProducts = ref<any[]>([])
+const bottomProducts = ref<any[]>([])
+const bottomPage = ref<number>(1)
+const bottomHasMore = ref<boolean>(false)
+const bottomLoading = ref<boolean>(false)
+const wishModalVisible = ref<boolean>(false)
+const contactModalVisible = ref<boolean>(false)
+const wishName = ref<string>('')
+const wishDescription = ref<string>('')
+const wishContact = ref<string>('')
 const customerContact = reactive({
   wechat: '',
   qq: '',
@@ -437,13 +437,12 @@ const customerContact = reactive({
   qr_image: '',
   work_time: '',
 })
-const bottomCategoryKey = ref('games')
-const gameSortKey = ref('hot')
-const gameViewMode = ref('grid')
-const themeMode = ref('light')
-const announcementText = ref('')
-const statusBarHeight = ref(0)
-const navbarHeight = ref(44)
+const bottomCategoryKey = ref<string>('games')
+const gameSortKey = ref<string>('hot')
+const gameViewMode = ref<string>('grid')
+const announcementText = ref<string>('')
+const statusBarHeight = ref<number>(0)
+const navbarHeight = ref<number>(44)
 const service = reactive({
   site_name: '',
   tagline: '',
@@ -482,57 +481,17 @@ const bottomCategoryTabs = [
   { key: 'software', label: '应用' },
 ]
 
-const HOME_THEME_KEY = 'home_ui_theme_mode'
+import {
+  themeClass,
+  getThemeMode,
+  setThemeMode,
+  syncThemeChrome,
+} from '@/utils/theme.uts'
+
+const themeMode = ref<string>(getThemeMode())
 
 function textValue(value: any): string {
   return String(value || '').trim()
-}
-
-function normalizedThemeMode(value: string): string {
-  return textValue(value) == 'dark' ? 'dark' : 'light'
-}
-
-function themeClass(): string {
-  return themeMode.value == 'dark' ? 'theme-dark' : 'theme-light'
-}
-
-function applyHomeTheme(mode: string) {
-  themeMode.value = normalizedThemeMode(mode)
-  uni.setStorageSync(HOME_THEME_KEY, themeMode.value)
-  syncThemeChrome()
-}
-
-function loadHomeTheme() {
-  const saved = String(uni.getStorageSync(HOME_THEME_KEY) || '')
-  themeMode.value = normalizedThemeMode(saved)
-  syncThemeChrome()
-}
-
-function syncThemeChrome() {
-  if (themeMode.value == 'dark') {
-    uni.setNavigationBarColor({
-      frontColor: '#ffffff',
-      backgroundColor: '#050505',
-    })
-    uni.setTabBarStyle({
-      color: '#9ca3af',
-      selectedColor: '#1677ff',
-      backgroundColor: '#000000',
-      borderStyle: 'black',
-    })
-    return
-  }
-
-  uni.setNavigationBarColor({
-    frontColor: '#000000',
-    backgroundColor: '#ffffff',
-  })
-  uni.setTabBarStyle({
-    color: '#6b7280',
-    selectedColor: '#1677ff',
-    backgroundColor: '#ffffff',
-    borderStyle: 'white',
-  })
 }
 
 function cover(path: string): string {
@@ -592,7 +551,7 @@ function bottomSectionLabel(): string {
 function bottomGameProducts(): any[] {
   const source = bottomProducts.value
   const rows = source.slice()
-  rows.sort((left, right) => {
+  rows.sort((left: any, right: any) => {
     const leftId = Number(left && left.id ? left.id : 0)
     const rightId = Number(right && right.id ? right.id : 0)
     const leftCreatedAt = Date.parse(String(left && left.created_at ? left.created_at : '')) || 0
@@ -802,7 +761,7 @@ function findTypeCategoryByName(targetName: string): any {
   const expected = normalizeCategoryName(targetName)
   const rows = typeCategories.value
   for (let i = 0; i < rows.length; i = i + 1) {
-    const item = rows[i]
+    const item: any = rows[i]
     if (!item) {
       continue
     }
@@ -1074,18 +1033,25 @@ function openThemeSwitcher() {
     itemList: ['白色 UI', '黑色 UI'],
     success: (res) => {
       if (res.tapIndex == 0) {
-        applyHomeTheme('light')
+        applyTheme('light')
       } else if (res.tapIndex == 1) {
-        applyHomeTheme('dark')
+        applyTheme('dark')
       }
     },
   })
 }
 
+function applyTheme(mode: string) {
+  setThemeMode(mode)
+  themeMode.value = mode
+  syncThemeChrome()
+}
+
 function toggleTheme() {
-  applyHomeTheme(themeMode.value == 'dark' ? 'light' : 'dark')
+  const newMode = themeMode.value == 'dark' ? 'light' : 'dark'
+  applyTheme(newMode)
   uni.showToast({
-    title: themeMode.value == 'dark' ? '已切换至黑色UI' : '已切换至白色UI',
+    title: newMode == 'dark' ? '已切换至黑色UI' : '已切换至白色UI',
     icon: 'none',
   })
 }
@@ -1147,14 +1113,16 @@ onLoad(() => {
   const systemInfo = uni.getSystemInfoSync()
   statusBarHeight.value = systemInfo.statusBarHeight || 0
   
-  loadHomeTheme()
+  syncThemeChrome()
+  themeMode.value = getThemeMode()
   syncLoginState()
   syncNavigationTitle()
   loadHomeData()
 })
 
 onShow(() => {
-  loadHomeTheme()
+  syncThemeChrome()
+  themeMode.value = getThemeMode()
   syncLoginState()
 })
 

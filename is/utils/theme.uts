@@ -1,0 +1,47 @@
+const THEME_KEY = 'app_ui_theme_mode'
+
+function normalizedThemeMode(value: string): string {
+  const v = String(value || '').trim()
+  return v == 'dark' ? 'dark' : 'light'
+}
+
+export function getThemeMode(): string {
+  const saved = String(uni.getStorageSync(THEME_KEY) || '')
+  return normalizedThemeMode(saved)
+}
+
+export function setThemeMode(mode: string): void {
+  const normalized = normalizedThemeMode(mode)
+  uni.setStorageSync(THEME_KEY, normalized)
+  syncThemeChrome(normalized)
+}
+
+export function themeClass(): string {
+  return getThemeMode() == 'dark' ? 'theme-dark' : 'theme-light'
+}
+
+export function syncThemeChrome(mode: string = getThemeMode()): void {
+  if (mode == 'dark') {
+    uni.setNavigationBarColor({
+      frontColor: '#ffffff',
+      backgroundColor: '#050505',
+    })
+    uni.setTabBarStyle({
+      color: '#9ca3af',
+      selectedColor: '#1677ff',
+      backgroundColor: '#000000',
+      borderStyle: 'black',
+    })
+    return
+  }
+  uni.setNavigationBarColor({
+    frontColor: '#000000',
+    backgroundColor: '#ffffff',
+  })
+  uni.setTabBarStyle({
+    color: '#6b7280',
+    selectedColor: '#1677ff',
+    backgroundColor: '#ffffff',
+    borderStyle: 'white',
+  })
+}

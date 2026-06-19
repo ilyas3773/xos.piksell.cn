@@ -101,7 +101,7 @@ export function request(path: string, method: string = 'GET', data: any = null, 
 
     uni.request({
       url: url,
-      method: upperMethod,
+      method: upperMethod as any,
       timeout: 15000,
       data: upperMethod == 'GET' ? {} : data,
       header: headers,
