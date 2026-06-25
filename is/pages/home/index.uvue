@@ -22,11 +22,7 @@
             <text class="navbar-site-tagline">{{ displaySiteTagline() }}</text>
           </view>
         </view>
-        <view class="navbar-right">
-          <view class="navbar-icon-btn" @click="handleLogin">
-            <text class="navbar-icon-text">{{ loggedIn ? '我的' : '登录' }}</text>
-          </view>
-        </view>
+
       </view>
     </view>
 
@@ -76,7 +72,7 @@
           </view>
         </view>
 
-        <scroll-view class="hot-scroll" scroll-x="true" show-scrollbar="false" v-if="featuredProducts.length > 0">
+        <scroll-view class="hot-scroll" scroll-x="true" :show-scrollbar="false" v-if="featuredProducts.length > 0">
           <view class="hot-row">
             <view
               class="hot-item"
@@ -112,7 +108,7 @@
           </view>
         </view>
 
-        <scroll-view class="hot-scroll" scroll-x="true" show-scrollbar="false" v-if="latestGameProducts().length > 0">
+        <scroll-view class="hot-scroll" scroll-x="true" :show-scrollbar="false" v-if="latestGameProducts().length > 0">
           <view class="hot-row">
             <view
               class="hot-item"
@@ -387,6 +383,42 @@
         </view>
       </view>
     </view>
+
+    <view class="wish-modal-mask" v-if="loginStatusVisible" @click="closeLoginStatus">
+      <view class="wish-modal login-status-modal" @click.stop>
+        <view class="wish-modal-head">
+          <text class="wish-modal-title">{{ loggedIn ? '账户信息' : '登录提示' }}</text>
+          <text class="wish-modal-close" @click="closeLoginStatus">✕</text>
+        </view>
+        <view class="wish-modal-body">
+          <view v-if="loggedIn" class="login-user-card">
+            <image
+              v-if="currentUserAvatar() != ''"
+              class="login-user-avatar"
+              :src="currentUserAvatar()"
+              mode="aspectFill"
+            ></image>
+            <view v-else class="login-user-avatar login-user-avatar-fallback">
+              <text class="login-user-avatar-text">{{ currentUserInitial() }}</text>
+            </view>
+            <text class="login-user-name">{{ currentUserDisplayName() }}</text>
+            <text class="login-user-account">登录账号：{{ currentUserAccount() }}</text>
+            <text class="login-user-energy">能量余额：{{ currentUserEnergyText() }}</text>
+          </view>
+          <view v-else class="login-user-card login-user-card-guest">
+            <text class="login-guest-icon">◈</text>
+            <text class="login-user-name">当前未登录</text>
+            <text class="login-user-account">登录后可查看能量余额、订单和个人资料</text>
+          </view>
+        </view>
+        <view class="wish-modal-foot">
+          <button class="wish-modal-btn cancel" @click="closeLoginStatus">取消</button>
+          <button class="wish-modal-btn confirm" @click="handleLoginAction">
+            {{ loggedIn ? '个人中心' : '去登录' }}
+          </button>
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -401,20 +433,19 @@ import {
   apiOrigin,
 } from '../../utils/shop.uts'
 import {
+  fetchProfile,
+  getStoredUser,
   hasUserSession,
+  openAuthPage,
 } from '../../utils/user.uts'
 import {
   openEnergyPage,
   openMinePage,
 } from '../../utils/navigation.uts'
-import {
-  wxLogin,
-  isWxLoggedIn,
-  getWxUserInfo,
-} from '../../utils/wx-auth.uts'
 
 const searchKeyword = ref<string>('')
 const loggedIn = ref<boolean>(false)
+const loginStatusVisible = ref<boolean>(false)
 const homeDataStatus = ref<string>('loading')
 const typeCategories = ref<any[]>([])
 const kindCategories = ref<any[]>([])
@@ -448,6 +479,13 @@ const service = reactive({
   tagline: '',
   logo: '',
   icon: '',
+})
+const currentUser = reactive({
+  id: 0,
+  username: '',
+  nickname: '',
+  avatar: '',
+  energy: 0,
 })
 
 const navbarStyle = computed(() => {
@@ -679,39 +717,83 @@ function syncNavigationTitle() {
   })
 }
 
+function applyCurrentUser(data: any) {
+  currentUser.id = Number(data && data.id ? data.id : 0)
+  currentUser.username = textValue(data && data.username ? data.username : '')
+  currentUser.nickname = textValue(data && data.nickname ? data.nickname : '')
+  currentUser.avatar = textValue(data && data.avatar ? data.avatar : '')
+  currentUser.energy = Number(data && data.energy ? data.energy : 0)
+}
+
+function clearCurrentUser() {
+  applyCurrentUser(null)
+}
+
 function syncLoginState() {
-  loggedIn.value = isWxLoggedIn()
+  loggedIn.value = hasUserSession()
+  if (!loggedIn.value) {
+    clearCurrentUser()
+    return
+  }
+  const storedUser = getStoredUser()
+  if (storedUser) {
+    applyCurrentUser(storedUser)
+  }
 }
 
 function handleLogin() {
+  syncLoginState()
+  loginStatusVisible.value = true
+}
+
+function closeLoginStatus() {
+  loginStatusVisible.value = false
+}
+
+function handleLoginAction() {
+  closeLoginStatus()
   if (loggedIn.value) {
     goMine()
     return
   }
-  
-  // 执行微信登录
-  uni.showLoading({
-    title: '登录中...'
-  })
-  
-  wxLogin().then((data) => {
-    uni.hideLoading()
-    loggedIn.value = true
-    
-    uni.showToast({
-      title: '登录成功',
-      icon: 'success'
-    })
-    
-    // 刷新页面数据
-    loadHomeData()
-  }).catch((error) => {
-    uni.hideLoading()
-    uni.showToast({
-      title: String(error || '登录失败'),
-      icon: 'none',
-      duration: 2000
-    })
+  openAuthPage('login')
+}
+
+function currentUserDisplayName(): string {
+  const value = textValue(currentUser.nickname || currentUser.username)
+  return value != '' ? value : '登录'
+}
+
+function currentUserAccount(): string {
+  const value = textValue(currentUser.username)
+  return value != '' ? value : '-'
+}
+
+function currentUserInitial(): string {
+  const value = currentUserDisplayName()
+  return value.slice(0, 1).toUpperCase()
+}
+
+function currentUserAvatar(): string {
+  const value = textValue(currentUser.avatar)
+  if (value == '') {
+    return ''
+  }
+  return imageUrl(value)
+}
+
+function currentUserEnergyText(): string {
+  return String(Number(currentUser.energy || 0))
+}
+
+function refreshUserProfile() {
+  if (!loggedIn.value) {
+    return
+  }
+  fetchProfile().then((profile) => {
+    applyCurrentUser(profile)
+  }).catch(() => {
+    syncLoginState()
   })
 }
 
@@ -1116,6 +1198,7 @@ onLoad(() => {
   syncThemeChrome()
   themeMode.value = getThemeMode()
   syncLoginState()
+  refreshUserProfile()
   syncNavigationTitle()
   loadHomeData()
 })
@@ -1124,6 +1207,7 @@ onShow(() => {
   syncThemeChrome()
   themeMode.value = getThemeMode()
   syncLoginState()
+  refreshUserProfile()
 })
 
 onPullDownRefresh(() => {
@@ -1251,10 +1335,34 @@ onPullDownRefresh(() => {
 }
 
 .navbar-icon-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12rpx;
   padding: 12rpx 24rpx;
   border-radius: 999rpx;
   background: linear-gradient(135deg, #1677ff 0%, #0d5fd8 100%);
   box-shadow: 0 6rpx 16rpx rgba(22, 119, 255, 0.25);
+}
+
+.navbar-user-avatar {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.navbar-user-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-user-avatar-text {
+  font-size: 20rpx;
+  font-weight: 700;
+  color: #ffffff;
 }
 
 .navbar-icon-text {
@@ -1506,6 +1614,7 @@ onPullDownRefresh(() => {
   display: block;
   width: 100%;
   box-sizing: border-box;
+  white-space: nowrap;
 }
 
 .hot-row {
@@ -1515,6 +1624,8 @@ onPullDownRefresh(() => {
   gap: 22rpx;
   width: max-content;
   min-width: 100%;
+  padding: 0 24rpx;
+  box-sizing: border-box;
 }
 
 .hot-item {
@@ -2201,6 +2312,70 @@ onPullDownRefresh(() => {
 .wish-modal-btn.confirm {
   color: #ffffff;
   background: linear-gradient(135deg, #ff8a3d 0%, #ff5778 100%);
+}
+
+.login-status-modal {
+  width: 600rpx;
+}
+
+.login-user-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12rpx 0 4rpx;
+}
+
+.login-user-card-guest {
+  padding-top: 24rpx;
+}
+
+.login-user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+}
+
+.login-user-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-user-avatar-text {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.login-user-name {
+  margin-top: 20rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.login-user-account {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.login-user-energy {
+  margin-top: 16rpx;
+  padding: 14rpx 24rpx;
+  border-radius: 999rpx;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.login-guest-icon {
+  font-size: 72rpx;
+  color: #1677ff;
 }
 
 .theme-dark {

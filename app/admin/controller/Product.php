@@ -317,7 +317,7 @@ class Product extends BaseController
             }
 
             $result[] = $url;
-            if (count($result) >= 10) {
+            if (count($result) >= 12) {
                 break;
             }
         }

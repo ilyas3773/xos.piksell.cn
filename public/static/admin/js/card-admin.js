@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     const token = localStorage.getItem('admin_token');
     if (!token) {
         window.location.href = '/login.html';
@@ -1999,9 +1999,6 @@
             const mediaTags = [];
             const isSelected = selectedIds.includes(Number(item.id));
 
-            if (Number(item.exchange_energy || 0) > 0) {
-                categoryTags.push('<span class="tag tag-yellow">兑换能量 ' + escapeHtml(String(item.exchange_energy)) + '</span>');
-            }
             mediaTags.push('<span class="tag tag-gray">轮播图 ' + escapeHtml(String(galleryImages.length)) + ' 张</span>');
             if (item.category && Number(item.category.status) === 0) {
                 mediaTags.push('<span class="tag tag-yellow">分类停用</span>');
@@ -2479,7 +2476,7 @@
             + '<button type="button" class="btn btn-small" id="addProductGalleryUrlBtn">添加链接图</button>'
             + '<label class="btn btn-warning product-upload-label">上传多图<input id="productGalleryFileInput" type="file" accept="image/*" multiple hidden></label>'
             + '</div>'
-            + '<div class="product-media-tip">支持多张轮播图，建议最多 8 张。图片链接也会先保存到本地再使用。</div>'
+            + '<div class="product-media-tip">支持多张轮播图，建议最多 12 张。图片链接也会先保存到本地再使用。</div>'
             + '<div class="product-media-preview gallery" id="productGalleryPreview"></div>'
             + '</div>'
             + '</div>'
@@ -2767,8 +2764,8 @@
             if (galleryState.items.indexOf(normalizedUrl) >= 0) {
                 return;
             }
-            if (galleryState.items.length >= 8) {
-                alert('轮播图最多保留 8 张');
+            if (galleryState.items.length >= 12) {
+                alert('轮播图最多保留 12 张');
                 return;
             }
 

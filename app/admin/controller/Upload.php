@@ -100,6 +100,14 @@ class Upload extends BaseController
             }
         }
 
+        // Fallback for webp if mime is application/octet-stream or empty but url ends with .webp
+        if ($extension === '') {
+            $pathExtension = strtolower(pathinfo((string)parse_url($imageUrl, PHP_URL_PATH), PATHINFO_EXTENSION));
+            if ($pathExtension === 'webp') {
+                $extension = 'webp';
+            }
+        }
+
         if ($extension === '') {
             throw new RuntimeException('远程链接不是受支持的图片格式');
         }
